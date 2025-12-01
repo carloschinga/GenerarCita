@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Especialidades - Clínica San Bartolomé</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* Estilos generales y variables actualizados */
+        :root {
+            /* Colores de la marca (Azul y Amarillo del logo) */
+            --color-primary-blue: #0A3587;
+            --color-secondary-yellow: #F9BF3C;
+            --color-text-dark: #2c3e50;
+            --color-text-gray: #6c7a89;
+
+            /* Colores de fondo y bordes */
+            --color-background-page: #edf1f7; /* Fondo Celeste Bajo (Original) */
+            --color-card-background: #ffffff;
+            --color-border: #e0e6ed; /* Borde más sutil para hacer juego con el fondo */
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--color-background-page);
+            margin: 0;
+            padding: 0;
+            color: var(--color-text-dark);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* --- Encabezado / Navbar --- */
+        .header {
+            background-color: white;
+            padding: 10px 20px;
+            border-bottom: 1px solid var(--color-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-container img {
+            height: 35px;
+            display: block;
+        }
+
+        .logo {
+            display: none;
+        }
+
+        .search-bar {
+            flex-grow: 1;
+            margin: 0 40px;
+            max-width: 450px;
+            position: relative;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 10px 15px 10px 40px;
+            border: 1px solid var(--color-border);
+            border-radius: 20px;
+            font-size: 1rem;
+            background-color: #f1f4f8;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .search-bar input:focus {
+             border-color: var(--color-primary-blue);
+             box-shadow: 0 0 0 3px rgba(10, 53, 135, 0.2);
+             outline: none;
+        }
+
+        .search-bar::before {
+            content: '🔍';
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--color-text-gray);
+            font-size: 1rem;
+        }
+
+        .config-dots {
+            display: flex;
+            gap: 5px;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            background-color: var(--color-primary-blue);
+            border-radius: 50%;
+            opacity: 0.3;
+            transition: opacity 0.3s;
+        }
+        .dot:nth-child(2) { opacity: 1; }
+
+
+        /* --- Sección Principal de Contenido --- */
+        .main-content {
+            padding: 40px 20px;
+        }
+
+        .intro h2 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--color-text-dark);
+            margin-bottom: 8px;
+        }
+
+        .intro p {
+            font-size: 1rem;
+            color: var(--color-text-gray);
+            margin-bottom: 40px;
+        }
+
+        /* --- Grid de Especialidades --- */
+        .specialty-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .specialty-card {
+            background-color: var(--color-card-background);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid var(--color-border);
+        }
+
+        .specialty-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-image {
+            height: 180px;
+            background-color: #e0e0e0;
+            background-size: cover;
+            background-position: center;
+            border-bottom: 3px solid var(--color-secondary-yellow);
+        }
+
+        /* Imágenes específicas (usando URLs de ejemplo o colores sólidos si no hay imagen) */
+        .card-image.card-1 { background-image: url('https://picsum.photos/id/10/500/300'); }
+        .card-image.card-2 { background-color: #f1f4f8; }
+        .card-image.card-3 { background-image: url('https://picsum.photos/id/1015/500/300'); }
+        .card-image.card-4 { background-image: url('https://picsum.photos/id/400/500/300'); }
+        .card-image.card-5 { background-image: url('https://picsum.photos/id/83/500/300'); }
+        .card-image.card-6 { background-image: url('https://picsum.photos/id/237/500/300'); }
+
+
+        .card-content {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .card-title {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .card-title .icon {
+            font-size: 1.3rem;
+            margin-right: 10px;
+            color: var(--color-primary-blue);
+        }
+
+        .card-title h3 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .card-description {
+            font-size: 0.9rem;
+            color: var(--color-text-gray);
+            margin-bottom: 20px;
+            min-height: 40px;
+        }
+
+        .card-link {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--color-primary-blue);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            margin-top: auto;
+            border-bottom: 2px solid transparent;
+            padding-bottom: 2px;
+        }
+
+        .card-link:hover {
+            border-bottom: 2px solid var(--color-secondary-yellow);
+        }
+
+        .card-link span {
+            margin-left: 5px;
+            transition: margin-left 0.2s;
+        }
+
+        .card-link:hover span {
+             margin-left: 10px;
+        }
+
+        /* --- Media Queries para Responsividad --- */
+        @media (max-width: 992px) {
+            .search-bar {
+                margin: 0 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            .logo-container {
+                width: 100%;
+                justify-content: center;
+                margin-bottom: 15px;
+            }
+            .search-bar {
+                margin: 10px 0;
+                max-width: 100%;
+                order: 3;
+            }
+            .config-dots {
+                display: none;
+            }
+            .main-content {
+                padding: 30px 15px;
+            }
+            .intro {
+                text-align: center;
+            }
+            .intro h2 {
+                font-size: 1.8rem;
+            }
+            .intro p {
+                font-size: 0.95rem;
+                margin-bottom: 30px;
+            }
+            .specialty-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            .specialty-card {
+                /* Mantenemos el ancho completo en móvil */
+                max-width: none;
+                margin: 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+            }
+            .header {
+                padding: 10px 15px;
+            }
+            .logo-container img {
+                height: 30px;
+            }
+            .search-bar input {
+                padding: 8px 10px 8px 35px;
+                font-size: 0.9rem;
+            }
+            .search-bar::before {
+                left: 10px;
+                font-size: 0.9rem;
+            }
+            .intro h2 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header class="header">
+    <div class="logo-container">
+        <img src="img/logo2.png" alt="Logo Clínica San Bartolomé">
+    </div>
+    <div class="search-bar">
+        <input type="text" placeholder="Buscar especialidad, médico...">
+    </div>
+    <div class="config-dots">
+        <div class="dot"></div>
+        <div class="dot" style="opacity: 1;"></div>
+        <div class="dot"></div>
+    </div>
+</header>
+
+<main class="container main-content">
+    <div class="intro">
+        <h2>¿Qué especialista necesitas hoy?</h2>
+        <p>Selecciona un área para ver nuestros expertos</p>
+    </div>
+
+    <div class="specialty-grid">
+
+        <div class="specialty-card">
+            <div class="card-image card-1"></div>
+            <div class="card-content">
+                <div class="card-title">
+                    <span class="icon">💙</span>
+                    <h3>Cardiología</h3>
+                </div>
+                <p class="card-description">Salud del corazón y sistema vascular.</p>
+                <a href="medicos_cardiologia.html" class="card-link">Ver disponibilidad <span>→</span></a>
+            </div>
+        </div>
+
+        <div class="specialty-card">
+            <div class="card-image card-2"></div>
+            <div class="card-content">
+                <div class="card-title">
+                    <span class="icon">🧠</span>
+                    <h3>Neurología</h3>
+                </div>
+                <p class="card-description">Trastornos del sistema nervioso.</p>
+                <a href="medicos_neurologia.html" class="card-link">Ver disponibilidad <span>→</span></a>
+            </div>
+        </div>
+
+        <div class="specialty-card">
+            <div class="card-image card-3"></div>
+            <div class="card-content">
+                <div class="card-title">
+                    <span class="icon">🦴</span>
+                    <h3>Traumatología</h3>
+                </div>
+                <p class="card-description">Lesiones óseas y musculares.</p>
+                <a href="medicos_traumatologia.html" class="card-link">Ver disponibilidad <span>→</span></a>
+            </div>
+        </div>
+
+        <div class="specialty-card">
+            <div class="card-image card-4"></div>
+            <div class="card-content">
+                <div class="card-title">
+                    <span class="icon">👁️</span>
+                    <h3>Oftalmología</h3>
+                </div>
+                <p class="card-description">Cuidado y cirugía de la visión.</p>
+                <a href="medicos_oftalmologia.html" class="card-link">Ver disponibilidad <span>→</span></a>
+            </div>
+        </div>
+
+        <div class="specialty-card">
+            <div class="card-image card-5"></div>
+            <div class="card-content">
+                <div class="card-title">
+                    <span class="icon">⚕️</span>
+                    <h3>Medicina General</h3>
+                </div>
+                <p class="card-description">Atención primaria y preventiva.</p>
+                <a href="medicos_medicinageneral.html" class="card-link">Ver disponibilidad <span>→</span></a>
+            </div>
+        </div>
+
+        <div class="specialty-card">
+            <div class="card-image card-6"></div>
+            <div class="card-content">
+                <div class="card-title">
+                    <span class="icon">👶</span>
+                    <h3>Pediatría</h3>
+                </div>
+                <p class="card-description">Cuidado médico de infantes y niños.</p>
+                <a href="medicos_pediatria.html" class="card-link">Ver disponibilidad <span>→</span></a>
+            </div>
+        </div>
+
+    </div>
+</main>
+
+</body>
+</html>
