@@ -1,398 +1,376 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Especialidades - Clínica San Bartolomé</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
     <style>
-        /* Estilos generales y variables actualizados */
-        :root {
-            /* Colores de la marca (Azul y Amarillo del logo) */
-            --color-primary-blue: #0A3587;
-            --color-secondary-yellow: #F9BF3C;
-            --color-text-dark: #2c3e50;
-            --color-text-gray: #6c7a89;
-
-            /* Colores de fondo y bordes */
-            --color-background-page: #edf1f7; /* Fondo Celeste Bajo (Original) */
-            --color-card-background: #ffffff;
-            --color-border: #e0e6ed; /* Borde más sutil para hacer juego con el fondo */
+        :root{
+          --primary: #2A3B90;
+          --accent: #FFC107;
+          --bg: #F3F4F6;
+          --font: 'Manrope', sans-serif;
         }
 
-        body {
-            font-family: 'Roboto', sans-serif;
-            background-color: var(--color-background-page);
-            margin: 0;
-            padding: 0;
-            color: var(--color-text-dark);
+        *{box-sizing:border-box; margin:0; padding:0;}
+
+        body{ font-family: var(--font); background: #f3f4f6; color: #1f2937; padding-bottom: 60px; }
+
+        /* HERO BANNER */
+        .hero-section {
+            position: relative; height: 380px;
+            background: linear-gradient(135deg, rgba(42,59,144,0.92) 0%, rgba(30,40,117,0.96) 100%),
+                        url('https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?q=80&w=2000&auto=format&fit=crop');
+            background-size: cover; background-position: center;
+            border-radius: 0 0 40px 40px; padding: 20px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            text-align: center; color: white;
+        }
+        .top-bar {
+            position: absolute; top: 30px; left: 0; right: 0; padding: 0 40px;
+            display: flex; justify-content: space-between; align-items: center;
+            width: 100%; max-width: 1280px; margin: 0 auto;
+        }
+        .brand-logo { background: white; padding: 10px 24px; border-radius: 16px; height: 64px; display: flex; align-items: center; }
+        .brand-logo img { height: 100%; width: auto; object-fit: contain; }
+        .btn-back {
+            background: rgba(255,255,255,0.2); backdrop-filter: blur(5px); color: white;
+            border: 1px solid rgba(255,255,255,0.4); padding: 10px 20px; border-radius: 30px;
+            text-decoration: none; font-weight: 700; font-size: 14px; display: flex; gap: 8px; align-items: center;
+        }
+        .hero-title { font-size: 42px; font-weight: 800; margin-bottom: 10px; }
+        .hero-subtitle { font-size: 18px; opacity: 0.9; }
+
+        /* CONTAINER */
+        .main-container { max-width: 1200px; margin: 0 auto; padding: 0 30px; position: relative; z-index: 10; }
+
+        /* FILTER CARD */
+        .filter-card {
+            background: white; padding: 30px; border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.08); margin-top: -60px; margin-bottom: 50px;
+        }
+        .filter-header { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
+        .filter-icon-box {
+            width: 48px; height: 48px; background: #FFF4DA; color: #F59E0B; border-radius: 12px;
+            display: flex; align-items: center; justify-content: center; font-size: 20px;
+        }
+        .controls-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        .input-wrapper label { display: block; font-size: 12px; font-weight: 700; color: #6b7280; margin-bottom: 8px; text-transform: uppercase; }
+        .custom-input {
+            width: 100%; padding: 14px 18px; border-radius: 12px; border: 2px solid #e5e7eb;
+            font-size: 15px; outline: none; background: #f9fafb; font-family: var(--font);
         }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        /* --- Encabezado / Navbar --- */
-        .header {
-            background-color: white;
-            padding: 10px 20px;
-            border-bottom: 1px solid var(--color-border);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .logo-container {
-            display: flex;
-            align-items: center;
-        }
-
-        .logo-container img {
-            height: 35px;
-            display: block;
-        }
-
-        .logo {
-            display: none;
-        }
-
-        .search-bar {
-            flex-grow: 1;
-            margin: 0 40px;
-            max-width: 450px;
-            position: relative;
-        }
-
-        .search-bar input {
-            width: 100%;
-            padding: 10px 15px 10px 40px;
-            border: 1px solid var(--color-border);
-            border-radius: 20px;
-            font-size: 1rem;
-            background-color: #f1f4f8;
-            transition: border-color 0.3s, box-shadow 0.3s;
-        }
-
-        .search-bar input:focus {
-             border-color: var(--color-primary-blue);
-             box-shadow: 0 0 0 3px rgba(10, 53, 135, 0.2);
-             outline: none;
-        }
-
-        .search-bar::before {
-            content: '🔍';
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--color-text-gray);
-            font-size: 1rem;
-        }
-
-        .config-dots {
-            display: flex;
-            gap: 5px;
-        }
-
-        .dot {
-            width: 10px;
-            height: 10px;
-            background-color: var(--color-primary-blue);
-            border-radius: 50%;
-            opacity: 0.3;
-            transition: opacity 0.3s;
-        }
-        .dot:nth-child(2) { opacity: 1; }
-
-
-        /* --- Sección Principal de Contenido --- */
-        .main-content {
-            padding: 40px 20px;
-        }
-
-        .intro h2 {
-            font-size: 2.2rem;
-            font-weight: 700;
-            color: var(--color-text-dark);
-            margin-bottom: 8px;
-        }
-
-        .intro p {
-            font-size: 1rem;
-            color: var(--color-text-gray);
-            margin-bottom: 40px;
-        }
-
-        /* --- Grid de Especialidades --- */
-        .specialty-grid {
+        /* ==========================================================
+           GRID DE TARJETAS PREMIUM (Estilo Poster/Netflix)
+           ========================================================== */
+        .grid-medicos {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 25px;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
         }
 
-        .specialty-card {
-            background-color: var(--color-card-background);
-            border-radius: 12px;
+        .medico-card {
+            position: relative;
+            height: 420px; /* Tarjeta alta tipo poster */
+            border-radius: 24px;
             overflow: hidden;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-            transition: transform 0.3s, box-shadow 0.3s;
-            display: flex;
-            flex-direction: column;
-            border: 1px solid var(--color-border);
-        }
-
-        .specialty-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
-        }
-
-        .card-image {
-            height: 180px;
-            background-color: #e0e0e0;
+            background-color: #e2e8f0; /* Fondo de carga */
             background-size: cover;
-            background-position: center;
-            border-bottom: 3px solid var(--color-secondary-yellow);
+            background-position: center top;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+
+            image-rendering: -webkit-optimize-contrast;
         }
 
-        /* Imágenes específicas (usando URLs de ejemplo o colores sólidos si no hay imagen) */
-        .card-image.card-1 { background-image: url('https://picsum.photos/id/10/500/300'); }
-        .card-image.card-2 { background-color: #f1f4f8; }
-        .card-image.card-3 { background-image: url('https://picsum.photos/id/1015/500/300'); }
-        .card-image.card-4 { background-image: url('https://picsum.photos/id/400/500/300'); }
-        .card-image.card-5 { background-image: url('https://picsum.photos/id/83/500/300'); }
-        .card-image.card-6 { background-image: url('https://picsum.photos/id/237/500/300'); }
+        /* Efecto Hover: Sube y aumenta sombra */
+        .medico-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px rgba(42, 59, 144, 0.25);
+        }
 
-
-        .card-content {
-            padding: 20px;
+        /* Overlay oscuro degradado (siempre visible para legibilidad) */
+        .card-overlay {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            height: 60%; /* Ocupa la parte inferior */
+            background: linear-gradient(to top, rgba(10,15,40, 0.95) 10%, rgba(10,15,40, 0.6) 50%, transparent 100%);
             display: flex;
             flex-direction: column;
-            flex-grow: 1;
+            justify-content: flex-end;
+            padding: 24px;
+            color: white;
         }
 
-        .card-title {
-            display: flex;
-            align-items: center;
-            margin-bottom: 5px;
+        .card-name {
+            font-size: 20px; font-weight: 800; line-height: 1.2; margin-bottom: 6px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
         }
 
-        .card-title .icon {
-            font-size: 1.3rem;
-            margin-right: 10px;
-            color: var(--color-primary-blue);
+        .card-spec {
+            display: inline-block;
+            font-size: 12px; font-weight: 700;
+            color: var(--accent); letter-spacing: 1px; text-transform: uppercase;
+            margin-bottom: 16px;
         }
 
-        .card-title h3 {
-            font-size: 1.4rem;
-            font-weight: 600;
-            margin: 0;
+        .card-btn {
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,255,255,0.4);
+            color: white;
+            padding: 12px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 14px;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            transition: all 0.2s;
         }
 
-        .card-description {
-            font-size: 0.9rem;
-            color: var(--color-text-gray);
-            margin-bottom: 20px;
-            min-height: 40px;
+        .medico-card:hover .card-btn {
+            background: var(--accent);
+            color: #111;
+            border-color: var(--accent);
         }
 
-        .card-link {
-            font-size: 1rem;
-            font-weight: 600;
-            color: var(--color-primary-blue);
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            margin-top: auto;
-            border-bottom: 2px solid transparent;
-            padding-bottom: 2px;
-        }
+        /* MODAL (Estilo Netflix mantenido) */
+        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); display: none; align-items: center; justify-content: center; z-index: 2000; padding: 20px; }
+        .modal.open { display: flex; animation: fadeIn 0.3s ease-out; }
+        .modal-panel { background: white; width: 100%; max-width: 950px; height: 580px; border-radius: 30px; display: flex; overflow: hidden; box-shadow: 0 40px 80px rgba(0,0,0,0.6); }
 
-        .card-link:hover {
-            border-bottom: 2px solid var(--color-secondary-yellow);
+        .modal-left {
+            width: 400px; flex-shrink: 0; position: relative; padding: 0; display: flex; flex-direction: column; justify-content: flex-end;
+            background-size: cover; background-position: center top;
         }
-
-        .card-link span {
-            margin-left: 5px;
-            transition: margin-left 0.2s;
+        .profile-overlay {
+            width: 100%; background: linear-gradient(to bottom, transparent 0%, rgba(10, 15, 50, 0.6) 30%, rgba(10, 15, 50, 0.95) 100%);
+            padding: 80px 30px 30px 30px; color: white; text-align: left;
         }
+        .modal-h2 { font-size: 32px; font-weight: 800; color: white; margin: 0 0 6px 0; line-height: 1.1; }
+        .modal-role { display: inline-block; font-size: 14px; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; }
+        .modal-btn-premium { margin-top: 24px; width: 100%; background: white; color: #111; border: none; padding: 14px; border-radius: 12px; font-weight: 800; cursor: pointer; text-transform: uppercase; font-size: 14px; transition: transform 0.2s; }
+        .modal-btn-premium:hover { transform: translateY(-2px); background: var(--accent); }
 
-        .card-link:hover span {
-             margin-left: 10px;
-        }
+        .modal-right { flex: 1; display: flex; flex-direction: column; background: white; }
+        .modal-header-right { padding: 24px 30px; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center; }
+        .btn-close { background: #f3f4f6; border: none; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; color: #555; }
+        .scroll-area { flex: 1; overflow-y: auto; padding: 30px; }
+        .horario-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 16px; }
+        .time-card { border: 1px solid #e5e7eb; border-radius: 12px; padding: 12px; text-align: center; background: white; border-top: 4px solid #ddd; }
+        .time-card.blue { border-top-color: #3b82f6; } .time-card.green { border-top-color: #10b981; } .time-card.purple { border-top-color: #8b5cf6; }
+        .t-dia { display: block; font-size: 11px; font-weight: 700; color: #888; text-transform: uppercase; margin-bottom: 4px; }
+        .t-hora { font-size: 15px; font-weight: 800; color: #333; }
 
-        /* --- Media Queries para Responsividad --- */
-        @media (max-width: 992px) {
-            .search-bar {
-                margin: 0 20px;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .header {
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-            .logo-container {
-                width: 100%;
-                justify-content: center;
-                margin-bottom: 15px;
-            }
-            .search-bar {
-                margin: 10px 0;
-                max-width: 100%;
-                order: 3;
-            }
-            .config-dots {
-                display: none;
-            }
-            .main-content {
-                padding: 30px 15px;
-            }
-            .intro {
-                text-align: center;
-            }
-            .intro h2 {
-                font-size: 1.8rem;
-            }
-            .intro p {
-                font-size: 0.95rem;
-                margin-bottom: 30px;
-            }
-            .specialty-grid {
-                grid-template-columns: 1fr;
-                gap: 15px;
-            }
-            .specialty-card {
-                /* Mantenemos el ancho completo en móvil */
-                max-width: none;
-                margin: 0;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .container {
-                padding: 10px;
-            }
-            .header {
-                padding: 10px 15px;
-            }
-            .logo-container img {
-                height: 30px;
-            }
-            .search-bar input {
-                padding: 8px 10px 8px 35px;
-                font-size: 0.9rem;
-            }
-            .search-bar::before {
-                left: 10px;
-                font-size: 0.9rem;
-            }
-            .intro h2 {
-                font-size: 1.5rem;
-            }
+        @media (max-width: 800px) {
+            .modal-panel { flex-direction: column; height: auto; max-height: 95vh; }
+            .modal-left { width: 100%; height: 350px; }
+            .medico-card { height: 380px; } /* Ajuste altura en movil */
         }
     </style>
 </head>
 <body>
 
-<header class="header">
-    <div class="logo-container">
-        <img src="img/logo2.png" alt="Logo Clínica San Bartolomé">
+<header class="hero-section">
+    <div class="top-bar">
+        <div class="brand-logo"><img src="img/logo2.png" alt="Logo"></div>
+        <a href="#" class="btn-back"><i class="fa-solid fa-arrow-left"></i> Volver</a>
     </div>
-    <div class="search-bar">
-        <input type="text" placeholder="Buscar especialidad, médico...">
-    </div>
-    <div class="config-dots">
-        <div class="dot"></div>
-        <div class="dot" style="opacity: 1;"></div>
-        <div class="dot"></div>
+    <div class="hero-content">
+        <h1 class="hero-title">Staff Médico Especializado</h1>
+        <p class="hero-subtitle">Gestión de horarios y citas médicas.</p>
     </div>
 </header>
 
-<main class="container main-content">
-    <div class="intro">
-        <h2>¿Qué especialista necesitas hoy?</h2>
-        <p>Selecciona un área para ver nuestros expertos</p>
+<div class="main-container">
+    <div class="filter-card">
+        <div class="filter-header">
+            <div class="filter-icon-box"><i class="fa-solid fa-filter"></i></div>
+            <h2>Filtrar Especialidad</h2>
+        </div>
+        <div class="controls-grid">
+            <div class="input-wrapper">
+                <label>Búsqueda Rápida</label>
+                <input id="txtEspecialidad" class="custom-input" placeholder="Ej: CARDIOLOGIA...">
+            </div>
+            <div class="input-wrapper">
+                <label>Lista de Especialidades</label>
+                <select id="selectEspecialidad" class="custom-input">
+                    <option value="">-- Seleccionar --</option>
+                </select>
+            </div>
+        </div>
     </div>
 
-    <div class="specialty-grid">
-
-        <div class="specialty-card">
-            <div class="card-image card-1"></div>
-            <div class="card-content">
-                <div class="card-title">
-                    <span class="icon">💙</span>
-                    <h3>Cardiología</h3>
-                </div>
-                <p class="card-description">Salud del corazón y sistema vascular.</p>
-                <a href="medicos_cardiologia.html" class="card-link">Ver disponibilidad <span>→</span></a>
-            </div>
+    <div id="medicosSection" style="display:none;">
+        <div style="margin-bottom:20px; display:flex; gap:10px; align-items:center;">
+            <h3 style="font-size:24px; font-weight:800; color:#1f2937;">Médicos Disponibles</h3>
+            <span id="badgeCount" style="background:#2A3B90; color:white; padding:4px 10px; border-radius:20px; font-size:12px; font-weight:700;">0</span>
         </div>
-
-        <div class="specialty-card">
-            <div class="card-image card-2"></div>
-            <div class="card-content">
-                <div class="card-title">
-                    <span class="icon">🧠</span>
-                    <h3>Neurología</h3>
-                </div>
-                <p class="card-description">Trastornos del sistema nervioso.</p>
-                <a href="medicos_neurologia.html" class="card-link">Ver disponibilidad <span>→</span></a>
-            </div>
-        </div>
-
-        <div class="specialty-card">
-            <div class="card-image card-3"></div>
-            <div class="card-content">
-                <div class="card-title">
-                    <span class="icon">🦴</span>
-                    <h3>Traumatología</h3>
-                </div>
-                <p class="card-description">Lesiones óseas y musculares.</p>
-                <a href="medicos_traumatologia.html" class="card-link">Ver disponibilidad <span>→</span></a>
-            </div>
-        </div>
-
-        <div class="specialty-card">
-            <div class="card-image card-4"></div>
-            <div class="card-content">
-                <div class="card-title">
-                    <span class="icon">👁️</span>
-                    <h3>Oftalmología</h3>
-                </div>
-                <p class="card-description">Cuidado y cirugía de la visión.</p>
-                <a href="medicos_oftalmologia.html" class="card-link">Ver disponibilidad <span>→</span></a>
-            </div>
-        </div>
-
-        <div class="specialty-card">
-            <div class="card-image card-5"></div>
-            <div class="card-content">
-                <div class="card-title">
-                    <span class="icon">⚕️</span>
-                    <h3>Medicina General</h3>
-                </div>
-                <p class="card-description">Atención primaria y preventiva.</p>
-                <a href="medicos_medicinageneral.html" class="card-link">Ver disponibilidad <span>→</span></a>
-            </div>
-        </div>
-
-        <div class="specialty-card">
-            <div class="card-image card-6"></div>
-            <div class="card-content">
-                <div class="card-title">
-                    <span class="icon">👶</span>
-                    <h3>Pediatría</h3>
-                </div>
-                <p class="card-description">Cuidado médico de infantes y niños.</p>
-                <a href="medicos_pediatria.html" class="card-link">Ver disponibilidad <span>→</span></a>
-            </div>
-        </div>
-
+        <div id="gridMedicos" class="grid-medicos"></div>
     </div>
-</main>
 
+    <div id="emptyPlaceholder" style="text-align:center; padding:60px; color:#9ca3af;">
+        <i class="fa-solid fa-user-doctor" style="font-size:48px; margin-bottom:16px;"></i>
+        <p>Selecciona una especialidad para ver resultados.</p>
+    </div>
+</div>
+
+<div id="modal" class="modal">
+    <div class="modal-panel">
+        <div id="modalLeft" class="modal-left">
+            <div class="profile-overlay">
+                <h2 id="mNombre" class="modal-h2">Nombre Médico</h2>
+                <span id="mEspecialidad" class="modal-role">Especialidad</span>
+                <div style="color:rgba(255,255,255,0.8); font-size:14px; margin-bottom:10px;">
+                    <i class="fa-solid fa-hospital" style="color:var(--accent); margin-right:5px;"></i> Clínica San Bartolomé
+                </div>
+                <button id="btnAction" class="modal-btn-premium">
+                    Agendar Cita <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+        <div class="modal-right">
+            <div class="modal-header-right">
+                <div><h3>Programación</h3><span style="font-size:13px; color:#888;">Horarios disponibles</span></div>
+                <button class="btn-close" onclick="closeModal()"><i class="fa-solid fa-times"></i></button>
+            </div>
+            <div class="scroll-area">
+                <div id="gridHorarios" class="horario-grid"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const API_SERVICIOS = 'http://localhost:8082/api/servicios/distintos';
+    const API_MEDICOS   = 'http://localhost:8082/api/medicos/distintos';
+    const API_PROGRAM   = 'http://localhost:8082/api/programacionmedicos/distintos';
+
+    let servicios=[], medicos=[], programaciones=[];
+
+    const selectEsp = document.getElementById('selectEspecialidad');
+    const inputEsp = document.getElementById('txtEspecialidad');
+    const gridMed = document.getElementById('gridMedicos');
+    const medicosSection = document.getElementById('medicosSection');
+    const emptyPlaceholder = document.getElementById('emptyPlaceholder');
+    const badgeCount = document.getElementById('badgeCount');
+
+    const modal = document.getElementById('modal');
+    const modalLeft = document.getElementById('modalLeft');
+    const mNombre = document.getElementById('mNombre');
+    const mEsp = document.getElementById('mEspecialidad');
+    const gridHor = document.getElementById('gridHorarios');
+
+    document.addEventListener('DOMContentLoaded', init);
+
+    async function init(){
+        try {
+            const [s, m, p] = await Promise.all([
+                fetch(API_SERVICIOS).then(r=>r.json()),
+                fetch(API_MEDICOS).then(r=>r.json()),
+                fetch(API_PROGRAM).then(r=>r.json())
+            ]);
+            servicios = s; medicos = m; programaciones = p;
+            fillSelect(servicios);
+
+            const def = servicios.find(x => x.descripcion.toUpperCase().includes('MEDICINA GENERAL'));
+            if(def){ selectEsp.value = def.codigo; showDoctors(def.codigo); }
+
+            inputEsp.addEventListener('input', e => filterServices(e.target.value));
+            selectEsp.addEventListener('change', e => showDoctors(e.target.value));
+        } catch(e){ console.error(e); }
+    }
+
+    function fillSelect(list){
+        selectEsp.innerHTML = '<option value="">-- Seleccionar --</option>';
+        list.forEach(i => {
+            const o = document.createElement('option');
+            o.value = i.codigo; o.textContent = i.descripcion;
+            selectEsp.appendChild(o);
+        });
+    }
+
+    function filterServices(txt){
+        txt = txt.toUpperCase();
+        if(!txt){ fillSelect(servicios); return; }
+        const f = servicios.filter(x => x.descripcion.toUpperCase().includes(txt));
+        fillSelect(f);
+        if(f.length===1){ selectEsp.value = f[0].codigo; showDoctors(f[0].codigo); }
+    }
+
+    function showDoctors(cod){
+        if(!cod){ medicosSection.style.display='none'; emptyPlaceholder.style.display='block'; return; }
+        const docs = medicos.filter(x => String(x.codigoServicio) === String(cod));
+        gridMed.innerHTML=''; badgeCount.textContent = docs.length;
+
+        if(docs.length===0){
+            medicosSection.style.display='none'; emptyPlaceholder.style.display='block';
+            emptyPlaceholder.innerHTML = '<p>No hay médicos en esta especialidad.</p>'; return;
+        }
+        medicosSection.style.display='block'; emptyPlaceholder.style.display='none';
+
+        docs.forEach(d => {
+            const div = document.createElement('div');
+            div.className = 'medico-card';
+            // FOTO DE FONDO
+            const foto = d.foto || 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=90&w=800&auto=format&fit=crop';
+            div.style.backgroundImage = `url('${foto}')`;
+
+            // NUEVA ESTRUCTURA PREMIUM PARA LA GRID
+            div.innerHTML = `
+                <div class="card-overlay">
+                    <div class="card-name">${d.descripcion}</div>
+                    <div class="card-spec">${getServiceName(d.codigoServicio)}</div>
+                    <button class="card-btn">
+                        <i class="fa-regular fa-calendar-check"></i> Ver Horarios
+                    </button>
+                </div>
+            `;
+            // Al hacer click en toda la tarjeta, abre el modal
+            div.onclick = () => openModal(d.codigo, esc(d.descripcion), d.codigoServicio, d.foto);
+            gridMed.appendChild(div);
+        });
+    }
+
+    function openModal(cod, nombre, codServ, foto){
+        mNombre.textContent = unesc(nombre);
+        mEsp.textContent = getServiceName(codServ);
+        const bgUrl = (foto && foto !== 'undefined' && foto !== 'null') ? foto : 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?q=80&w=800&auto=format&fit=crop';
+        modalLeft.style.backgroundImage = `url('${bgUrl}')`;
+
+        const hors = programaciones.filter(p => String(p.codigoMedico) === String(cod))
+                                   .sort((a,b)=> new Date(a.fecha)-new Date(b.fecha));
+
+        gridHor.innerHTML = '';
+        if(hors.length===0){
+            gridHor.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:30px;color:#999;">Sin turnos.</div>';
+        } else {
+            const cols = ['blue','green','purple'];
+            hors.forEach((h,i) => {
+                const f = new Date(h.fecha);
+                const dia = f.toLocaleDateString('es-PE', {weekday:'short', day:'numeric', month:'short'}).replace('.','');
+                const hora = (h.hora_inicio) ? `${h.hora_inicio.substr(0,5)} - ${h.hora_fin.substr(0,5)}` : (h.hora || 'Turno');
+                const el = document.createElement('div');
+                el.className = `time-card ${cols[i%3]}`;
+                el.innerHTML = `<span class="t-dia">${dia}</span><div class="t-hora">${hora}</div>`;
+                gridHor.appendChild(el);
+            });
+        }
+        modal.classList.add('open');
+        document.body.style.overflow = 'hidden';
+        document.getElementById('btnAction').onclick = () => alert('Reservando para: '+unesc(nombre));
+    }
+
+    function closeModal(){ modal.classList.remove('open'); document.body.style.overflow=''; }
+    function getServiceName(c){ const s = servicios.find(x=>String(x.codigo)===String(c)); return s?s.descripcion:'General'; }
+    function esc(s){ return String(s).replace(/'/g, "\\'"); }
+    function unesc(s){ return s; }
+    modal.addEventListener('click', e=>{ if(e.target===modal) closeModal(); });
+
+</script>
 </body>
 </html>

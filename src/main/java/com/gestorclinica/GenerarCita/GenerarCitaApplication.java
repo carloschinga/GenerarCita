@@ -2,12 +2,19 @@ package com.gestorclinica.GenerarCita;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
 @SpringBootApplication
-public class GenerarCitaApplication {
+public class GenerarCitaApplication extends SpringBootServletInitializer {
 
-	public static void main(String[] args) {
-		SpringApplication.run(GenerarCitaApplication.class, args);
-	}
+    @Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+        return application.sources(GenerarCitaApplication.class);
+    }
+
+    public static void main(String[] args) {
+        SpringApplication.run(GenerarCitaApplication.class, args);
+    }
 
 }
