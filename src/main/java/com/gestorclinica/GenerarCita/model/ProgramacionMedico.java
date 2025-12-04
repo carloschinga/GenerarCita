@@ -1,7 +1,8 @@
 package com.gestorclinica.GenerarCita.model;
 
-import jakarta.persistence.*;
 
+
+import javax.persistence.*;
 import java.util.Date;
 
 // Usamos @Entity y @Table para mapear a la vista.

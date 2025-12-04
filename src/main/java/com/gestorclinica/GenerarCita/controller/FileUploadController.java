@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/upload")
+@RequestMapping("/api")
 public class FileUploadController {
 
     private final FileStorageService fileStorageService;

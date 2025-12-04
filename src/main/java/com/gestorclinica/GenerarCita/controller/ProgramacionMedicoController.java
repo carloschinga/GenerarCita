@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/programacionmedicos")
+@RequestMapping("/programacionmedicos")
 public class ProgramacionMedicoController {
 
     private final ProgramacionMedicoService programacionMedicoService;
@@ -28,7 +28,7 @@ public class ProgramacionMedicoController {
      * Respuesta: 200 OK con el cuerpo JSON de la lista.
      * URL: GET /api/servicios/distintos
      */
-    @GetMapping("/distintos")
+    @GetMapping("/listar")
     public ResponseEntity<List<ProgramacionMedico>> getProgramacionMedicosDistintos() {
         List<ProgramacionMedico> programacionMedicos = programacionMedicoService.obtenerProgramacionMedicoDistintos();
 

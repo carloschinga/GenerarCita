@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
     <title>Especialidades - Clínica San Bartolomé</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
@@ -16,7 +16,13 @@
 
         *{box-sizing:border-box; margin:0; padding:0;}
 
-        body{ font-family: var(--font); background: #f3f4f6; color: #1f2937; padding-bottom: 60px; }
+        body{
+            font-family: var(--font);
+            background: #f3f4f6;
+            color: #1f2937;
+            padding-bottom: 60px;
+            overflow-x: hidden; /* Evita scroll horizontal fantasma */
+        }
 
         /* HERO BANNER */
         .hero-section {
@@ -30,17 +36,14 @@
         }
         .top-bar {
             position: absolute; top: 30px; left: 0; right: 0; padding: 0 40px;
-            display: flex; justify-content: space-between; align-items: center;
+            display: flex; justify-content: center;
+            align-items: center;
             width: 100%; max-width: 1280px; margin: 0 auto;
         }
         .brand-logo { background: white; padding: 10px 24px; border-radius: 16px; height: 64px; display: flex; align-items: center; }
         .brand-logo img { height: 100%; width: auto; object-fit: contain; }
-        .btn-back {
-            background: rgba(255,255,255,0.2); backdrop-filter: blur(5px); color: white;
-            border: 1px solid rgba(255,255,255,0.4); padding: 10px 20px; border-radius: 30px;
-            text-decoration: none; font-weight: 700; font-size: 14px; display: flex; gap: 8px; align-items: center;
-        }
-        .hero-title { font-size: 42px; font-weight: 800; margin-bottom: 10px; }
+
+        .hero-title { font-size: 42px; font-weight: 800; margin-bottom: 10px; margin-top: 20px;}
         .hero-subtitle { font-size: 18px; opacity: 0.9; }
 
         /* CONTAINER */
@@ -63,9 +66,7 @@
             font-size: 15px; outline: none; background: #f9fafb; font-family: var(--font);
         }
 
-        /* ==========================================================
-           GRID DE TARJETAS PREMIUM (Estilo Poster/Netflix)
-           ========================================================== */
+        /* GRID DE MÉDICOS */
         .grid-medicos {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -74,73 +75,55 @@
 
         .medico-card {
             position: relative;
-            height: 420px; /* Tarjeta alta tipo poster */
+            height: 420px;
             border-radius: 24px;
             overflow: hidden;
-            background-color: #e2e8f0; /* Fondo de carga */
+            background-color: #e2e8f0;
             background-size: cover;
             background-position: center top;
             box-shadow: 0 10px 25px rgba(0,0,0,0.1);
             transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             cursor: pointer;
-
             image-rendering: -webkit-optimize-contrast;
         }
 
-        /* Efecto Hover: Sube y aumenta sombra */
-        .medico-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 25px 50px rgba(42, 59, 144, 0.25);
-        }
+        .medico-card:hover { transform: translateY(-10px); box-shadow: 0 25px 50px rgba(42, 59, 144, 0.25); }
 
-        /* Overlay oscuro degradado (siempre visible para legibilidad) */
         .card-overlay {
-            position: absolute;
-            bottom: 0; left: 0; right: 0;
-            height: 60%; /* Ocupa la parte inferior */
+            position: absolute; bottom: 0; left: 0; right: 0; height: 60%;
             background: linear-gradient(to top, rgba(10,15,40, 0.95) 10%, rgba(10,15,40, 0.6) 50%, transparent 100%);
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            padding: 24px;
-            color: white;
+            display: flex; flex-direction: column; justify-content: flex-end; padding: 24px; color: white;
         }
-
-        .card-name {
-            font-size: 20px; font-weight: 800; line-height: 1.2; margin-bottom: 6px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-        }
-
-        .card-spec {
-            display: inline-block;
-            font-size: 12px; font-weight: 700;
-            color: var(--accent); letter-spacing: 1px; text-transform: uppercase;
-            margin-bottom: 16px;
-        }
-
+        .card-name { font-size: 20px; font-weight: 800; line-height: 1.2; margin-bottom: 6px; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+        .card-spec { font-size: 12px; font-weight: 700; color: var(--accent); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 16px; }
         .card-btn {
-            background: rgba(255,255,255,0.2);
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(255,255,255,0.4);
-            color: white;
-            padding: 12px;
-            border-radius: 12px;
-            font-weight: 700;
-            font-size: 14px;
-            display: flex; align-items: center; justify-content: center; gap: 8px;
-            transition: all 0.2s;
+            background: rgba(255,255,255,0.2); backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.4);
+            color: white; padding: 12px; border-radius: 12px; font-weight: 700; font-size: 14px;
+            display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s;
         }
+        .medico-card:hover .card-btn { background: var(--accent); color: #111; border-color: var(--accent); }
 
-        .medico-card:hover .card-btn {
-            background: var(--accent);
-            color: #111;
-            border-color: var(--accent);
+        /* MODAL GENERAL (PC) */
+        .modal {
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.85); backdrop-filter: blur(5px);
+            display: none;
+            /* Flexbox para centrar en PC y Móvil */
+            align-items: center; justify-content: center;
+            z-index: 2000;
+            padding: 20px;
         }
-
-        /* MODAL (Estilo Netflix mantenido) */
-        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); display: none; align-items: center; justify-content: center; z-index: 2000; padding: 20px; }
         .modal.open { display: flex; animation: fadeIn 0.3s ease-out; }
-        .modal-panel { background: white; width: 100%; max-width: 950px; height: 580px; border-radius: 30px; display: flex; overflow: hidden; box-shadow: 0 40px 80px rgba(0,0,0,0.6); }
+
+        .modal-panel {
+            background: white;
+            width: 100%; max-width: 950px; height: 580px;
+            border-radius: 30px;
+            display: flex;
+            overflow: hidden;
+            box-shadow: 0 40px 80px rgba(0,0,0,0.6);
+            position: relative;
+        }
 
         .modal-left {
             width: 400px; flex-shrink: 0; position: relative; padding: 0; display: flex; flex-direction: column; justify-content: flex-end;
@@ -160,15 +143,77 @@
         .btn-close { background: #f3f4f6; border: none; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; color: #555; }
         .scroll-area { flex: 1; overflow-y: auto; padding: 30px; }
         .horario-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 16px; }
+
         .time-card { border: 1px solid #e5e7eb; border-radius: 12px; padding: 12px; text-align: center; background: white; border-top: 4px solid #ddd; }
         .time-card.blue { border-top-color: #3b82f6; } .time-card.green { border-top-color: #10b981; } .time-card.purple { border-top-color: #8b5cf6; }
         .t-dia { display: block; font-size: 11px; font-weight: 700; color: #888; text-transform: uppercase; margin-bottom: 4px; }
         .t-hora { font-size: 15px; font-weight: 800; color: #333; }
 
+        /* =========================================
+           RESPONSIVE / MÓVIL (VERSIÓN DEFINITIVA)
+           ========================================= */
         @media (max-width: 800px) {
-            .modal-panel { flex-direction: column; height: auto; max-height: 95vh; }
-            .modal-left { width: 100%; height: 350px; }
-            .medico-card { height: 380px; } /* Ajuste altura en movil */
+            .main-container { padding: 0 15px; }
+            .filter-card { margin-top: -30px; padding: 20px; }
+            .controls-grid { grid-template-columns: 1fr; gap: 15px; }
+            .filter-header h2 { font-size: 20px; }
+
+            /* -- MODAL MÓVIL CENTRADO -- */
+            .modal {
+                /* Forzamos el centrado estricto */
+                padding: 15px;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .modal-panel {
+                flex-direction: column;
+                /* Dimensiones controladas */
+                width: 100%;
+                max-width: 380px; /* Ancho máximo de tarjeta para que no se estire feo */
+                height: auto;
+                max-height: 85vh; /* Altura máxima */
+                margin: 0 auto; /* Asegura centrado horizontal */
+                border-radius: 24px;
+                box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            }
+
+            /* -- FOTO GRANDE -- */
+            .modal-left {
+                width: 100%;
+                height: 250px; /* FOTO BIEN GRANDE */
+                flex-shrink: 0;
+            }
+            .profile-overlay {
+                padding: 20px;
+                justify-content: flex-end;
+                background: linear-gradient(to bottom, transparent 0%, rgba(10, 15, 50, 0.5) 40%, rgba(10, 15, 50, 1) 100%);
+            }
+            .modal-h2 { font-size: 24px; margin-bottom: 4px; }
+            .modal-role { font-size: 12px; margin-bottom: 8px; }
+
+            .modal-btn-premium { margin-top: 10px; padding: 12px; font-size: 13px; }
+
+            /* -- SCROLL -- */
+            .modal-right {
+                flex: 1;
+                min-height: 0; /* Clave para el overflow */
+                display: flex; flex-direction: column;
+            }
+            .modal-header-right { padding: 15px 20px; flex-shrink: 0; }
+            .scroll-area {
+                padding: 15px 20px;
+                overflow-y: auto;
+            }
+
+            /* -- GRID 2 COLUMNAS OBLIGATORIA -- */
+            .horario-grid {
+                grid-template-columns: 1fr 1fr; /* DOS COLUMNAS DE ANCHO IGUAL */
+                gap: 12px;
+            }
+
+            .medico-card { height: 380px; }
+            .hero-title { font-size: 28px; }
         }
     </style>
 </head>
@@ -177,7 +222,6 @@
 <header class="hero-section">
     <div class="top-bar">
         <div class="brand-logo"><img src="img/logo2.png" alt="Logo"></div>
-        <a href="#" class="btn-back"><i class="fa-solid fa-arrow-left"></i> Volver</a>
     </div>
     <div class="hero-content">
         <h1 class="hero-title">Staff Médico Especializado</h1>
@@ -225,7 +269,7 @@
             <div class="profile-overlay">
                 <h2 id="mNombre" class="modal-h2">Nombre Médico</h2>
                 <span id="mEspecialidad" class="modal-role">Especialidad</span>
-                <div style="color:rgba(255,255,255,0.8); font-size:14px; margin-bottom:10px;">
+                <div style="color:rgba(255,255,255,0.8); font-size:12px; display:flex; align-items:center;">
                     <i class="fa-solid fa-hospital" style="color:var(--accent); margin-right:5px;"></i> Clínica San Bartolomé
                 </div>
                 <button id="btnAction" class="modal-btn-premium">
@@ -246,130 +290,132 @@
 </div>
 
 <script>
-    const API_SERVICIOS = 'http://localhost:8082/api/servicios/distintos';
-    const API_MEDICOS   = 'http://localhost:8082/api/medicos/distintos';
-    const API_PROGRAM   = 'http://localhost:8082/api/programacionmedicos/distintos';
 
-    let servicios=[], medicos=[], programaciones=[];
+   const API_SERVICIOS = 'http://181.224.248.20/gcita/servicio/listar';
+   const API_MEDICOS   = 'http://181.224.248.20/gcita/medico/listar';
+   const API_PROGRAM   = 'http://181.224.248.20/gcita/programacionmedicos/listar';
 
-    const selectEsp = document.getElementById('selectEspecialidad');
-    const inputEsp = document.getElementById('txtEspecialidad');
-    const gridMed = document.getElementById('gridMedicos');
-    const medicosSection = document.getElementById('medicosSection');
-    const emptyPlaceholder = document.getElementById('emptyPlaceholder');
-    const badgeCount = document.getElementById('badgeCount');
+  /* const API_SERVICIOS = 'http://localhost:8082/servicio/listar';
+   const API_MEDICOS   = 'http://localhost:8082/medico/listar';
+   const API_PROGRAM   = 'http://localhost:8082/programacionmedicos/listar';*/
 
-    const modal = document.getElementById('modal');
-    const modalLeft = document.getElementById('modalLeft');
-    const mNombre = document.getElementById('mNombre');
-    const mEsp = document.getElementById('mEspecialidad');
-    const gridHor = document.getElementById('gridHorarios');
+   let servicios=[], medicos=[], programaciones=[];
 
-    document.addEventListener('DOMContentLoaded', init);
+   const selectEsp = document.getElementById('selectEspecialidad');
+   const inputEsp = document.getElementById('txtEspecialidad');
+   const gridMed = document.getElementById('gridMedicos');
+   const medicosSection = document.getElementById('medicosSection');
+   const emptyPlaceholder = document.getElementById('emptyPlaceholder');
+   const badgeCount = document.getElementById('badgeCount');
 
-    async function init(){
-        try {
-            const [s, m, p] = await Promise.all([
-                fetch(API_SERVICIOS).then(r=>r.json()),
-                fetch(API_MEDICOS).then(r=>r.json()),
-                fetch(API_PROGRAM).then(r=>r.json())
-            ]);
-            servicios = s; medicos = m; programaciones = p;
-            fillSelect(servicios);
+   const modal = document.getElementById('modal');
+   const modalLeft = document.getElementById('modalLeft');
+   const mNombre = document.getElementById('mNombre');
+   const mEsp = document.getElementById('mEspecialidad');
+   const gridHor = document.getElementById('gridHorarios');
 
-            const def = servicios.find(x => x.descripcion.toUpperCase().includes('MEDICINA GENERAL'));
-            if(def){ selectEsp.value = def.codigo; showDoctors(def.codigo); }
+   document.addEventListener('DOMContentLoaded', init);
 
-            inputEsp.addEventListener('input', e => filterServices(e.target.value));
-            selectEsp.addEventListener('change', e => showDoctors(e.target.value));
-        } catch(e){ console.error(e); }
-    }
+   async function init(){
+       try {
+           const [s, m, p] = await Promise.all([
+               fetch(API_SERVICIOS).then(r=>r.json()),
+               fetch(API_MEDICOS).then(r=>r.json()),
+               fetch(API_PROGRAM).then(r=>r.json())
+           ]);
+           servicios = s; medicos = m; programaciones = p;
+           fillSelect(servicios);
 
-    function fillSelect(list){
-        selectEsp.innerHTML = '<option value="">-- Seleccionar --</option>';
-        list.forEach(i => {
-            const o = document.createElement('option');
-            o.value = i.codigo; o.textContent = i.descripcion;
-            selectEsp.appendChild(o);
-        });
-    }
+           const def = servicios.find(x => x.descripcion.toUpperCase().includes('MEDICINA GENERAL'));
+           if(def){ selectEsp.value = def.codigo; showDoctors(def.codigo); }
 
-    function filterServices(txt){
-        txt = txt.toUpperCase();
-        if(!txt){ fillSelect(servicios); return; }
-        const f = servicios.filter(x => x.descripcion.toUpperCase().includes(txt));
-        fillSelect(f);
-        if(f.length===1){ selectEsp.value = f[0].codigo; showDoctors(f[0].codigo); }
-    }
+           inputEsp.addEventListener('input', e => filterServices(e.target.value));
+           selectEsp.addEventListener('change', e => showDoctors(e.target.value));
+       } catch(e){ console.error(e); }
+   }
 
-    function showDoctors(cod){
-        if(!cod){ medicosSection.style.display='none'; emptyPlaceholder.style.display='block'; return; }
-        const docs = medicos.filter(x => String(x.codigoServicio) === String(cod));
-        gridMed.innerHTML=''; badgeCount.textContent = docs.length;
+   function fillSelect(list){
+       selectEsp.innerHTML = '<option value="">-- Seleccionar --</option>';
+       list.forEach(i => {
+           const o = document.createElement('option');
+           o.value = i.codigo; o.textContent = i.descripcion;
+           selectEsp.appendChild(o);
+       });
+   }
 
-        if(docs.length===0){
-            medicosSection.style.display='none'; emptyPlaceholder.style.display='block';
-            emptyPlaceholder.innerHTML = '<p>No hay médicos en esta especialidad.</p>'; return;
-        }
-        medicosSection.style.display='block'; emptyPlaceholder.style.display='none';
+   function filterServices(txt){
+       txt = txt.toUpperCase();
+       if(!txt){ fillSelect(servicios); return; }
+       const f = servicios.filter(x => x.descripcion.toUpperCase().includes(txt));
+       fillSelect(f);
+       if(f.length===1){ selectEsp.value = f[0].codigo; showDoctors(f[0].codigo); }
+   }
 
-        docs.forEach(d => {
-            const div = document.createElement('div');
-            div.className = 'medico-card';
-            // FOTO DE FONDO
-            const foto = d.foto || 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=90&w=800&auto=format&fit=crop';
-            div.style.backgroundImage = `url('${foto}')`;
+   function showDoctors(cod){
+       if(!cod){ medicosSection.style.display='none'; emptyPlaceholder.style.display='block'; return; }
+       const docs = medicos.filter(x => String(x.codigoServicio) === String(cod));
+       gridMed.innerHTML=''; badgeCount.textContent = docs.length;
 
-            // NUEVA ESTRUCTURA PREMIUM PARA LA GRID
-            div.innerHTML = `
-                <div class="card-overlay">
-                    <div class="card-name">${d.descripcion}</div>
-                    <div class="card-spec">${getServiceName(d.codigoServicio)}</div>
-                    <button class="card-btn">
-                        <i class="fa-regular fa-calendar-check"></i> Ver Horarios
-                    </button>
-                </div>
-            `;
-            // Al hacer click en toda la tarjeta, abre el modal
-            div.onclick = () => openModal(d.codigo, esc(d.descripcion), d.codigoServicio, d.foto);
-            gridMed.appendChild(div);
-        });
-    }
+       if(docs.length===0){
+           medicosSection.style.display='none'; emptyPlaceholder.style.display='block';
+           emptyPlaceholder.innerHTML = '<p>No hay médicos en esta especialidad.</p>'; return;
+       }
+       medicosSection.style.display='block'; emptyPlaceholder.style.display='none';
 
-    function openModal(cod, nombre, codServ, foto){
-        mNombre.textContent = unesc(nombre);
-        mEsp.textContent = getServiceName(codServ);
-        const bgUrl = (foto && foto !== 'undefined' && foto !== 'null') ? foto : 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?q=80&w=800&auto=format&fit=crop';
-        modalLeft.style.backgroundImage = `url('${bgUrl}')`;
+       docs.forEach(d => {
+           const div = document.createElement('div');
+           div.className = 'medico-card';
+           const foto = d.foto || 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=90&w=800&auto=format&fit=crop';
+           div.style.backgroundImage = `url('${foto}')`;
 
-        const hors = programaciones.filter(p => String(p.codigoMedico) === String(cod))
-                                   .sort((a,b)=> new Date(a.fecha)-new Date(b.fecha));
+           div.innerHTML = `
+               <div class="card-overlay">
+                   <div class="card-name">${d.descripcion}</div>
+                   <div class="card-spec">${getServiceName(d.codigoServicio)}</div>
+                   <button class="card-btn">
+                       <i class="fa-regular fa-calendar-check"></i> Ver Horarios
+                   </button>
+               </div>
+           `;
+           div.onclick = () => openModal(d.codigo, esc(d.descripcion), d.codigoServicio, d.foto);
+           gridMed.appendChild(div);
+       });
+   }
 
-        gridHor.innerHTML = '';
-        if(hors.length===0){
-            gridHor.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:30px;color:#999;">Sin turnos.</div>';
-        } else {
-            const cols = ['blue','green','purple'];
-            hors.forEach((h,i) => {
-                const f = new Date(h.fecha);
-                const dia = f.toLocaleDateString('es-PE', {weekday:'short', day:'numeric', month:'short'}).replace('.','');
-                const hora = (h.hora_inicio) ? `${h.hora_inicio.substr(0,5)} - ${h.hora_fin.substr(0,5)}` : (h.hora || 'Turno');
-                const el = document.createElement('div');
-                el.className = `time-card ${cols[i%3]}`;
-                el.innerHTML = `<span class="t-dia">${dia}</span><div class="t-hora">${hora}</div>`;
-                gridHor.appendChild(el);
-            });
-        }
-        modal.classList.add('open');
-        document.body.style.overflow = 'hidden';
-        document.getElementById('btnAction').onclick = () => alert('Reservando para: '+unesc(nombre));
-    }
+   function openModal(cod, nombre, codServ, foto){
+       mNombre.textContent = unesc(nombre);
+       mEsp.textContent = getServiceName(codServ);
+       const bgUrl = (foto && foto !== 'undefined' && foto !== 'null') ? foto : 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?q=80&w=800&auto=format&fit=crop';
+       modalLeft.style.backgroundImage = `url('${bgUrl}')`;
 
-    function closeModal(){ modal.classList.remove('open'); document.body.style.overflow=''; }
-    function getServiceName(c){ const s = servicios.find(x=>String(x.codigo)===String(c)); return s?s.descripcion:'General'; }
-    function esc(s){ return String(s).replace(/'/g, "\\'"); }
-    function unesc(s){ return s; }
-    modal.addEventListener('click', e=>{ if(e.target===modal) closeModal(); });
+       const hors = programaciones.filter(p => String(p.codigoMedico) === String(cod))
+                                  .sort((a,b)=> new Date(a.fecha)-new Date(b.fecha));
+
+       gridHor.innerHTML = '';
+       if(hors.length===0){
+           gridHor.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:30px;color:#999;">Sin turnos.</div>';
+       } else {
+           const cols = ['blue','green','purple'];
+           hors.forEach((h,i) => {
+               const f = new Date(h.fecha);
+               const dia = f.toLocaleDateString('es-PE', {weekday:'short', day:'numeric', month:'short'}).replace('.','');
+               const hora = (h.hora_inicio) ? `${h.hora_inicio.substr(0,5)} - ${h.hora_fin.substr(0,5)}` : (h.hora || 'Turno');
+               const el = document.createElement('div');
+               el.className = `time-card ${cols[i%3]}`;
+               el.innerHTML = `<span class="t-dia">${dia}</span><div class="t-hora">${hora}</div>`;
+               gridHor.appendChild(el);
+           });
+       }
+       modal.classList.add('open');
+       document.body.style.overflow = 'hidden';
+       document.getElementById('btnAction').onclick = () => alert('Reservando para: '+unesc(nombre));
+   }
+
+   function closeModal(){ modal.classList.remove('open'); document.body.style.overflow=''; }
+   function getServiceName(c){ const s = servicios.find(x=>String(x.codigo)===String(c)); return s?s.descripcion:'General'; }
+   function esc(s){ return String(s).replace(/'/g, "\\'"); }
+   function unesc(s){ return s; }
+   modal.addEventListener('click', e=>{ if(e.target===modal) closeModal(); });
 
 </script>
 </body>
