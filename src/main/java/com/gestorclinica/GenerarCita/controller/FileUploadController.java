@@ -106,7 +106,7 @@ public class FileUploadController {
 
 		List<Map<String, String>> response = fotos.stream().map(foto -> {
 			Map<String, String> map = new HashMap<>();
-			map.put("url", "http://localhost:8083/appfotos/" + foto.getUrlFoto());
+			map.put("url", "http://181.224.248.20/appfotos/" + foto.getUrlFoto());
 			map.put("medcod", foto.getMedcod());
 			return map;
 		}).collect(Collectors.toList());
