@@ -103,7 +103,7 @@
         }
         .medico-card:hover .card-btn { background: var(--accent); color: #111; border-color: var(--accent); }
 
-        /* MODAL GENERAL (PC) */
+        /* MODAL GENERAL (PC) - TAMAÑO ESTÁTICO */
         .modal {
             position: fixed; inset: 0;
             background: rgba(0,0,0,0.85); backdrop-filter: blur(5px);
@@ -117,7 +117,8 @@
 
         .modal-panel {
             background: white;
-            width: 100%; max-width: 950px; height: 580px;
+            width: 100%; max-width: 950px; 
+            height: 580px; /* ALTURA FIJA */
             border-radius: 30px;
             display: flex;
             overflow: hidden;
@@ -135,19 +136,91 @@
         }
         .modal-h2 { font-size: 32px; font-weight: 800; color: white; margin: 0 0 6px 0; line-height: 1.1; }
         .modal-role { display: inline-block; font-size: 14px; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; }
-        .modal-btn-premium { margin-top: 24px; width: 100%; background: white; color: #111; border: none; padding: 14px; border-radius: 12px; font-weight: 800; cursor: pointer; text-transform: uppercase; font-size: 14px; transition: transform 0.2s; }
-        .modal-btn-premium:hover { transform: translateY(-2px); background: var(--accent); }
 
         .modal-right { flex: 1; display: flex; flex-direction: column; background: white; }
-        .modal-header-right { padding: 24px 30px; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center; }
+        .modal-header-right { padding: 24px 30px; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
         .btn-close { background: #f3f4f6; border: none; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; color: #555; }
-        .scroll-area { flex: 1; overflow-y: auto; padding: 30px; }
-        .horario-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 16px; }
+        
+        /* Área de scroll con altura fija */
+        .scroll-area { 
+            flex: 1; 
+            overflow-y: auto; 
+            padding: 30px;
+            height: calc(580px - 80px); /* Altura fija: 580px total - altura del header */
+            min-height: 0; /* Importante para scroll en flex */
+        }
+        
+        .horario-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); 
+            gap: 20px; 
+            min-height: 0; /* Importante para evitar crecimiento */
+        }
 
-        .time-card { border: 1px solid #e5e7eb; border-radius: 12px; padding: 12px; text-align: center; background: white; border-top: 4px solid #ddd; }
-        .time-card.blue { border-top-color: #3b82f6; } .time-card.green { border-top-color: #10b981; } .time-card.purple { border-top-color: #8b5cf6; }
+        .time-card { 
+            border: 1px solid #e5e7eb; border-radius: 12px; padding: 15px; text-align: center; background: white; 
+            border-top: 4px solid #ddd; display: flex; flex-direction: column; gap: 10px;
+            min-height: 110px; /* Altura mínima uniforme */
+        }
+        .time-card.blue { border-top-color: #3b82f6; } 
+        .time-card.green { border-top-color: #10b981; } 
+        .time-card.purple { border-top-color: #8b5cf6; }
         .t-dia { display: block; font-size: 11px; font-weight: 700; color: #888; text-transform: uppercase; margin-bottom: 4px; }
-        .t-hora { font-size: 15px; font-weight: 800; color: #333; }
+        .t-hora { font-size: 15px; font-weight: 800; color: #333; margin-bottom: 8px; }
+        
+        /* Botón de WhatsApp */
+        .whatsapp-btn {
+            background: #25D366;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: all 0.2s;
+            text-decoration: none;
+            margin-top: auto; /* Empuja el botón hacia abajo */
+        }
+        .whatsapp-btn:hover {
+            background: #1da851;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+        }
+        .whatsapp-btn i {
+            font-size: 14px;
+        }
+
+        /* Mensaje cuando no hay horarios */
+        .no-horarios {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #9ca3af;
+            text-align: center;
+            padding: 40px 20px;
+        }
+        .no-horarios i {
+            font-size: 48px;
+            margin-bottom: 16px;
+            color: #d1d5db;
+        }
+        .no-horarios h3 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #6b7280;
+        }
+        .no-horarios p {
+            font-size: 14px;
+            max-width: 300px;
+        }
 
         /* =========================================
            RESPONSIVE / MÓVIL (VERSIÓN DEFINITIVA)
@@ -168,12 +241,11 @@
 
             .modal-panel {
                 flex-direction: column;
-                /* Dimensiones controladas */
+                /* Dimensiones fijas también en móvil */
                 width: 100%;
-                max-width: 380px; /* Ancho máximo de tarjeta para que no se estire feo */
-                height: auto;
-                max-height: 85vh; /* Altura máxima */
-                margin: 0 auto; /* Asegura centrado horizontal */
+                max-width: 380px;
+                height: 500px; /* Altura fija en móvil */
+                margin: 0 auto;
                 border-radius: 24px;
                 box-shadow: 0 20px 50px rgba(0,0,0,0.5);
             }
@@ -181,18 +253,16 @@
             /* -- FOTO GRANDE -- */
             .modal-left {
                 width: 100%;
-                height: 250px; /* FOTO BIEN GRANDE */
+                height: 180px; /* Altura fija para la foto */
                 flex-shrink: 0;
             }
             .profile-overlay {
-                padding: 20px;
+                padding: 15px;
                 justify-content: flex-end;
                 background: linear-gradient(to bottom, transparent 0%, rgba(10, 15, 50, 0.5) 40%, rgba(10, 15, 50, 1) 100%);
             }
-            .modal-h2 { font-size: 24px; margin-bottom: 4px; }
-            .modal-role { font-size: 12px; margin-bottom: 8px; }
-
-            .modal-btn-premium { margin-top: 10px; padding: 12px; font-size: 13px; }
+            .modal-h2 { font-size: 22px; margin-bottom: 4px; }
+            .modal-role { font-size: 11px; margin-bottom: 8px; }
 
             /* -- SCROLL -- */
             .modal-right {
@@ -200,20 +270,78 @@
                 min-height: 0; /* Clave para el overflow */
                 display: flex; flex-direction: column;
             }
-            .modal-header-right { padding: 15px 20px; flex-shrink: 0; }
+            .modal-header-right { 
+                padding: 12px 15px; 
+                flex-shrink: 0;
+            }
+            .modal-header-right h3 {
+                font-size: 16px;
+            }
+            .modal-header-right span {
+                font-size: 12px;
+            }
             .scroll-area {
-                padding: 15px 20px;
-                overflow-y: auto;
+                padding: 15px;
+                height: calc(500px - 180px - 56px); /* Altura total - foto - header */
             }
 
-            /* -- GRID 2 COLUMNAS OBLIGATORIA -- */
+            /* -- GRID 2 COLUMNAS EN MÓVIL -- */
             .horario-grid {
-                grid-template-columns: 1fr 1fr; /* DOS COLUMNAS DE ANCHO IGUAL */
+                grid-template-columns: repeat(2, 1fr); /* Siempre 2 columnas */
                 gap: 12px;
             }
 
             .medico-card { height: 380px; }
             .hero-title { font-size: 28px; }
+            
+            .time-card {
+                padding: 12px;
+                min-height: 100px;
+            }
+            
+            .whatsapp-btn {
+                padding: 8px 10px;
+                font-size: 11px;
+            }
+            
+            .no-horarios {
+                padding: 20px;
+            }
+            .no-horarios i {
+                font-size: 36px;
+            }
+            .no-horarios h3 {
+                font-size: 16px;
+            }
+            .no-horarios p {
+                font-size: 13px;
+            }
+        }
+        
+        /* Para tablets */
+        @media (min-width: 801px) and (max-width: 1024px) {
+            .modal-panel {
+                max-width: 800px;
+                height: 550px;
+            }
+            
+            .modal-left {
+                width: 350px;
+            }
+            
+            .scroll-area {
+                height: calc(550px - 80px);
+            }
+            
+            .horario-grid {
+                grid-template-columns: repeat(2, 1fr); /* 2 columnas en tablet */
+            }
+        }
+        
+        /* Animación de entrada */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
@@ -272,14 +400,14 @@
                 <div style="color:rgba(255,255,255,0.8); font-size:12px; display:flex; align-items:center;">
                     <i class="fa-solid fa-hospital" style="color:var(--accent); margin-right:5px;"></i> Clínica San Bartolomé
                 </div>
-                <button id="btnAction" class="modal-btn-premium">
-                    Agendar Cita <i class="fa-solid fa-arrow-right"></i>
-                </button>
             </div>
         </div>
         <div class="modal-right">
             <div class="modal-header-right">
-                <div><h3>Programación</h3><span style="font-size:13px; color:#888;">Horarios disponibles</span></div>
+                <div>
+                    <h3>Programación</h3>
+                    <span style="font-size:13px; color:#888;">Horarios disponibles - Selecciona uno para agendar</span>
+                </div>
                 <button class="btn-close" onclick="closeModal()"><i class="fa-solid fa-times"></i></button>
             </div>
             <div class="scroll-area">
@@ -290,16 +418,28 @@
 </div>
 
 <script>
+   // URLs de API - Usando las mismas que el admin
+   const API_SERVICIOS = 'http://localhost:8082/gcita/servicio/listar';
+   const API_MEDICOS = 'http://localhost:8082/gcita/medico/listar';
+   const API_PROGRAM = 'http://localhost:8082/gcita/programacionmedicos/listar';
+   const API_FOTOS = 'http://localhost:8082/gcita/api/doctor/getFoto'; // API de fotos igual que admin
+   
+   // Base URL para las fotos (igual que admin)
+   const FOTOS_BASE_URL = 'http://localhost:8083/appfotos/';
+   
+   // Número de WhatsApp para agendar citas (cambia este número por el que necesites)
+   const WHATSAPP_NUMBER = '51913039208'; 
+   const WHATSAPP_MESSAGE_BASE = 'Hola, quisiera agendar una cita médica con la siguiente información:\n\n';
 
-   const API_SERVICIOS = 'http://181.224.248.20/gcita/servicio/listar';
-   const API_MEDICOS   = 'http://181.224.248.20/gcita/medico/listar';
-   const API_PROGRAM   = 'http://181.224.248.20/gcita/programacionmedicos/listar';
-
-  /* const API_SERVICIOS = 'http://localhost:8082/servicio/listar';
-   const API_MEDICOS   = 'http://localhost:8082/medico/listar';
-   const API_PROGRAM   = 'http://localhost:8082/programacionmedicos/listar';*/
-
-   let servicios=[], medicos=[], programaciones=[];
+   let servicios = [], medicos = [], programaciones = [];
+   let medicosFotos = {}; // Cache para las fotos: {medcod: url}
+   
+   // Variables para almacenar información del médico actual en el modal
+   let currentMedicoInfo = {
+       nombre: '',
+       especialidad: '',
+       codigo: ''
+   };
 
    const selectEsp = document.getElementById('selectEspecialidad');
    const inputEsp = document.getElementById('txtEspecialidad');
@@ -314,6 +454,115 @@
    const mEsp = document.getElementById('mEspecialidad');
    const gridHor = document.getElementById('gridHorarios');
 
+   // Función para formatear el código del médico a 4 dígitos
+   function formatMedCod(codigo) {
+       return String(codigo).padStart(4, '0');
+   }
+
+   // Función para cargar fotos de un médico (igual que admin)
+   async function cargarFotoMedico(medcod) {
+       try {
+           // Si ya tenemos la foto en cache, usarla
+           if (medicosFotos[medcod]) {
+               return medicosFotos[medcod];
+           }
+           
+           // Obtener las fotos del médico desde tu API
+           const response = await fetch(`${API_FOTOS}/${medcod}`);
+           if (!response.ok) {
+               if (response.status === 204) {
+                   console.log(`No hay fotos para el médico ${medcod}`);
+               }
+               return null;
+           }
+           
+           const fotos = await response.json();
+           
+           if (fotos && fotos.length > 0) {
+               // Buscar la primera foto con URL válida
+               const foto = fotos[0];
+               let fotoUrl = null;
+               
+               if (foto.urlFoto) {
+                   // Construir la URL completa
+                   fotoUrl = FOTOS_BASE_URL + foto.urlFoto;
+               } else if (foto.url) {
+                   // Si ya viene la URL completa
+                   fotoUrl = foto.url;
+               }
+               
+               if (fotoUrl) {
+                   // Verificar que la imagen existe
+                   const imgExists = await verificarImagen(fotoUrl);
+                   if (imgExists) {
+                       medicosFotos[medcod] = fotoUrl;
+                       return fotoUrl;
+                   }
+               }
+           }
+           return null;
+       } catch (error) {
+           console.error(`Error cargando foto para ${medcod}:`, error);
+           return null;
+       }
+   }
+
+   // Función para verificar si una imagen existe
+   function verificarImagen(url) {
+       return new Promise((resolve) => {
+           const img = new Image();
+           img.onload = () => resolve(true);
+           img.onerror = () => resolve(false);
+           img.src = url;
+       });
+   }
+
+   // Cargar también foto para el modal
+   async function cargarFotoParaModal(medcod) {
+       try {
+           const fotoUrl = await cargarFotoMedico(medcod);
+           return fotoUrl;
+       } catch (error) {
+           console.error('Error cargando foto para modal:', error);
+           return null;
+       }
+   }
+
+   // Función para crear mensaje de WhatsApp
+   function crearMensajeWhatsApp(nombreMedico, especialidad, fecha, hora) {
+       // Formatear la fecha para que sea más legible
+       const fechaFormateada = new Date(fecha).toLocaleDateString('es-PE', {
+           weekday: 'long',
+           year: 'numeric',
+           month: 'long',
+           day: 'numeric'
+       });
+       
+       const mensaje = `${WHATSAPP_MESSAGE_BASE}` +
+                      `👨‍⚕️ *Médico:* ${nombreMedico}\n` +
+                      `🎯 *Especialidad:* ${especialidad}\n` +
+                      `📅 *Fecha:* ${fechaFormateada}\n` +
+                      `⏰ *Horario:* ${hora}\n\n` +
+                      `Por favor, confírmame si este horario está disponible.`;
+       
+       // Codificar el mensaje para URL
+       return encodeURIComponent(mensaje);
+   }
+
+   // Función para abrir WhatsApp
+   function abrirWhatsApp(nombreMedico, especialidad, fecha, hora) {
+       const mensaje = crearMensajeWhatsApp(nombreMedico, especialidad, fecha, hora);
+       const urlWhatsApp = `https://wa.me/${WHATSAPP_NUMBER}?text=${mensaje}`;
+       
+       // Abrir en nueva pestaña
+       window.open(urlWhatsApp, '_blank');
+       
+       // Cerrar el modal después de abrir WhatsApp
+       setTimeout(() => {
+           closeModal();
+       }, 500);
+   }
+
    document.addEventListener('DOMContentLoaded', init);
 
    async function init(){
@@ -327,11 +576,18 @@
            fillSelect(servicios);
 
            const def = servicios.find(x => x.descripcion.toUpperCase().includes('MEDICINA GENERAL'));
-           if(def){ selectEsp.value = def.codigo; showDoctors(def.codigo); }
+           if(def){ 
+               selectEsp.value = def.codigo; 
+               await showDoctors(def.codigo); 
+           }
 
            inputEsp.addEventListener('input', e => filterServices(e.target.value));
-           selectEsp.addEventListener('change', e => showDoctors(e.target.value));
-       } catch(e){ console.error(e); }
+           selectEsp.addEventListener('change', async (e) => {
+               await showDoctors(e.target.value);
+           });
+       } catch(e){ 
+           console.error('Error en init:', e); 
+       }
    }
 
    function fillSelect(list){
@@ -348,25 +604,51 @@
        if(!txt){ fillSelect(servicios); return; }
        const f = servicios.filter(x => x.descripcion.toUpperCase().includes(txt));
        fillSelect(f);
-       if(f.length===1){ selectEsp.value = f[0].codigo; showDoctors(f[0].codigo); }
+       if(f.length===1){ 
+           selectEsp.value = f[0].codigo; 
+           showDoctors(f[0].codigo); 
+       }
    }
 
-   function showDoctors(cod){
-       if(!cod){ medicosSection.style.display='none'; emptyPlaceholder.style.display='block'; return; }
+   // Función para mostrar médicos (actualizada para cargar fotos)
+   async function showDoctors(cod){
+       if(!cod){ 
+           medicosSection.style.display='none'; 
+           emptyPlaceholder.style.display='block'; 
+           return; 
+       }
+       
        const docs = medicos.filter(x => String(x.codigoServicio) === String(cod));
-       gridMed.innerHTML=''; badgeCount.textContent = docs.length;
+       gridMed.innerHTML=''; 
+       badgeCount.textContent = docs.length;
 
        if(docs.length===0){
-           medicosSection.style.display='none'; emptyPlaceholder.style.display='block';
-           emptyPlaceholder.innerHTML = '<p>No hay médicos en esta especialidad.</p>'; return;
+           medicosSection.style.display='none'; 
+           emptyPlaceholder.style.display='block';
+           emptyPlaceholder.innerHTML = '<p>No hay médicos en esta especialidad.</p>'; 
+           return;
        }
-       medicosSection.style.display='block'; emptyPlaceholder.style.display='none';
+       
+       medicosSection.style.display='block'; 
+       emptyPlaceholder.style.display='none';
 
-       docs.forEach(d => {
+       // Cargar fotos para todos los médicos
+       for (const d of docs) {
            const div = document.createElement('div');
            div.className = 'medico-card';
-           const foto = d.foto || 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=90&w=800&auto=format&fit=crop';
-           div.style.backgroundImage = `url('${foto}')`;
+           
+           // Formatear el código del médico para que tenga 4 dígitos
+           const medcod = formatMedCod(d.codigo);
+           
+           // Intentar cargar la foto del médico
+           let fotoUrl = await cargarFotoMedico(medcod);
+           
+           // Si no hay foto, usar una por defecto (igual que admin)
+           if (!fotoUrl) {
+               fotoUrl = 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=90&w=800&auto=format&fit=crop';
+           }
+           
+           div.style.backgroundImage = `url('${fotoUrl}')`;
 
            div.innerHTML = `
                <div class="card-overlay">
@@ -377,15 +659,38 @@
                    </button>
                </div>
            `;
-           div.onclick = () => openModal(d.codigo, esc(d.descripcion), d.codigoServicio, d.foto);
+           
+           // Guardar el medcod en el elemento para usarlo en el modal
+           div.dataset.medcod = medcod;
+           div.onclick = async () => {
+               // Cargar la foto para el modal también
+               const fotoModal = await cargarFotoParaModal(medcod);
+               openModal(d.codigo, esc(d.descripcion), d.codigoServicio, fotoModal);
+           };
+           
            gridMed.appendChild(div);
-       });
+       }
    }
 
-   function openModal(cod, nombre, codServ, foto){
-       mNombre.textContent = unesc(nombre);
-       mEsp.textContent = getServiceName(codServ);
-       const bgUrl = (foto && foto !== 'undefined' && foto !== 'null') ? foto : 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?q=80&w=800&auto=format&fit=crop';
+   async function openModal(cod, nombre, codServ, fotoUrl){
+       // Guardar información del médico actual
+       currentMedicoInfo = {
+           nombre: unesc(nombre),
+           especialidad: getServiceName(codServ),
+           codigo: cod
+       };
+       
+       mNombre.textContent = currentMedicoInfo.nombre;
+       mEsp.textContent = currentMedicoInfo.especialidad;
+       
+       // Si no hay fotoUrl específica, intentar cargarla
+       if (!fotoUrl) {
+           const medcod = formatMedCod(cod);
+           fotoUrl = await cargarFotoParaModal(medcod);
+       }
+       
+       // Usar la foto del médico o una por defecto
+       const bgUrl = fotoUrl || 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?q=80&w=800&auto=format&fit=crop';
        modalLeft.style.backgroundImage = `url('${bgUrl}')`;
 
        const hors = programaciones.filter(p => String(p.codigoMedico) === String(cod))
@@ -393,29 +698,75 @@
 
        gridHor.innerHTML = '';
        if(hors.length===0){
-           gridHor.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:30px;color:#999;">Sin turnos.</div>';
+           // Mostrar mensaje cuando no hay horarios
+           gridHor.innerHTML = `
+               <div class="no-horarios" style="grid-column: 1 / -1;">
+                   <i class="fa-regular fa-calendar-xmark"></i>
+                   <h3>Sin horarios disponibles</h3>
+                   <p>Este médico no tiene horarios disponibles por el momento. Intenta más tarde.</p>
+               </div>
+           `;
        } else {
            const cols = ['blue','green','purple'];
            hors.forEach((h,i) => {
                const f = new Date(h.fecha);
                const dia = f.toLocaleDateString('es-PE', {weekday:'short', day:'numeric', month:'short'}).replace('.','');
                const hora = (h.hora_inicio) ? `${h.hora_inicio.substr(0,5)} - ${h.hora_fin.substr(0,5)}` : (h.hora || 'Turno');
+               
                const el = document.createElement('div');
                el.className = `time-card ${cols[i%3]}`;
-               el.innerHTML = `<span class="t-dia">${dia}</span><div class="t-hora">${hora}</div>`;
+               
+               // Crear botón de WhatsApp
+               const whatsappBtn = document.createElement('a');
+               whatsappBtn.className = 'whatsapp-btn';
+               whatsappBtn.innerHTML = '<i class="fa-brands fa-whatsapp"></i> Agendar';
+               
+               // Asignar evento al botón de WhatsApp
+               whatsappBtn.onclick = (e) => {
+                   e.stopPropagation(); // Prevenir cualquier otro evento
+                   abrirWhatsApp(
+                       currentMedicoInfo.nombre,
+                       currentMedicoInfo.especialidad,
+                       h.fecha,
+                       hora
+                   );
+               };
+               
+               el.innerHTML = `
+                   <span class="t-dia">${dia}</span>
+                   <div class="t-hora">${hora}</div>
+               `;
+               
+               el.appendChild(whatsappBtn);
                gridHor.appendChild(el);
            });
        }
+       
        modal.classList.add('open');
        document.body.style.overflow = 'hidden';
-       document.getElementById('btnAction').onclick = () => alert('Reservando para: '+unesc(nombre));
    }
 
-   function closeModal(){ modal.classList.remove('open'); document.body.style.overflow=''; }
-   function getServiceName(c){ const s = servicios.find(x=>String(x.codigo)===String(c)); return s?s.descripcion:'General'; }
-   function esc(s){ return String(s).replace(/'/g, "\\'"); }
-   function unesc(s){ return s; }
-   modal.addEventListener('click', e=>{ if(e.target===modal) closeModal(); });
+   function closeModal(){ 
+       modal.classList.remove('open'); 
+       document.body.style.overflow=''; 
+   }
+   
+   function getServiceName(c){ 
+       const s = servicios.find(x=>String(x.codigo)===String(c)); 
+       return s ? s.descripcion : 'General'; 
+   }
+   
+   function esc(s){ 
+       return String(s).replace(/'/g, "\\'"); 
+   }
+   
+   function unesc(s){ 
+       return s; 
+   }
+   
+   modal.addEventListener('click', e => { 
+       if(e.target===modal) closeModal(); 
+   });
 
 </script>
 </body>
