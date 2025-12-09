@@ -419,13 +419,28 @@
 
 <script>
    // URLs de API - Usando las mismas que el admin
+
+   /*
    const API_SERVICIOS = 'http://localhost:8082/gcita/servicio/listar';
    const API_MEDICOS = 'http://localhost:8082/gcita/medico/listar';
    const API_PROGRAM = 'http://localhost:8082/gcita/programacionmedicos/listar';
-   const API_FOTOS = 'http://localhost:8082/gcita/api/doctor/getFoto'; // API de fotos igual que admin
-   
+   const API_FOTOS = 'http://localhost:8082/gcita/api/doctor/getFoto';
+   */
+
+    /*
+   const API_SERVICIOS = 'http://181.224.248.20/gcita/servicio/listar';
+   const API_MEDICOS = 'http://181.224.248.20/gcita/medico/listar';
+   const API_PROGRAM = 'http://181.224.248.20/gcita/programacionmedicos/listar';
+   const API_FOTOS = 'http://181.224.248.20/gcita/api/doctor/getFoto';
+   */
+
+    const API_SERVICIOS = '/gcita/servicio/listar';
+    const API_MEDICOS = '/gcita/medico/listar';
+    const API_PROGRAM = '/gcita/programacionmedicos/listar';
+    const API_FOTOS = '/gcita/api/doctor/getFoto';
+
    // Base URL para las fotos (igual que admin)
-   const FOTOS_BASE_URL = 'http://localhost:8083/appfotos/';
+   const FOTOS_BASE_URL = 'http://181.224.248.20/appfotos/';
    
    // Número de WhatsApp para agendar citas (cambia este número por el que necesites)
    const WHATSAPP_NUMBER = '51913039208'; 
