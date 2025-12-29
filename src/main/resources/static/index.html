@@ -1077,6 +1077,135 @@
         *::-webkit-scrollbar-thumb:hover {
             background: #a8a8a8;
         }
+
+          .datalist-placeholder {
+        color: #6b7280 !important;
+        font-style: italic !important;
+        cursor: default !important;
+        background: #f9fafb !important;
+    }
+
+    .datalist-placeholder:hover {
+        background: #f9fafb !important;
+    }
+
+        /* Estilos para el botón de limpiar búsqueda */
+.clear-icon {
+    position: absolute;
+    right: 48px; /* Ajustado para que no se solape con la flecha */
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6b7280;
+    cursor: pointer;
+    z-index: 2;
+    background: #f1f5f9;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    transition: all 0.2s;
+}
+
+.clear-icon:hover {
+    background: #e2e8f0;
+    color: #374151;
+}
+
+/* Ajustar el padding del input cuando el botón de limpiar está visible */
+.combobox-input.has-text {
+    padding-right: 80px; /* Espacio para el botón de limpiar y la flecha */
+}
+
+/* Ajustar la posición de la flecha cuando hay texto */
+.combobox-input.has-text + .dropdown-arrow {
+    right: 48px;
+}
+
+        @media (max-width: 800px) {
+    .clear-icon {
+        right: 44px;
+        width: 24px;
+        height: 24px;
+    }
+
+    .combobox-input.has-text {
+        padding-right: 72px;
+    }
+
+    .combobox-input.has-text + .dropdown-arrow {
+        right: 44px;
+    }
+}
+
+        /* ESTILOS ESPECÍFICOS PARA LA FOTO DEL MODAL */
+.modal-foto {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 1;
+    z-index: 1;
+    transition: transform 0.3s ease-out;
+}
+
+/* Asegurar que la imagen se mantenga centrada y cubra todo el espacio */
+.modal-foto::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to top, rgba(10, 15, 40, 0.9) 0%, rgba(10, 15, 40, 0.4) 50%, rgba(10, 15, 40, 0.2) 100%);
+    z-index: 2;
+}
+
+.modal-left {
+    flex: 0 0 40%;
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    padding: 40px;
+    color: white;
+    overflow: hidden;
+    min-height: 400px; /* Altura mínima */
+}
+
+.profile-overlay {
+    width: 100%;
+    position: relative;
+    z-index: 3; /* Asegurar que esté por encima del gradiente */
+}
+
+/* Para pantallas móviles */
+@media (max-width: 800px) {
+    .modal-left {
+        flex: 0 0 180px;
+        padding: 20px;
+        min-height: 180px;
+    }
+
+    .modal-foto {
+        background-size: cover;
+        background-position: center center;
+    }
+}
+
+/* Para pantallas muy pequeñas */
+@media (max-width: 480px) {
+    .modal-left {
+        flex: 0 0 160px;
+        min-height: 160px;
+    }
+}
+
     </style>
 </head>
 
@@ -1106,6 +1235,8 @@
                     <input type="text" id="comboboxInput" class="combobox-input"
                            placeholder="Escribe para buscar o seleccionar..." autocomplete="off">
                     <i class="fa-solid fa-chevron-down dropdown-arrow"></i>
+                    <!-- Nuevo botón para limpiar -->
+                    <i class="fa-solid fa-times clear-icon" id="clearSearchBtn" style="display: none;"></i>
                     <select id="selectEspecialidad" class="select-hidden">
                         <option value="">-- Seleccionar --</option>
                     </select>
@@ -1281,6 +1412,7 @@
 		let turnosDisponibles = [];
 		let selectedDia = null;
 		let selectedTurno = null;
+		let clearSearchBtn = document.getElementById('clearSearchBtn');
 
 		// Elementos del DOM
 		const comboboxInput = document.getElementById('comboboxInput');
@@ -1346,85 +1478,128 @@
 		}
 
 		// Función para crear el datalist personalizado
-		function crearDatalistOptions(serviciosList) {
-			datalistOptions.innerHTML = '';
-			filteredOptions = [];
+// Función para crear el datalist personalizado
+function crearDatalistOptions(serviciosList, showPlaceholder = false) {
+    datalistOptions.innerHTML = '';
+    filteredOptions = [];
 
-			serviciosList.forEach(servicio => {
-				const option = document.createElement('div');
-				option.className = 'datalist-option';
-				option.dataset.value = servicio.codigo;
-				option.dataset.text = servicio.descripcion;
-				option.textContent = servicio.descripcion;
+    // Si showPlaceholder es true y la lista está vacía, mostrar mensaje
+    if (showPlaceholder && (!serviciosList || serviciosList.length === 0)) {
+        const emptyOption = document.createElement('div');
+        emptyOption.className = 'datalist-option datalist-placeholder';
+        emptyOption.textContent = 'No se encontraron especialidades';
+        emptyOption.addEventListener('click', (e) => {
+            e.stopPropagation(); // Evitar que se cierre
+        });
+        datalistOptions.appendChild(emptyOption);
+        return;
+    }
 
-				option.addEventListener('click', () => {
-					seleccionarOpcion(servicio.codigo, servicio.descripcion);
-				});
+    // Si la lista está vacía pero no estamos mostrando placeholder, no mostrar nada
+    if (!serviciosList || serviciosList.length === 0) {
+        return;
+    }
 
-				option.addEventListener('mouseenter', () => {
-					document.querySelectorAll('.datalist-option').forEach(opt => {
-						opt.classList.remove('highlighted');
-					});
-					option.classList.add('highlighted');
-					selectedIndex = Array.from(datalistOptions.children).indexOf(option);
-				});
+    serviciosList.forEach(servicio => {
+        const option = document.createElement('div');
+        option.className = 'datalist-option';
+        option.dataset.value = servicio.codigo;
+        option.dataset.text = servicio.descripcion;
+        option.textContent = servicio.descripcion;
 
-				datalistOptions.appendChild(option);
-				filteredOptions.push(servicio);
-			});
-		}
+        option.addEventListener('click', () => {
+            seleccionarOpcion(servicio.codigo, servicio.descripcion);
+        });
+
+        option.addEventListener('mouseenter', () => {
+            document.querySelectorAll('.datalist-option').forEach(opt => {
+                opt.classList.remove('highlighted');
+            });
+            // No resaltar el placeholder
+            if (!option.classList.contains('datalist-placeholder')) {
+                option.classList.add('highlighted');
+                selectedIndex = Array.from(datalistOptions.children).indexOf(option);
+            }
+        });
+
+        datalistOptions.appendChild(option);
+        filteredOptions.push(servicio);
+    });
+}
 
 		// Función para filtrar opciones
-		function filtrarOpciones(searchText) {
-			if (!searchText) {
-				crearDatalistOptions(servicios);
-				return;
-			}
+function filtrarOpciones(searchText) {
+    if (!searchText || searchText.trim() === '') {
+        // Cuando no hay texto, mostrar TODOS los servicios
+        crearDatalistOptions(servicios);
+        return;
+    }
 
-			const texto = searchText.toUpperCase();
-			const filtrados = servicios.filter(servicio =>
-				servicio.descripcion.toUpperCase().includes(texto)
-			);
+    const texto = searchText.toUpperCase();
+    const filtrados = servicios.filter(servicio =>
+        servicio.descripcion.toUpperCase().includes(texto)
+    );
 
-			crearDatalistOptions(filtrados);
-		}
+    // Mostrar resultados filtrados, y si no hay resultados, mostrar mensaje
+    crearDatalistOptions(filtrados, true); // true = mostrar placeholder si no hay resultados
+}
 
 		// Función para seleccionar una opción
 		function seleccionarOpcion(codigo, texto) {
-			comboboxInput.value = texto;
-			selectEsp.value = codigo;
-			datalistOptions.classList.remove('show');
+    comboboxInput.value = texto;
+    selectEsp.value = codigo;
+    datalistOptions.classList.remove('show');
 
-			// Mostrar médicos
-			showDoctors(codigo);
-		}
+    // Mostrar botón de limpiar cuando hay texto seleccionado
+    toggleClearButton(true);
 
-		// Función para mostrar/ocultar el datalist
-		function toggleDatalist(show) {
-			if (show) {
-				datalistOptions.classList.add('show');
-				if (!comboboxInput.value) {
-					crearDatalistOptions(servicios);
-				}
-			} else {
-				setTimeout(() => {
-					datalistOptions.classList.remove('show');
-				}, 150);
-			}
-		}
+    // Mostrar médicos
+    showDoctors(codigo);
+}
 
-		// Event Listeners para el combobox
-		comboboxInput.addEventListener('focus', () => {
-			toggleDatalist(true);
-		});
+	// Función para mostrar/ocultar el datalist - ACTUALIZADO
+function toggleDatalist(show) {
+    if (show) {
+        datalistOptions.classList.add('show');
+        // Si no hay texto o se acaba de limpiar, mostrar TODAS las opciones
+        if (!comboboxInput.value || comboboxInput.value.trim() === '') {
+            crearDatalistOptions(servicios);
+        } else {
+            // Si hay texto, mostrar las opciones filtradas
+            filtrarOpciones(comboboxInput.value);
+        }
+    } else {
+        // Pequeño delay para que los clics en las opciones funcionen
+        setTimeout(() => {
+            datalistOptions.classList.remove('show');
+        }, 150);
+    }
+}
 
-		comboboxInput.addEventListener('input', (e) => {
-			filtrarOpciones(e.target.value);
-			if (!datalistOptions.classList.contains('show')) {
-				datalistOptions.classList.add('show');
-			}
-			selectedIndex = -1;
-		});
+		// Event Listeners para el combobox - ACTUALIZADO
+comboboxInput.addEventListener('focus', () => {
+    toggleDatalist(true);
+    // Mostrar botón de limpiar solo si hay texto
+    if (comboboxInput.value.trim() !== '') {
+        toggleClearButton(true);
+    }
+});
+
+	// Actualizar la función de input para mostrar/ocultar el botón de limpiar
+comboboxInput.addEventListener('input', (e) => {
+    filtrarOpciones(e.target.value);
+    if (!datalistOptions.classList.contains('show')) {
+        datalistOptions.classList.add('show');
+    }
+    selectedIndex = -1;
+
+    // Mostrar/ocultar botón de limpiar según si hay texto
+    if (e.target.value.trim() !== '') {
+        toggleClearButton(true);
+    } else {
+        toggleClearButton(false);
+    }
+});
 
 		comboboxInput.addEventListener('keydown', (e) => {
 			const options = document.querySelectorAll('.datalist-option');
@@ -1464,12 +1639,15 @@
 			}
 		});
 
-		// Cerrar datalist al hacer clic fuera
-		document.addEventListener('click', (e) => {
-			if (!comboboxInput.contains(e.target) && !datalistOptions.contains(e.target)) {
-				toggleDatalist(false);
-			}
-		});
+		// Cerrar datalist al hacer clic fuera - ACTUALIZADO
+document.addEventListener('click', (e) => {
+    // Si el clic no es en el input, ni en el datalist, NI en el botón de limpiar
+    if (!comboboxInput.contains(e.target) &&
+        !datalistOptions.contains(e.target) &&
+        !clearSearchBtn.contains(e.target)) {
+        toggleDatalist(false);
+    }
+});
 
 		async function cargarFotoMedico(medcod) {
 			try {
@@ -1522,49 +1700,59 @@
 		}
 
 		async function cargarDiasDisponibles(medcod, sercod) {
-			try {
-				const requestBody = {
-					sercod: sercod,
-					medcod: medcod,
-					fecha: null
-				};
+		    try {
+		        const requestBody = {
+		            sercod: sercod,
+		            medcod: medcod,
+		            fecha: null
+		        };
 
-				const response = await fetch(API_LISTAR_DIAS, {
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json'
-					},
-					body: JSON.stringify(requestBody)
-				});
+		        const response = await fetch(API_LISTAR_DIAS, {
+		            method: 'POST',
+		            headers: {
+		                'Content-Type': 'application/json'
+		            },
+		            body: JSON.stringify(requestBody)
+		        });
 
-				if (!response.ok) {
-					if (response.status === 204) {
-						return [];
-					}
-					throw new Error(`Error HTTP: ${response.status}`);
-				}
+		        if (!response.ok) {
+		            if (response.status === 204) {
+		                return [];
+		            }
+		            throw new Error(`Error HTTP: ${response.status}`);
+		        }
 
-				const dias = await response.json();
+		        const dias = await response.json();
 
-				// Filtrar fechas duplicadas
-				const fechasUnicas = [...new Set(dias.map(dia => dia.fecha))];
+		        // Filtrar fechas duplicadas
+		        const fechasUnicas = [...new Set(dias.map(dia => dia.fecha))];
 
-				// Mapear a un formato más manejable
-				return fechasUnicas.map(fecha => {
-					const fechaObj = new Date(fecha);
-					return {
-						fecha: fecha,
-						fechaObj: fechaObj,
-						diaSemana: fechaObj.toLocaleDateString('es-PE', {weekday: 'short'}).toUpperCase(),
-						diaNumero: fechaObj.getDate(),
-						mes: fechaObj.toLocaleDateString('es-PE', {month: 'short'}).toUpperCase()
-					};
-				}).sort((a, b) => a.fechaObj - b.fechaObj); // Ordenar por fecha
+		        // Mapear a un formato más manejable
+		        return fechasUnicas.map(fechaStr => {
+		            // Parsear fecha correctamente evitando problemas de zona horaria
+		            let fechaObj;
+		            if (fechaStr.match(/^\d{4}-\d{2}-\d{2}$/)) {
+		                const [year, month, day] = fechaStr.split('-').map(Number);
+		                fechaObj = new Date(year, month - 1, day);
+		            } else {
+		                fechaObj = new Date(fechaStr);
+		            }
 
-			} catch (error) {
-				console.error('Error cargando días disponibles:', error);
-				return [];
-			}
+		            console.log('Fecha procesada:', fechaStr, '->', fechaObj.getDate());
+
+		            return {
+		                fecha: fechaStr, // Mantener el string original para enviar al backend
+		                fechaObj: fechaObj, // Para ordenar y mostrar
+		                diaSemana: fechaObj.toLocaleDateString('es-PE', {weekday: 'short'}).toUpperCase(),
+		                diaNumero: fechaObj.getDate(),
+		                mes: fechaObj.toLocaleDateString('es-PE', {month: 'short'}).toUpperCase()
+		            };
+		        }).sort((a, b) => a.fechaObj - b.fechaObj);
+
+		    } catch (error) {
+		        console.error('Error cargando días disponibles:', error);
+		        return [];
+		    }
 		}
 
 		async function cargarTurnosPorDia(medcod, sercod, fecha) {
@@ -1628,33 +1816,30 @@
 
 		document.addEventListener('DOMContentLoaded', init);
 
-		async function init() {
-			try {
-				const s = await fetch(API_SERVICIOS).then(r => r.json());
-				servicios = s;
+		// En la función init, cuando se cargan los servicios:
+async function init() {
+    try {
+        const s = await fetch(API_SERVICIOS).then(r => r.json());
+        servicios = s;
 
-				// Llenar el select oculto
-				selectEsp.innerHTML = '<option value="">-- Seleccionar --</option>';
-				servicios.forEach(servicio => {
-					const option = document.createElement('option');
-					option.value = servicio.codigo;
-					option.textContent = servicio.descripcion;
-					selectEsp.appendChild(option);
-				});
+        // Llenar el select oculto
+        selectEsp.innerHTML = '<option value="">-- Seleccionar --</option>';
+        servicios.forEach(servicio => {
+            const option = document.createElement('option');
+            option.value = servicio.codigo;
+            option.textContent = servicio.descripcion;
+            selectEsp.appendChild(option);
+        });
 
-				// Crear datalist inicial
-				crearDatalistOptions(servicios);
+        // Crear datalist inicial (vacío por ahora, se llenará cuando se abra)
+        crearDatalistOptions([]);
 
-				// Seleccionar Medicina General por defecto si existe
-				const def = servicios.find(x => x.descripcion.toUpperCase().includes('MEDICINA GENERAL'));
-				if (def) {
-					seleccionarOpcion(def.codigo, def.descripcion);
-				}
+        toggleClearButton(false);
 
-			} catch (e) {
-				console.error('Error en init:', e);
-			}
-		}
+    } catch (e) {
+        console.error('Error en init:', e);
+    }
+}
 
 		async function showDoctors(cod) {
 			if (!cod) {
@@ -1824,114 +2009,145 @@
 		}
 
 		async function mostrarTurnosEnModal(fecha) {
-			// Mostrar loading
-			turnosSectionModal.style.display = 'block';
-			horariosGridModal.innerHTML = '<p style="padding: 20px; text-align: center; color: #6b7280;">Cargando horarios...</p>';
+		    // Mostrar loading
+		    turnosSectionModal.style.display = 'block';
+		    horariosGridModal.innerHTML = '<p style="padding: 20px; text-align: center; color: #6b7280;">Cargando horarios...</p>';
 
-			// Actualizar título
-			const fechaObj = new Date(fecha);
-			const fechaFormateada = fechaObj.toLocaleDateString('es-PE', {
-				weekday: 'long',
-				day: 'numeric',
-				month: 'long',
-				year: 'numeric'
-			});
+		    // IMPORTANTE: Usar el mismo método de parseo que en cargarDiasDisponibles
+		    // Si la fecha viene como YYYY-MM-DD
+		    let fechaObj;
+		    if (fecha.match(/^\d{4}-\d{2}-\d{2}$/)) {
+		        const [year, month, day] = fecha.split('-').map(Number);
+		        fechaObj = new Date(year, month - 1, day);
+		    } else {
+		        fechaObj = new Date(fecha);
+		    }
 
-			turnosTitleModal.textContent = `Horarios para ${fechaFormateada}`;
-			turnosSubtitleModal.textContent = 'Selecciona un horario disponible';
+		    const fechaFormateada = fechaObj.toLocaleDateString('es-PE', {
+		        weekday: 'long',
+		        day: 'numeric',
+		        month: 'long',
+		        year: 'numeric'
+		    });
 
-			// Hacer scroll hasta la sección de turnos
-			turnosSectionModal.scrollIntoView({ behavior: 'smooth', block: 'start' });
+		    turnosTitleModal.textContent = `Horarios para ${fechaFormateada}`;
+		    turnosSubtitleModal.textContent = 'Selecciona un horario disponible';
 
-			// Cargar turnos
-			turnosDisponibles = await cargarTurnosPorDia(currentMedicoInfo.codigo, currentMedicoInfo.servicioCodigo, fecha);
+		    // Hacer scroll hasta la sección de turnos
+		    turnosSectionModal.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-			if (turnosDisponibles.length === 0) {
-				horariosGridModal.innerHTML = '<p style="padding: 20px; text-align: center; color: #6b7280;">No hay horarios disponibles para este día.</p>';
-				confirmarCitaBtn.disabled = true;
-				return;
-			}
+		    // Cargar turnos - IMPORTANTE: Enviar la fecha original como viene del backend
+		    // No enviar el Date object, enviar el string original
+		    turnosDisponibles = await cargarTurnosPorDia(
+		        currentMedicoInfo.codigo,
+		        currentMedicoInfo.servicioCodigo,
+		        fecha  // Enviar la fecha string original
+		    );
 
-			// Mostrar turnos
-			horariosGridModal.innerHTML = '';
-			turnosDisponibles.forEach(turno => {
-				const horarioBtn = document.createElement('button');
-				horarioBtn.className = `horario-btn ${turno.estado ? 'available' : 'disabled'}`;
-				horarioBtn.disabled = !turno.estado;
+		    if (turnosDisponibles.length === 0) {
+		        horariosGridModal.innerHTML = '<p style="padding: 20px; text-align: center; color: #6b7280;">No hay horarios disponibles para este día.</p>';
+		        confirmarCitaBtn.disabled = true;
+		        return;
+		    }
 
-				const horaFormateada = turno.horaCita ? turno.horaCita.substring(0, 5) : '--:--';
+		    // Mostrar turnos
+		    horariosGridModal.innerHTML = '';
+		    turnosDisponibles.forEach(turno => {
+		        const horarioBtn = document.createElement('button');
+		        horarioBtn.className = `horario-btn ${turno.estado ? 'available' : 'disabled'}`;
+		        horarioBtn.disabled = !turno.estado;
 
-				horarioBtn.innerHTML = `
-					<span class="turno-hora">${horaFormateada}</span>
-					<span class="turno-estado">${turno.estado ? 'DISPONIBLE' : 'OCUPADO'}</span>
-				`;
+		        const horaFormateada = turno.horaCita ? turno.horaCita.substring(0, 5) : '--:--';
 
-				if (turno.estado) {
-					horarioBtn.onclick = () => {
-						// Remover selección anterior
-						document.querySelectorAll('.horario-btn').forEach(btn => {
-							btn.classList.remove('selected-turno');
-						});
+		        horarioBtn.innerHTML = `
+		            <span class="turno-hora">${horaFormateada}</span>
+		            <span class="turno-estado">${turno.estado ? 'DISPONIBLE' : 'OCUPADO'}</span>
+		        `;
 
-						// Seleccionar nuevo turno
-						horarioBtn.classList.add('selected-turno');
-						selectedTurno = turno;
+		        if (turno.estado) {
+		            horarioBtn.onclick = () => {
+		                // Remover selección anterior
+		                document.querySelectorAll('.horario-btn').forEach(btn => {
+		                    btn.classList.remove('selected-turno');
+		                });
 
-						// Habilitar botón de confirmación
-						confirmarCitaBtn.disabled = false;
+		                // Seleccionar nuevo turno
+		                horarioBtn.classList.add('selected-turno');
+		                selectedTurno = turno;
 
-						// Hacer scroll al botón de confirmación
-						setTimeout(() => {
-							confirmarCitaBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
-						}, 300);
-					};
-				}
+		                // Habilitar botón de confirmación
+		                confirmarCitaBtn.disabled = false;
 
-				horariosGridModal.appendChild(horarioBtn);
-			});
+		                // Hacer scroll al botón de confirmación
+		                setTimeout(() => {
+		                    confirmarCitaBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+		                }, 300);
+		            };
+		        }
+
+		        horariosGridModal.appendChild(horarioBtn);
+		    });
 		}
 
 		function mostrarConfirmacionFinal() {
-			if (!selectedTurno || !selectedDia) {
-				alert('Por favor, selecciona un día y horario primero.');
-				return;
-			}
+		    if (!selectedTurno || !selectedDia) {
+		        alert('Por favor, selecciona un día y horario primero.');
+		        return;
+		    }
 
-			// Cargar foto del médico para el modal
-			const fotoUrl = medicosFotos[currentMedicoInfo.codigo];
-			if (fotoUrl) {
-				confirmFotoImg.src = fotoUrl;
-			} else {
-				confirmFotoImg.src = 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=90&w=800&auto=format&fit=crop';
-			}
+		    // Cargar foto del médico para el modal
+		    const fotoUrl = medicosFotos[currentMedicoInfo.codigo];
+		    if (fotoUrl) {
+		        confirmFotoImg.src = fotoUrl;
+		    } else {
+		        confirmFotoImg.src = 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=90&w=800&auto=format&fit=crop';
+		    }
 
-			// Llenar información
-			confirmMedico.textContent = currentMedicoInfo.nombre;
-			confirmEspecialidad.textContent = currentMedicoInfo.especialidad;
+		    // Llenar información
+		    confirmMedico.textContent = currentMedicoInfo.nombre;
+		    confirmEspecialidad.textContent = currentMedicoInfo.especialidad;
 
-			const fechaFormateada = new Date(selectedDia.fecha).toLocaleDateString('es-PE', {
-				weekday: 'long',
-				year: 'numeric',
-				month: 'long',
-				day: 'numeric'
-			});
+		    // CORRECCIÓN: Parsear la fecha correctamente
+		    let fechaObj;
+		    if (selectedDia.fecha.match(/^\d{4}-\d{2}-\d{2}$/)) {
+		        const [year, month, day] = selectedDia.fecha.split('-').map(Number);
+		        fechaObj = new Date(year, month - 1, day);
+		    } else {
+		        fechaObj = new Date(selectedDia.fecha);
+		    }
 
-			confirmFecha.textContent = fechaFormateada;
-			confirmHora.textContent = selectedTurno.horaCita ? selectedTurno.horaCita.substring(0, 5) : '--:--';
+		    const fechaFormateada = fechaObj.toLocaleDateString('es-PE', {
+		        weekday: 'long',
+		        year: 'numeric',
+		        month: 'long',
+		        day: 'numeric'
+		    });
 
-			// Mostrar modal de confirmación
-			confirmModal.classList.add('open');
+		    confirmFecha.textContent = fechaFormateada;
+		    confirmHora.textContent = selectedTurno.horaCita ? selectedTurno.horaCita.substring(0, 5) : '--:--';
+
+		    // Mostrar modal de confirmación
+		    confirmModal.classList.add('open');
 		}
 
 		function confirmarCitaWhatsApp() {
-			if (!selectedTurno || !selectedDia) return;
+		    if (!selectedTurno || !selectedDia) return;
 
-			abrirWhatsApp(
-				currentMedicoInfo.nombre,
-				currentMedicoInfo.especialidad,
-				selectedDia.fecha,
-				selectedTurno.horaCita ? selectedTurno.horaCita.substring(0, 5) : '--:--'
-			);
+		    // CORRECCIÓN: Parsear la fecha correctamente para el mensaje de WhatsApp
+		    let fechaObj;
+		    if (selectedDia.fecha.match(/^\d{4}-\d{2}-\d{2}$/)) {
+		        const [year, month, day] = selectedDia.fecha.split('-').map(Number);
+		        fechaObj = new Date(year, month - 1, day);
+		    } else {
+		        fechaObj = new Date(selectedDia.fecha);
+		    }
+
+		    abrirWhatsApp(
+		        currentMedicoInfo.nombre,
+		        currentMedicoInfo.especialidad,
+		        fechaObj, // Enviar el objeto Date parseado correctamente
+		        selectedTurno.horaCita ? selectedTurno.horaCita.substring(0, 5) : '--:--'
+		    );
 		}
 
 		function closeDisponibilidadModal() {
@@ -1985,6 +2201,44 @@
 				this.style.cursor = '';
 			});
 		});
+
+    // Función para mostrar/ocultar el botón de limpiar
+function toggleClearButton(show) {
+    if (show) {
+        clearSearchBtn.style.display = 'flex';
+        comboboxInput.classList.add('has-text');
+    } else {
+        clearSearchBtn.style.display = 'none';
+        comboboxInput.classList.remove('has-text');
+    }
+}
+
+// Función para limpiar la búsqueda
+function clearSearch() {
+    comboboxInput.value = '';
+    comboboxInput.focus();
+    toggleClearButton(false);
+    selectEsp.value = '';
+
+    // Ocultar la sección de médicos
+    medicosSection.style.display = 'none';
+    emptyPlaceholder.style.display = 'block';
+
+    // IMPORTANTE: Mostrar todas las opciones en el datalist inmediatamente
+    crearDatalistOptions(servicios);
+
+    // Asegurar que el dropdown esté visible
+    if (!datalistOptions.classList.contains('show')) {
+        datalistOptions.classList.add('show');
+    }
+}
+
+   // Event listener para el botón de limpiar - ACTUALIZADO
+clearSearchBtn.addEventListener('click', function(e) {
+    e.stopPropagation(); // IMPORTANTE: Evitar que el clic se propague
+    e.preventDefault(); // Prevenir comportamiento por defecto
+    clearSearch();
+});
 
 </script>
 </body>
