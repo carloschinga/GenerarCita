@@ -13,7 +13,7 @@ public interface ServicioRepository extends JpaRepository<Servicio, String> {
 
     // Consulta nativa usando la sintaxis del prompt:
     // SELECT DISTINCT sercod, serdes FROM view_programacion_medico_deta
-    @Query(value = "SELECT DISTINCT s.sercod, s.serdes FROM view_programacion_medico_deta s",
+    @Query(value = "SELECT DISTINCT s.sercod, s.serdes FROM view_programacion_medico_deta s ORDER BY s.serdes ASC",
             nativeQuery = true)
     List<Servicio> findDistinctServiciosNative();
 
