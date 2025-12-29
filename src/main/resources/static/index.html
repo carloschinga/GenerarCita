@@ -1077,6 +1077,17 @@
         *::-webkit-scrollbar-thumb:hover {
             background: #a8a8a8;
         }
+
+          .datalist-placeholder {
+        color: #6b7280 !important;
+        font-style: italic !important;
+        cursor: default !important;
+        background: #f9fafb !important;
+    }
+
+    .datalist-placeholder:hover {
+        background: #f9fafb !important;
+    }
     </style>
 </head>
 
@@ -1346,48 +1357,64 @@
 		}
 
 		// Función para crear el datalist personalizado
-		function crearDatalistOptions(serviciosList) {
-			datalistOptions.innerHTML = '';
-			filteredOptions = [];
+function crearDatalistOptions(serviciosList) {
+    datalistOptions.innerHTML = '';
+    filteredOptions = [];
 
-			serviciosList.forEach(servicio => {
-				const option = document.createElement('div');
-				option.className = 'datalist-option';
-				option.dataset.value = servicio.codigo;
-				option.dataset.text = servicio.descripcion;
-				option.textContent = servicio.descripcion;
+    // Si no hay servicios o la lista está vacía, mostrar mensaje
+    if (!serviciosList || serviciosList.length === 0) {
+        const emptyOption = document.createElement('div');
+        emptyOption.className = 'datalist-option datalist-placeholder';
+        emptyOption.textContent = 'Escribe el nombre de la especialidad';
+        emptyOption.addEventListener('click', (e) => {
+            e.stopPropagation(); // Evitar que se cierre
+        });
+        datalistOptions.appendChild(emptyOption);
+        return;
+    }
 
-				option.addEventListener('click', () => {
-					seleccionarOpcion(servicio.codigo, servicio.descripcion);
-				});
+    serviciosList.forEach(servicio => {
+        const option = document.createElement('div');
+        option.className = 'datalist-option';
+        option.dataset.value = servicio.codigo;
+        option.dataset.text = servicio.descripcion;
+        option.textContent = servicio.descripcion;
 
-				option.addEventListener('mouseenter', () => {
-					document.querySelectorAll('.datalist-option').forEach(opt => {
-						opt.classList.remove('highlighted');
-					});
-					option.classList.add('highlighted');
-					selectedIndex = Array.from(datalistOptions.children).indexOf(option);
-				});
+        option.addEventListener('click', () => {
+            seleccionarOpcion(servicio.codigo, servicio.descripcion);
+        });
 
-				datalistOptions.appendChild(option);
-				filteredOptions.push(servicio);
-			});
-		}
+        option.addEventListener('mouseenter', () => {
+            document.querySelectorAll('.datalist-option').forEach(opt => {
+                opt.classList.remove('highlighted');
+            });
+            // No resaltar el placeholder
+            if (!option.classList.contains('datalist-placeholder')) {
+                option.classList.add('highlighted');
+                selectedIndex = Array.from(datalistOptions.children).indexOf(option);
+            }
+        });
+
+        datalistOptions.appendChild(option);
+        filteredOptions.push(servicio);
+    });
+}
 
 		// Función para filtrar opciones
-		function filtrarOpciones(searchText) {
-			if (!searchText) {
-				crearDatalistOptions(servicios);
-				return;
-			}
+function filtrarOpciones(searchText) {
+    if (!searchText || searchText.trim() === '') {
+        // Mostrar placeholder cuando no hay texto
+        crearDatalistOptions([]);
+        return;
+    }
 
-			const texto = searchText.toUpperCase();
-			const filtrados = servicios.filter(servicio =>
-				servicio.descripcion.toUpperCase().includes(texto)
-			);
+    const texto = searchText.toUpperCase();
+    const filtrados = servicios.filter(servicio =>
+        servicio.descripcion.toUpperCase().includes(texto)
+    );
 
-			crearDatalistOptions(filtrados);
-		}
+    crearDatalistOptions(filtrados);
+}
 
 		// Función para seleccionar una opción
 		function seleccionarOpcion(codigo, texto) {
@@ -1400,18 +1427,22 @@
 		}
 
 		// Función para mostrar/ocultar el datalist
-		function toggleDatalist(show) {
-			if (show) {
-				datalistOptions.classList.add('show');
-				if (!comboboxInput.value) {
-					crearDatalistOptions(servicios);
-				}
-			} else {
-				setTimeout(() => {
-					datalistOptions.classList.remove('show');
-				}, 150);
-			}
-		}
+function toggleDatalist(show) {
+    if (show) {
+        datalistOptions.classList.add('show');
+        // Si el input está vacío, mostrar todas las opciones
+        if (!comboboxInput.value) {
+            crearDatalistOptions([]); // Mostrar placeholder cuando está vacío
+        } else {
+            // Si hay texto, mostrar las opciones filtradas
+            filtrarOpciones(comboboxInput.value);
+        }
+    } else {
+        setTimeout(() => {
+            datalistOptions.classList.remove('show');
+        }, 150);
+    }
+}
 
 		// Event Listeners para el combobox
 		comboboxInput.addEventListener('focus', () => {
@@ -1522,49 +1553,59 @@
 		}
 
 		async function cargarDiasDisponibles(medcod, sercod) {
-			try {
-				const requestBody = {
-					sercod: sercod,
-					medcod: medcod,
-					fecha: null
-				};
+		    try {
+		        const requestBody = {
+		            sercod: sercod,
+		            medcod: medcod,
+		            fecha: null
+		        };
 
-				const response = await fetch(API_LISTAR_DIAS, {
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json'
-					},
-					body: JSON.stringify(requestBody)
-				});
+		        const response = await fetch(API_LISTAR_DIAS, {
+		            method: 'POST',
+		            headers: {
+		                'Content-Type': 'application/json'
+		            },
+		            body: JSON.stringify(requestBody)
+		        });
 
-				if (!response.ok) {
-					if (response.status === 204) {
-						return [];
-					}
-					throw new Error(`Error HTTP: ${response.status}`);
-				}
+		        if (!response.ok) {
+		            if (response.status === 204) {
+		                return [];
+		            }
+		            throw new Error(`Error HTTP: ${response.status}`);
+		        }
 
-				const dias = await response.json();
+		        const dias = await response.json();
 
-				// Filtrar fechas duplicadas
-				const fechasUnicas = [...new Set(dias.map(dia => dia.fecha))];
+		        // Filtrar fechas duplicadas
+		        const fechasUnicas = [...new Set(dias.map(dia => dia.fecha))];
 
-				// Mapear a un formato más manejable
-				return fechasUnicas.map(fecha => {
-					const fechaObj = new Date(fecha);
-					return {
-						fecha: fecha,
-						fechaObj: fechaObj,
-						diaSemana: fechaObj.toLocaleDateString('es-PE', {weekday: 'short'}).toUpperCase(),
-						diaNumero: fechaObj.getDate(),
-						mes: fechaObj.toLocaleDateString('es-PE', {month: 'short'}).toUpperCase()
-					};
-				}).sort((a, b) => a.fechaObj - b.fechaObj); // Ordenar por fecha
+		        // Mapear a un formato más manejable
+		        return fechasUnicas.map(fechaStr => {
+		            // Parsear fecha correctamente evitando problemas de zona horaria
+		            let fechaObj;
+		            if (fechaStr.match(/^\d{4}-\d{2}-\d{2}$/)) {
+		                const [year, month, day] = fechaStr.split('-').map(Number);
+		                fechaObj = new Date(year, month - 1, day);
+		            } else {
+		                fechaObj = new Date(fechaStr);
+		            }
 
-			} catch (error) {
-				console.error('Error cargando días disponibles:', error);
-				return [];
-			}
+		            console.log('Fecha procesada:', fechaStr, '->', fechaObj.getDate());
+
+		            return {
+		                fecha: fechaStr, // Mantener el string original para enviar al backend
+		                fechaObj: fechaObj, // Para ordenar y mostrar
+		                diaSemana: fechaObj.toLocaleDateString('es-PE', {weekday: 'short'}).toUpperCase(),
+		                diaNumero: fechaObj.getDate(),
+		                mes: fechaObj.toLocaleDateString('es-PE', {month: 'short'}).toUpperCase()
+		            };
+		        }).sort((a, b) => a.fechaObj - b.fechaObj);
+
+		    } catch (error) {
+		        console.error('Error cargando días disponibles:', error);
+		        return [];
+		    }
 		}
 
 		async function cargarTurnosPorDia(medcod, sercod, fecha) {
@@ -1824,114 +1865,145 @@
 		}
 
 		async function mostrarTurnosEnModal(fecha) {
-			// Mostrar loading
-			turnosSectionModal.style.display = 'block';
-			horariosGridModal.innerHTML = '<p style="padding: 20px; text-align: center; color: #6b7280;">Cargando horarios...</p>';
+		    // Mostrar loading
+		    turnosSectionModal.style.display = 'block';
+		    horariosGridModal.innerHTML = '<p style="padding: 20px; text-align: center; color: #6b7280;">Cargando horarios...</p>';
 
-			// Actualizar título
-			const fechaObj = new Date(fecha);
-			const fechaFormateada = fechaObj.toLocaleDateString('es-PE', {
-				weekday: 'long',
-				day: 'numeric',
-				month: 'long',
-				year: 'numeric'
-			});
+		    // IMPORTANTE: Usar el mismo método de parseo que en cargarDiasDisponibles
+		    // Si la fecha viene como YYYY-MM-DD
+		    let fechaObj;
+		    if (fecha.match(/^\d{4}-\d{2}-\d{2}$/)) {
+		        const [year, month, day] = fecha.split('-').map(Number);
+		        fechaObj = new Date(year, month - 1, day);
+		    } else {
+		        fechaObj = new Date(fecha);
+		    }
 
-			turnosTitleModal.textContent = `Horarios para ${fechaFormateada}`;
-			turnosSubtitleModal.textContent = 'Selecciona un horario disponible';
+		    const fechaFormateada = fechaObj.toLocaleDateString('es-PE', {
+		        weekday: 'long',
+		        day: 'numeric',
+		        month: 'long',
+		        year: 'numeric'
+		    });
 
-			// Hacer scroll hasta la sección de turnos
-			turnosSectionModal.scrollIntoView({ behavior: 'smooth', block: 'start' });
+		    turnosTitleModal.textContent = `Horarios para ${fechaFormateada}`;
+		    turnosSubtitleModal.textContent = 'Selecciona un horario disponible';
 
-			// Cargar turnos
-			turnosDisponibles = await cargarTurnosPorDia(currentMedicoInfo.codigo, currentMedicoInfo.servicioCodigo, fecha);
+		    // Hacer scroll hasta la sección de turnos
+		    turnosSectionModal.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-			if (turnosDisponibles.length === 0) {
-				horariosGridModal.innerHTML = '<p style="padding: 20px; text-align: center; color: #6b7280;">No hay horarios disponibles para este día.</p>';
-				confirmarCitaBtn.disabled = true;
-				return;
-			}
+		    // Cargar turnos - IMPORTANTE: Enviar la fecha original como viene del backend
+		    // No enviar el Date object, enviar el string original
+		    turnosDisponibles = await cargarTurnosPorDia(
+		        currentMedicoInfo.codigo,
+		        currentMedicoInfo.servicioCodigo,
+		        fecha  // Enviar la fecha string original
+		    );
 
-			// Mostrar turnos
-			horariosGridModal.innerHTML = '';
-			turnosDisponibles.forEach(turno => {
-				const horarioBtn = document.createElement('button');
-				horarioBtn.className = `horario-btn ${turno.estado ? 'available' : 'disabled'}`;
-				horarioBtn.disabled = !turno.estado;
+		    if (turnosDisponibles.length === 0) {
+		        horariosGridModal.innerHTML = '<p style="padding: 20px; text-align: center; color: #6b7280;">No hay horarios disponibles para este día.</p>';
+		        confirmarCitaBtn.disabled = true;
+		        return;
+		    }
 
-				const horaFormateada = turno.horaCita ? turno.horaCita.substring(0, 5) : '--:--';
+		    // Mostrar turnos
+		    horariosGridModal.innerHTML = '';
+		    turnosDisponibles.forEach(turno => {
+		        const horarioBtn = document.createElement('button');
+		        horarioBtn.className = `horario-btn ${turno.estado ? 'available' : 'disabled'}`;
+		        horarioBtn.disabled = !turno.estado;
 
-				horarioBtn.innerHTML = `
-					<span class="turno-hora">${horaFormateada}</span>
-					<span class="turno-estado">${turno.estado ? 'DISPONIBLE' : 'OCUPADO'}</span>
-				`;
+		        const horaFormateada = turno.horaCita ? turno.horaCita.substring(0, 5) : '--:--';
 
-				if (turno.estado) {
-					horarioBtn.onclick = () => {
-						// Remover selección anterior
-						document.querySelectorAll('.horario-btn').forEach(btn => {
-							btn.classList.remove('selected-turno');
-						});
+		        horarioBtn.innerHTML = `
+		            <span class="turno-hora">${horaFormateada}</span>
+		            <span class="turno-estado">${turno.estado ? 'DISPONIBLE' : 'OCUPADO'}</span>
+		        `;
 
-						// Seleccionar nuevo turno
-						horarioBtn.classList.add('selected-turno');
-						selectedTurno = turno;
+		        if (turno.estado) {
+		            horarioBtn.onclick = () => {
+		                // Remover selección anterior
+		                document.querySelectorAll('.horario-btn').forEach(btn => {
+		                    btn.classList.remove('selected-turno');
+		                });
 
-						// Habilitar botón de confirmación
-						confirmarCitaBtn.disabled = false;
+		                // Seleccionar nuevo turno
+		                horarioBtn.classList.add('selected-turno');
+		                selectedTurno = turno;
 
-						// Hacer scroll al botón de confirmación
-						setTimeout(() => {
-							confirmarCitaBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
-						}, 300);
-					};
-				}
+		                // Habilitar botón de confirmación
+		                confirmarCitaBtn.disabled = false;
 
-				horariosGridModal.appendChild(horarioBtn);
-			});
+		                // Hacer scroll al botón de confirmación
+		                setTimeout(() => {
+		                    confirmarCitaBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+		                }, 300);
+		            };
+		        }
+
+		        horariosGridModal.appendChild(horarioBtn);
+		    });
 		}
 
 		function mostrarConfirmacionFinal() {
-			if (!selectedTurno || !selectedDia) {
-				alert('Por favor, selecciona un día y horario primero.');
-				return;
-			}
+		    if (!selectedTurno || !selectedDia) {
+		        alert('Por favor, selecciona un día y horario primero.');
+		        return;
+		    }
 
-			// Cargar foto del médico para el modal
-			const fotoUrl = medicosFotos[currentMedicoInfo.codigo];
-			if (fotoUrl) {
-				confirmFotoImg.src = fotoUrl;
-			} else {
-				confirmFotoImg.src = 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=90&w=800&auto=format&fit=crop';
-			}
+		    // Cargar foto del médico para el modal
+		    const fotoUrl = medicosFotos[currentMedicoInfo.codigo];
+		    if (fotoUrl) {
+		        confirmFotoImg.src = fotoUrl;
+		    } else {
+		        confirmFotoImg.src = 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=90&w=800&auto=format&fit=crop';
+		    }
 
-			// Llenar información
-			confirmMedico.textContent = currentMedicoInfo.nombre;
-			confirmEspecialidad.textContent = currentMedicoInfo.especialidad;
+		    // Llenar información
+		    confirmMedico.textContent = currentMedicoInfo.nombre;
+		    confirmEspecialidad.textContent = currentMedicoInfo.especialidad;
 
-			const fechaFormateada = new Date(selectedDia.fecha).toLocaleDateString('es-PE', {
-				weekday: 'long',
-				year: 'numeric',
-				month: 'long',
-				day: 'numeric'
-			});
+		    // CORRECCIÓN: Parsear la fecha correctamente
+		    let fechaObj;
+		    if (selectedDia.fecha.match(/^\d{4}-\d{2}-\d{2}$/)) {
+		        const [year, month, day] = selectedDia.fecha.split('-').map(Number);
+		        fechaObj = new Date(year, month - 1, day);
+		    } else {
+		        fechaObj = new Date(selectedDia.fecha);
+		    }
 
-			confirmFecha.textContent = fechaFormateada;
-			confirmHora.textContent = selectedTurno.horaCita ? selectedTurno.horaCita.substring(0, 5) : '--:--';
+		    const fechaFormateada = fechaObj.toLocaleDateString('es-PE', {
+		        weekday: 'long',
+		        year: 'numeric',
+		        month: 'long',
+		        day: 'numeric'
+		    });
 
-			// Mostrar modal de confirmación
-			confirmModal.classList.add('open');
+		    confirmFecha.textContent = fechaFormateada;
+		    confirmHora.textContent = selectedTurno.horaCita ? selectedTurno.horaCita.substring(0, 5) : '--:--';
+
+		    // Mostrar modal de confirmación
+		    confirmModal.classList.add('open');
 		}
 
 		function confirmarCitaWhatsApp() {
-			if (!selectedTurno || !selectedDia) return;
+		    if (!selectedTurno || !selectedDia) return;
 
-			abrirWhatsApp(
-				currentMedicoInfo.nombre,
-				currentMedicoInfo.especialidad,
-				selectedDia.fecha,
-				selectedTurno.horaCita ? selectedTurno.horaCita.substring(0, 5) : '--:--'
-			);
+		    // CORRECCIÓN: Parsear la fecha correctamente para el mensaje de WhatsApp
+		    let fechaObj;
+		    if (selectedDia.fecha.match(/^\d{4}-\d{2}-\d{2}$/)) {
+		        const [year, month, day] = selectedDia.fecha.split('-').map(Number);
+		        fechaObj = new Date(year, month - 1, day);
+		    } else {
+		        fechaObj = new Date(selectedDia.fecha);
+		    }
+
+		    abrirWhatsApp(
+		        currentMedicoInfo.nombre,
+		        currentMedicoInfo.especialidad,
+		        fechaObj, // Enviar el objeto Date parseado correctamente
+		        selectedTurno.horaCita ? selectedTurno.horaCita.substring(0, 5) : '--:--'
+		    );
 		}
 
 		function closeDisponibilidadModal() {

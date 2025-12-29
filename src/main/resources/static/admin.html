@@ -847,6 +847,17 @@
             background: #e5e7eb;
         }
 
+            .datalist-placeholder {
+        color: #6b7280 !important;
+        font-style: italic !important;
+        cursor: default !important;
+        background: #f9fafb !important;
+    }
+
+    .datalist-placeholder:hover {
+        background: #f9fafb !important;
+    }
+
     </style>
 </head>
 
@@ -1042,48 +1053,64 @@
 		}
 
 		// Función para crear el datalist personalizado
-		function crearDatalistOptions(serviciosList) {
-			datalistOptions.innerHTML = '';
-			filteredOptions = [];
+function crearDatalistOptions(serviciosList) {
+    datalistOptions.innerHTML = '';
+    filteredOptions = [];
 
-			serviciosList.forEach(servicio => {
-				const option = document.createElement('div');
-				option.className = 'datalist-option';
-				option.dataset.value = servicio.codigo;
-				option.dataset.text = servicio.descripcion;
-				option.textContent = servicio.descripcion;
+    // Si no hay servicios o la lista está vacía, mostrar mensaje
+    if (!serviciosList || serviciosList.length === 0) {
+        const emptyOption = document.createElement('div');
+        emptyOption.className = 'datalist-option datalist-placeholder';
+        emptyOption.textContent = 'Escribe el nombre de la especialidad';
+        emptyOption.addEventListener('click', (e) => {
+            e.stopPropagation(); // Evitar que se cierre
+        });
+        datalistOptions.appendChild(emptyOption);
+        return;
+    }
 
-				option.addEventListener('click', () => {
-					seleccionarOpcion(servicio.codigo, servicio.descripcion);
-				});
+    serviciosList.forEach(servicio => {
+        const option = document.createElement('div');
+        option.className = 'datalist-option';
+        option.dataset.value = servicio.codigo;
+        option.dataset.text = servicio.descripcion;
+        option.textContent = servicio.descripcion;
 
-				option.addEventListener('mouseenter', () => {
-					document.querySelectorAll('.datalist-option').forEach(opt => {
-						opt.classList.remove('highlighted');
-					});
-					option.classList.add('highlighted');
-					selectedIndex = Array.from(datalistOptions.children).indexOf(option);
-				});
+        option.addEventListener('click', () => {
+            seleccionarOpcion(servicio.codigo, servicio.descripcion);
+        });
 
-				datalistOptions.appendChild(option);
-				filteredOptions.push(servicio);
-			});
-		}
+        option.addEventListener('mouseenter', () => {
+            document.querySelectorAll('.datalist-option').forEach(opt => {
+                opt.classList.remove('highlighted');
+            });
+            // No resaltar el placeholder
+            if (!option.classList.contains('datalist-placeholder')) {
+                option.classList.add('highlighted');
+                selectedIndex = Array.from(datalistOptions.children).indexOf(option);
+            }
+        });
+
+        datalistOptions.appendChild(option);
+        filteredOptions.push(servicio);
+    });
+}
 
 		// Función para filtrar opciones
-		function filtrarOpciones(searchText) {
-			if (!searchText) {
-				crearDatalistOptions(servicios);
-				return;
-			}
+function filtrarOpciones(searchText) {
+    if (!searchText || searchText.trim() === '') {
+        // Mostrar placeholder cuando no hay texto
+        crearDatalistOptions([]);
+        return;
+    }
 
-			const texto = searchText.toUpperCase();
-			const filtrados = servicios.filter(servicio =>
-				servicio.descripcion.toUpperCase().includes(texto)
-			);
+    const texto = searchText.toUpperCase();
+    const filtrados = servicios.filter(servicio =>
+        servicio.descripcion.toUpperCase().includes(texto)
+    );
 
-			crearDatalistOptions(filtrados);
-		}
+    crearDatalistOptions(filtrados);
+}
 
 		// Función para seleccionar una opción
 		function seleccionarOpcion(codigo, texto) {
@@ -1096,19 +1123,22 @@
 		}
 
 		// Función para mostrar/ocultar el datalist
-		function toggleDatalist(show) {
-			if (show) {
-				datalistOptions.classList.add('show');
-				if (!comboboxInput.value) {
-					crearDatalistOptions(servicios);
-				}
-			} else {
-				// Pequeño retraso para permitir clics en las opciones
-				setTimeout(() => {
-					datalistOptions.classList.remove('show');
-				}, 150);
-			}
-		}
+function toggleDatalist(show) {
+    if (show) {
+        datalistOptions.classList.add('show');
+        // Si el input está vacío, mostrar todas las opciones
+        if (!comboboxInput.value) {
+            crearDatalistOptions([]); // Mostrar placeholder cuando está vacío
+        } else {
+            // Si hay texto, mostrar las opciones filtradas
+            filtrarOpciones(comboboxInput.value);
+        }
+    } else {
+        setTimeout(() => {
+            datalistOptions.classList.remove('show');
+        }, 150);
+    }
+}
 
 		// Event Listeners para el combobox
 		comboboxInput.addEventListener('focus', () => {
