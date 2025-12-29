@@ -1088,6 +1088,124 @@
     .datalist-placeholder:hover {
         background: #f9fafb !important;
     }
+
+        /* Estilos para el botón de limpiar búsqueda */
+.clear-icon {
+    position: absolute;
+    right: 48px; /* Ajustado para que no se solape con la flecha */
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6b7280;
+    cursor: pointer;
+    z-index: 2;
+    background: #f1f5f9;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    transition: all 0.2s;
+}
+
+.clear-icon:hover {
+    background: #e2e8f0;
+    color: #374151;
+}
+
+/* Ajustar el padding del input cuando el botón de limpiar está visible */
+.combobox-input.has-text {
+    padding-right: 80px; /* Espacio para el botón de limpiar y la flecha */
+}
+
+/* Ajustar la posición de la flecha cuando hay texto */
+.combobox-input.has-text + .dropdown-arrow {
+    right: 48px;
+}
+
+        @media (max-width: 800px) {
+    .clear-icon {
+        right: 44px;
+        width: 24px;
+        height: 24px;
+    }
+
+    .combobox-input.has-text {
+        padding-right: 72px;
+    }
+
+    .combobox-input.has-text + .dropdown-arrow {
+        right: 44px;
+    }
+}
+
+        /* ESTILOS ESPECÍFICOS PARA LA FOTO DEL MODAL */
+.modal-foto {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 1;
+    z-index: 1;
+    transition: transform 0.3s ease-out;
+}
+
+/* Asegurar que la imagen se mantenga centrada y cubra todo el espacio */
+.modal-foto::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to top, rgba(10, 15, 40, 0.9) 0%, rgba(10, 15, 40, 0.4) 50%, rgba(10, 15, 40, 0.2) 100%);
+    z-index: 2;
+}
+
+.modal-left {
+    flex: 0 0 40%;
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    padding: 40px;
+    color: white;
+    overflow: hidden;
+    min-height: 400px; /* Altura mínima */
+}
+
+.profile-overlay {
+    width: 100%;
+    position: relative;
+    z-index: 3; /* Asegurar que esté por encima del gradiente */
+}
+
+/* Para pantallas móviles */
+@media (max-width: 800px) {
+    .modal-left {
+        flex: 0 0 180px;
+        padding: 20px;
+        min-height: 180px;
+    }
+
+    .modal-foto {
+        background-size: cover;
+        background-position: center center;
+    }
+}
+
+/* Para pantallas muy pequeñas */
+@media (max-width: 480px) {
+    .modal-left {
+        flex: 0 0 160px;
+        min-height: 160px;
+    }
+}
+
     </style>
 </head>
 
@@ -1117,6 +1235,8 @@
                     <input type="text" id="comboboxInput" class="combobox-input"
                            placeholder="Escribe para buscar o seleccionar..." autocomplete="off">
                     <i class="fa-solid fa-chevron-down dropdown-arrow"></i>
+                    <!-- Nuevo botón para limpiar -->
+                    <i class="fa-solid fa-times clear-icon" id="clearSearchBtn" style="display: none;"></i>
                     <select id="selectEspecialidad" class="select-hidden">
                         <option value="">-- Seleccionar --</option>
                     </select>
@@ -1292,6 +1412,7 @@
 		let turnosDisponibles = [];
 		let selectedDia = null;
 		let selectedTurno = null;
+		let clearSearchBtn = document.getElementById('clearSearchBtn');
 
 		// Elementos del DOM
 		const comboboxInput = document.getElementById('comboboxInput');
@@ -1357,19 +1478,25 @@
 		}
 
 		// Función para crear el datalist personalizado
-function crearDatalistOptions(serviciosList) {
+// Función para crear el datalist personalizado
+function crearDatalistOptions(serviciosList, showPlaceholder = false) {
     datalistOptions.innerHTML = '';
     filteredOptions = [];
 
-    // Si no hay servicios o la lista está vacía, mostrar mensaje
-    if (!serviciosList || serviciosList.length === 0) {
+    // Si showPlaceholder es true y la lista está vacía, mostrar mensaje
+    if (showPlaceholder && (!serviciosList || serviciosList.length === 0)) {
         const emptyOption = document.createElement('div');
         emptyOption.className = 'datalist-option datalist-placeholder';
-        emptyOption.textContent = 'Escribe el nombre de la especialidad';
+        emptyOption.textContent = 'No se encontraron especialidades';
         emptyOption.addEventListener('click', (e) => {
             e.stopPropagation(); // Evitar que se cierre
         });
         datalistOptions.appendChild(emptyOption);
+        return;
+    }
+
+    // Si la lista está vacía pero no estamos mostrando placeholder, no mostrar nada
+    if (!serviciosList || serviciosList.length === 0) {
         return;
     }
 
@@ -1403,8 +1530,8 @@ function crearDatalistOptions(serviciosList) {
 		// Función para filtrar opciones
 function filtrarOpciones(searchText) {
     if (!searchText || searchText.trim() === '') {
-        // Mostrar placeholder cuando no hay texto
-        crearDatalistOptions([]);
+        // Cuando no hay texto, mostrar TODOS los servicios
+        crearDatalistOptions(servicios);
         return;
     }
 
@@ -1413,49 +1540,66 @@ function filtrarOpciones(searchText) {
         servicio.descripcion.toUpperCase().includes(texto)
     );
 
-    crearDatalistOptions(filtrados);
+    // Mostrar resultados filtrados, y si no hay resultados, mostrar mensaje
+    crearDatalistOptions(filtrados, true); // true = mostrar placeholder si no hay resultados
 }
 
 		// Función para seleccionar una opción
 		function seleccionarOpcion(codigo, texto) {
-			comboboxInput.value = texto;
-			selectEsp.value = codigo;
-			datalistOptions.classList.remove('show');
+    comboboxInput.value = texto;
+    selectEsp.value = codigo;
+    datalistOptions.classList.remove('show');
 
-			// Mostrar médicos
-			showDoctors(codigo);
-		}
+    // Mostrar botón de limpiar cuando hay texto seleccionado
+    toggleClearButton(true);
 
-		// Función para mostrar/ocultar el datalist
+    // Mostrar médicos
+    showDoctors(codigo);
+}
+
+	// Función para mostrar/ocultar el datalist - ACTUALIZADO
 function toggleDatalist(show) {
     if (show) {
         datalistOptions.classList.add('show');
-        // Si el input está vacío, mostrar todas las opciones
-        if (!comboboxInput.value) {
-            crearDatalistOptions([]); // Mostrar placeholder cuando está vacío
+        // Si no hay texto o se acaba de limpiar, mostrar TODAS las opciones
+        if (!comboboxInput.value || comboboxInput.value.trim() === '') {
+            crearDatalistOptions(servicios);
         } else {
             // Si hay texto, mostrar las opciones filtradas
             filtrarOpciones(comboboxInput.value);
         }
     } else {
+        // Pequeño delay para que los clics en las opciones funcionen
         setTimeout(() => {
             datalistOptions.classList.remove('show');
         }, 150);
     }
 }
 
-		// Event Listeners para el combobox
-		comboboxInput.addEventListener('focus', () => {
-			toggleDatalist(true);
-		});
+		// Event Listeners para el combobox - ACTUALIZADO
+comboboxInput.addEventListener('focus', () => {
+    toggleDatalist(true);
+    // Mostrar botón de limpiar solo si hay texto
+    if (comboboxInput.value.trim() !== '') {
+        toggleClearButton(true);
+    }
+});
 
-		comboboxInput.addEventListener('input', (e) => {
-			filtrarOpciones(e.target.value);
-			if (!datalistOptions.classList.contains('show')) {
-				datalistOptions.classList.add('show');
-			}
-			selectedIndex = -1;
-		});
+	// Actualizar la función de input para mostrar/ocultar el botón de limpiar
+comboboxInput.addEventListener('input', (e) => {
+    filtrarOpciones(e.target.value);
+    if (!datalistOptions.classList.contains('show')) {
+        datalistOptions.classList.add('show');
+    }
+    selectedIndex = -1;
+
+    // Mostrar/ocultar botón de limpiar según si hay texto
+    if (e.target.value.trim() !== '') {
+        toggleClearButton(true);
+    } else {
+        toggleClearButton(false);
+    }
+});
 
 		comboboxInput.addEventListener('keydown', (e) => {
 			const options = document.querySelectorAll('.datalist-option');
@@ -1495,12 +1639,15 @@ function toggleDatalist(show) {
 			}
 		});
 
-		// Cerrar datalist al hacer clic fuera
-		document.addEventListener('click', (e) => {
-			if (!comboboxInput.contains(e.target) && !datalistOptions.contains(e.target)) {
-				toggleDatalist(false);
-			}
-		});
+		// Cerrar datalist al hacer clic fuera - ACTUALIZADO
+document.addEventListener('click', (e) => {
+    // Si el clic no es en el input, ni en el datalist, NI en el botón de limpiar
+    if (!comboboxInput.contains(e.target) &&
+        !datalistOptions.contains(e.target) &&
+        !clearSearchBtn.contains(e.target)) {
+        toggleDatalist(false);
+    }
+});
 
 		async function cargarFotoMedico(medcod) {
 			try {
@@ -1669,33 +1816,30 @@ function toggleDatalist(show) {
 
 		document.addEventListener('DOMContentLoaded', init);
 
-		async function init() {
-			try {
-				const s = await fetch(API_SERVICIOS).then(r => r.json());
-				servicios = s;
+		// En la función init, cuando se cargan los servicios:
+async function init() {
+    try {
+        const s = await fetch(API_SERVICIOS).then(r => r.json());
+        servicios = s;
 
-				// Llenar el select oculto
-				selectEsp.innerHTML = '<option value="">-- Seleccionar --</option>';
-				servicios.forEach(servicio => {
-					const option = document.createElement('option');
-					option.value = servicio.codigo;
-					option.textContent = servicio.descripcion;
-					selectEsp.appendChild(option);
-				});
+        // Llenar el select oculto
+        selectEsp.innerHTML = '<option value="">-- Seleccionar --</option>';
+        servicios.forEach(servicio => {
+            const option = document.createElement('option');
+            option.value = servicio.codigo;
+            option.textContent = servicio.descripcion;
+            selectEsp.appendChild(option);
+        });
 
-				// Crear datalist inicial
-				crearDatalistOptions(servicios);
+        // Crear datalist inicial (vacío por ahora, se llenará cuando se abra)
+        crearDatalistOptions([]);
 
-				// Seleccionar Medicina General por defecto si existe
-				const def = servicios.find(x => x.descripcion.toUpperCase().includes('MEDICINA GENERAL'));
-				if (def) {
-					seleccionarOpcion(def.codigo, def.descripcion);
-				}
+        toggleClearButton(false);
 
-			} catch (e) {
-				console.error('Error en init:', e);
-			}
-		}
+    } catch (e) {
+        console.error('Error en init:', e);
+    }
+}
 
 		async function showDoctors(cod) {
 			if (!cod) {
@@ -2057,6 +2201,44 @@ function toggleDatalist(show) {
 				this.style.cursor = '';
 			});
 		});
+
+    // Función para mostrar/ocultar el botón de limpiar
+function toggleClearButton(show) {
+    if (show) {
+        clearSearchBtn.style.display = 'flex';
+        comboboxInput.classList.add('has-text');
+    } else {
+        clearSearchBtn.style.display = 'none';
+        comboboxInput.classList.remove('has-text');
+    }
+}
+
+// Función para limpiar la búsqueda
+function clearSearch() {
+    comboboxInput.value = '';
+    comboboxInput.focus();
+    toggleClearButton(false);
+    selectEsp.value = '';
+
+    // Ocultar la sección de médicos
+    medicosSection.style.display = 'none';
+    emptyPlaceholder.style.display = 'block';
+
+    // IMPORTANTE: Mostrar todas las opciones en el datalist inmediatamente
+    crearDatalistOptions(servicios);
+
+    // Asegurar que el dropdown esté visible
+    if (!datalistOptions.classList.contains('show')) {
+        datalistOptions.classList.add('show');
+    }
+}
+
+   // Event listener para el botón de limpiar - ACTUALIZADO
+clearSearchBtn.addEventListener('click', function(e) {
+    e.stopPropagation(); // IMPORTANTE: Evitar que el clic se propague
+    e.preventDefault(); // Prevenir comportamiento por defecto
+    clearSearch();
+});
 
 </script>
 </body>
