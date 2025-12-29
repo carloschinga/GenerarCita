@@ -32,7 +32,7 @@
         /* HERO BANNER */
         .hero-section {
             position: relative;
-            height: 380px;
+            height: 330px;
             background: linear-gradient(135deg, rgba(42, 59, 144, 0.92) 0%, rgba(30, 40, 117, 0.96) 100%),
                 url('https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?q=80&w=2000&auto=format&fit=crop');
             background-size: cover;
@@ -49,7 +49,7 @@
 
         .top-bar {
             position: absolute;
-            top: 30px;
+            top: 40px;
             left: 0;
             right: 0;
             padding: 0 40px;
@@ -80,12 +80,13 @@
             font-size: 42px;
             font-weight: 800;
             margin-bottom: 10px;
-            margin-top: 20px;
+            margin-top: 15px;
         }
 
         .hero-subtitle {
             font-size: 18px;
             opacity: 0.9;
+            margin-bottom: -20px
         }
 
         /* CONTAINER */
@@ -103,8 +104,9 @@
             padding: 30px;
             border-radius: 24px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
-            margin-top: -60px;
-            margin-bottom: 50px;
+            margin-top: -70px;
+            margin-bottom: 20px;
+            padding: 24px;
         }
 
         .filter-header {
@@ -128,8 +130,12 @@
 
         .controls-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: 1fr;
             gap: 20px;
+        }
+
+        .input-wrapper {
+            position: relative;
         }
 
         .input-wrapper label {
@@ -141,15 +147,100 @@
             text-transform: uppercase;
         }
 
-        .custom-input {
+        /* ESTILOS PARA EL COMBOBOX CON BÚSQUEDA */
+        .combobox-wrapper {
+            position: relative;
             width: 100%;
-            padding: 14px 18px;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6b7280;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .combobox-input {
+            width: 100%;
+            padding: 14px 18px 14px 48px;
             border-radius: 12px;
             border: 2px solid #e5e7eb;
             font-size: 15px;
             outline: none;
             background: #f9fafb;
             font-family: var(--font);
+            cursor: pointer;
+            position: relative;
+            z-index: 1;
+        }
+
+        .combobox-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(42, 59, 144, 0.1);
+        }
+
+        .dropdown-arrow {
+            position: absolute;
+            right: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6b7280;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        /* Ocultar el select nativo pero mantenerlo funcional */
+        .select-hidden {
+            position: absolute;
+            left: -9999px;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        /* Datalist personalizado */
+        .datalist-options {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-top: none;
+            border-radius: 0 0 12px 12px;
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 1000;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+
+        .datalist-options.show {
+            display: block;
+        }
+
+        .datalist-option {
+            padding: 12px 18px;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-size: 15px;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .datalist-option:hover {
+            background: #f9fafb;
+        }
+
+        .datalist-option.highlighted {
+            background: var(--primary);
+            color: white;
+        }
+
+        .datalist-option:last-child {
+            border-bottom: none;
         }
 
         /* GRID DE MÉDICOS */
@@ -262,17 +353,26 @@
             animation: fadeIn 0.3s ease-out;
         }
 
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
         .upload-panel {
             background: white;
             width: 100%;
             max-width: 500px;
+            height: auto;
             max-height: 90vh;
             border-radius: 24px;
             display: flex;
             flex-direction: column;
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-            /* Cambios importantes: */
-            overflow: hidden; /* Evita que todo se desborde */
         }
 
         .upload-header {
@@ -281,7 +381,6 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-shrink: 0; /* Evita que el header se encoja */
         }
 
         .upload-header h3 {
@@ -293,17 +392,6 @@
         .upload-body {
             padding: 25px;
             text-align: center;
-            /* Cambios importantes: */
-            flex: 1; /* Ocupa el espacio disponible */
-            overflow-y: auto; /* Permite scroll solo si es necesario */
-            max-height: calc(90vh - 80px); /* Considera el alto del header */
-        }
-
-        .upload-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-            flex-shrink: 0; /* Evita que los botones se encojan */
         }
 
         .image-preview-container {
@@ -454,51 +542,50 @@
 
         /* RESPONSIVE */
         @media (max-width: 800px) {
-            /* ... tus estilos existentes ... */
+            .main-container {
+                padding: 0 15px;
+            }
+
+            .filter-card {
+                margin-top: -30px;
+                padding: 20px;
+            }
+
+            .controls-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .filter-header h2 {
+                font-size: 20px;
+            }
+
+            .medico-card {
+                height: 380px;
+            }
+
+            .hero-title {
+                font-size: 28px;
+            }
 
             .upload-panel {
-                max-width: 90vw; /* Más flexible en móviles */
+                max-width: 380px;
             }
 
-            .upload-body {
-                padding: 20px 15px; /* Menos padding en móviles */
-            }
-
-            .upload-actions {
-                flex-direction: column; /* Botones en columna en móviles muy pequeños */
-            }
-
-            .btn-cancel,
-            .btn-submit {
-                width: 100%; /* Botones de ancho completo */
+            .upload-preview {
+                width: 180px;
+                height: 180px;
             }
         }
 
         @media (max-width: 480px) {
             .upload-panel {
-                max-width: 95vw;
-                border-radius: 16px; /* Bordes más pequeños en móviles */
-            }
-
-            .upload-header {
-                padding: 15px 20px;
-            }
-
-            .upload-header h3 {
-                font-size: 18px;
-            }
-
-            .upload-body {
-                padding: 15px 12px;
+                max-width: 320px;
             }
 
             .upload-preview {
-                width: 140px;
-                height: 140px;
-            }
-
-            .upload-info h4 {
-                font-size: 16px;
+                width: 160px;
+                height: 160px;
             }
         }
 
@@ -559,141 +646,378 @@
             font-size: 14px;
             color: red;
         }
+
+        /*TELEFONO*/
+
+        /* Estilos para el botón de teléfono */
+        .btn-telefono {
+            position: absolute;
+            right: 40px;
+            background: white;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .btn-telefono:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(42, 59, 144, 0.3);
+        }
+
+        /* Responsive para el botón */
+        @media (max-width: 800px) {
+            .btn-telefono {
+                right: 20px;
+                padding: 8px 16px;
+                font-size: 13px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .btn-telefono span {
+                display: none;
+            }
+            .btn-telefono {
+                padding: 10px;
+                border-radius: 50%;
+                width: 40px;
+                height: 40px;
+                justify-content: center;
+            }
+        }
+
+        /* Modal para teléfonos */
+        .modal-telefono {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(5px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 3000;
+            padding: 20px;
+        }
+
+        .modal-telefono.open {
+            display: flex;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .telefono-panel {
+            background: white;
+            width: 100%;
+            max-width: 500px;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .telefono-header {
+            background: var(--primary);
+            color: white;
+            padding: 20px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .telefono-header h3 {
+            font-weight: 800;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .telefono-body {
+            padding: 25px;
+        }
+
+        .telefono-info {
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .telefono-info h4 {
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        .telefono-lista {
+            margin-bottom: 25px;
+        }
+
+        .telefono-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .telefono-item:last-child {
+            border-bottom: none;
+        }
+
+        .telefono-nombre {
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .telefono-numero {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 16px;
+        }
+
+        .form-telefono {
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 12px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #4b5563;
+            margin-bottom: 5px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 2px solid #e5e7eb;
+            font-size: 15px;
+            font-family: var(--font);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn-secondary {
+            flex: 1;
+            background: #f3f4f6;
+            color: #4b5563;
+            padding: 12px;
+            border-radius: 12px;
+            border: none;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            flex: 1;
+            background: var(--primary);
+            color: white;
+            padding: 12px;
+            border-radius: 12px;
+            border: none;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            background: #233072;
+        }
+
+        .btn-secondary:hover {
+            background: #e5e7eb;
+        }
+
     </style>
 </head>
 
 <body>
 
-    <header class="hero-section">
-        <div class="top-bar">
-            <div class="brand-logo"><img src="img/logo2.png" alt="Logo"></div>
-        </div>
-        <div class="hero-content">
-            <h1 class="hero-title">Staff Médico Especializado</h1>
-            <p class="hero-subtitle">Gestión de fotos del personal médico</p>
-        </div>
-    </header>
+<header class="hero-section">
+    <div class="top-bar">
+        <div class="brand-logo"><img src="img/logo2.png" alt="Logo"></div>
+        <button id="btnTelefono" class="btn-telefono">
+            <i class="fa-solid fa-phone"></i> Teléfonos
+        </button>
+    </div>
+    <div class="hero-content">
+        <h1 class="hero-title">Staff Médico Especializado</h1>
+        <p class="hero-subtitle">Gestión de fotos del personal médico</p>
+    </div>
+</header>
 
-    <div class="main-container">
-        <div class="filter-card">
-            <div class="filter-header">
-                <div class="filter-icon-box"><i class="fa-solid fa-filter"></i></div>
-                <h2>Filtrar Especialidad</h2>
-            </div>
-            <div class="controls-grid">
-                <div class="input-wrapper">
-                    <label>Búsqueda Rápida</label>
-                    <input id="txtEspecialidad" class="custom-input" placeholder="Ej: CARDIOLOGIA...">
-                </div>
-                <div class="input-wrapper">
-                    <label>Lista de Especialidades</label>
-                    <select id="selectEspecialidad" class="custom-input">
+<div class="main-container">
+    <div class="filter-card">
+        <div class="filter-header">
+            <div class="filter-icon-box"><i class="fa-solid fa-filter"></i></div>
+            <h2>Filtrar Especialidad</h2>
+        </div>
+        <div class="controls-grid">
+            <div class="input-wrapper">
+                <label>Buscar Especialidad</label>
+                <div class="combobox-wrapper">
+                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                    <input type="text"
+                           id="comboboxInput"
+                           class="combobox-input"
+                           placeholder="Escribe para buscar o seleccionar..."
+                           autocomplete="off">
+                    <i class="fa-solid fa-chevron-down dropdown-arrow"></i>
+                    <!-- Select oculto que mantiene la funcionalidad -->
+                    <select id="selectEspecialidad" class="select-hidden">
                         <option value="">-- Seleccionar --</option>
                     </select>
+                    <!-- Datalist personalizado -->
+                    <div id="datalistOptions" class="datalist-options"></div>
                 </div>
             </div>
         </div>
-
-        <div id="medicosSection" style="display:none;">
-            <div style="margin-bottom:20px; display:flex; gap:10px; align-items:center;">
-                <h3 style="font-size:24px; font-weight:800; color:#1f2937;">Médicos Disponibles</h3>
-                <span id="badgeCount"
-                    style="background:#2A3B90; color:white; padding:4px 10px; border-radius:20px; font-size:12px; font-weight:700;">0</span>
-            </div>
-            <div id="gridMedicos" class="grid-medicos"></div>
-        </div>
-        <div id="emptyPlaceholder" style="text-align:center; padding:60px; color:#9ca3af;">
-            <i class="fa-solid fa-user-doctor" style="font-size:48px; margin-bottom:16px;"></i>
-            <p>Selecciona una especialidad para ver resultados.</p>
-        </div>
     </div>
 
-    <!-- Modal de Upload de Imagen -->
-    <div id="modalUpload" class="modal-upload">
-        <div class="upload-panel">
-            <div class="upload-header">
-                <h3>Actualizar Foto del Médico</h3>
-                <button class="btn-close" onclick="cerrarUpload()">&times;</button>
-            </div>
-            <div class="upload-body">
-                <div class="image-preview-container">
-                    <div class="current-image">Imagen Actual</div>
-                    <div class="upload-preview">
-                        <div id="noImagePreview" class="no-image">
-                            <i class="fa-solid fa-user-doctor"></i>
-                            <span>Sin imagen</span>
-                        </div>
-                        <img id="previewImg" src="" alt="Vista previa" style="display: none;">
+    <div id="medicosSection" style="display:none;">
+        <div style="margin-bottom:20px; display:flex; gap:10px; align-items:center;">
+            <h3 style="font-size:24px; font-weight:800; color:#1f2937;">Médicos Disponibles</h3>
+            <span id="badgeCount"
+                  style="background:#2A3B90; color:white; padding:4px 10px; border-radius:20px; font-size:12px; font-weight:700;">0</span>
+        </div>
+        <div id="gridMedicos" class="grid-medicos"></div>
+    </div>
+    <div id="emptyPlaceholder" style="text-align:center; padding:60px; color:#9ca3af;">
+        <i class="fa-solid fa-user-doctor" style="font-size:48px; margin-bottom:16px;"></i>
+        <p>Selecciona una especialidad para ver resultados.</p>
+    </div>
+</div>
+
+<!-- Modal de Upload de Imagen -->
+<div id="modalUpload" class="modal-upload">
+    <div class="upload-panel">
+        <div class="upload-header">
+            <h3>Actualizar Foto del Médico</h3>
+            <button class="btn-close" onclick="cerrarUpload()">&times;</button>
+        </div>
+        <div class="upload-body">
+            <div class="image-preview-container">
+                <div class="current-image">Imagen Actual</div>
+                <div class="upload-preview">
+                    <div id="noImagePreview" class="no-image">
+                        <i class="fa-solid fa-user-doctor"></i>
+                        <span>Sin imagen</span>
                     </div>
+                    <img id="previewImg" src="" alt="Vista previa" style="display: none;">
                 </div>
-                
-                <div class="upload-info">
-                    <h4 id="uploadNombre"></h4>
-                    <p id="uploadEspecialidad"></p>
-                    <span class="medico-id">ID: <span id="uploadCodigo"></span></span>
+            </div>
+
+            <div class="upload-info">
+                <h4 id="uploadNombre"></h4>
+                <p id="uploadEspecialidad"></p>
+                <span class="medico-id">ID: <span id="uploadCodigo"></span></span>
+            </div>
+
+            <div class="file-input-wrapper">
+                <label for="fileImg">Seleccionar nueva imagen</label>
+                <input type="file" id="fileImg" accept="image/*">
+            </div>
+
+            <div class="upload-actions">
+                <button class="btn-cancel" onclick="cerrarUpload()">Cancelar</button>
+                <button class="btn-submit" onclick="guardarImagen()" id="btnSubmit">Subir Imagen</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Login -->
+<div id="loginModal" class="login-modal">
+    <div class="login-box">
+        <h2>Iniciar Sesión</h2>
+        <label>Usuario</label>
+        <input type="text" id="username" class="input-login" autocomplete="off">
+        <label>Contraseña</label>
+        <input type="password" id="password" class="input-login">
+        <button id="btnLogin" class="btn-login">Ingresar</button>
+        <p id="loginMessage" class="login-msg"></p>
+    </div>
+</div>
+
+<!-- Modal para teléfonos -->
+<div id="modalTelefono" class="modal-telefono">
+    <div class="telefono-panel">
+        <div class="telefono-header">
+            <h3><i class="fa-solid fa-phone"></i> Mantenimiento de Teléfonos</h3>
+        </div>
+        <div class="telefono-body">
+            <div class="telefono-info">
+                <h4>Contactos de Emergencia</h4>
+                <p>Actualiza los números telefónicos importantes de la clínica.</p>
+            </div>
+
+            <div id="telefonoLista" class="telefono-lista">
+                <!-- Los teléfonos se cargarán aquí dinámicamente -->
+            </div>
+
+            <div class="form-telefono">
+                <h4 style="margin-bottom: 15px;">Actualizar Teléfono</h4>
+                <div class="form-group">
+                    <label>Nombre del Contacto</label>
+                    <input type="text" id="txtNombre" class="custom-input" placeholder="Ej: Emergencias">
                 </div>
-                
-                <div class="file-input-wrapper">
-                    <label for="fileImg">Seleccionar nueva imagen</label>
-                    <input type="file" id="fileImg" accept="image/*">
+                <div class="form-group">
+                    <label>Número de Teléfono</label>
+                    <input type="text" id="txtNumero" class="custom-input" placeholder="Ej: 913039208">
                 </div>
-                
-                <div class="upload-actions">
-                    <button class="btn-cancel" onclick="cerrarUpload()">Cancelar</button>
-                    <button class="btn-submit" onclick="guardarImagen()" id="btnSubmit">Subir Imagen</button>
+                <div class="form-actions">
+                    <button class="btn-secondary" onclick="cerrarTelefono()">Cancelar</button>
+                    <button class="btn-primary" onclick="guardarTelefono()" id="btnGuardarTel">Guardar</button>
                 </div>
             </div>
         </div>
     </div>
-
-    <!-- Modal de Login -->
-    <div id="loginModal" class="login-modal">
-        <div class="login-box">
-            <h2>Iniciar Sesión</h2>
-            <label>Usuario</label>
-            <input type="text" id="username" class="input-login" autocomplete="off">
-            <label>Contraseña</label>
-            <input type="password" id="password" class="input-login">
-            <button id="btnLogin" class="btn-login">Ingresar</button>
-            <p id="loginMessage" class="login-msg"></p>
-        </div>
-    </div>
+</div>
 
     <script>
+        // URL BASE para todas las APIs
+        const API_BASE = 'http://181.224.248.20'; // Cambia esto según tu servidor
 
-		// URLs de API - Ajusta según tu configuración
-		/*const API_SERVICIOS = 'http://localhost:8082/gcita/servicio/listar';
-		const API_MEDICOS = 'http://localhost:8082/gcita/medico/listar';
-		const API_FOTOS = 'http://localhost:8082/gcita/api/doctor/getFoto';
-		const API_UPLOAD = 'http://localhost:8082/gcita/api/doctor/upload'; // Tu endpoint actual
-		const API_AUTH = 'http://localhost:8082/gcita/auth/login';
-        */
+        //const API_BASE = 'http://localhost:8082';
 
-    /*
-        const API_SERVICIOS = 'http://181.224.248.20/gcita/servicio/listar';
-		const API_MEDICOS = 'http://181.224.248.20/gcita/medico/listar';
-		const API_FOTOS = 'http://181.224.248.20/gcita/api/doctor/getFoto';
-		const API_UPLOAD = 'http://181.224.248.20/gcita/api/doctor/upload'; // Tu endpoint actual
-		const API_AUTH = 'http://181.224.248.20/gcita/auth/login';
-		*/
+        // URLs de API - Usando la URL base
+        const API_SERVICIOS = `${API_BASE}/GenerarCita/servicio/listar`;
+        const API_MEDICOS = `${API_BASE}/GenerarCita/medico/listarByServicio`;
+        const API_FOTOS = `${API_BASE}/GenerarCita/api/doctor/getFoto`;
+        const API_AUTH = `${API_BASE}/GenerarCita/auth/login`;
+        const API_UPLOAD = `${API_BASE}/GenerarCita/api/doctor/upload`;
 
-        const API_SERVICIOS = '/GenerarCita/servicio/listar';
-        const API_MEDICOS = '/GenerarCita/medico/listar';
-        const API_FOTOS = '/GenerarCita/api/doctor/getFoto';
-        const API_AUTH = '/GenerarCita/auth/login';
-        const API_UPLOAD = '/GenerarCita/api/doctor/upload';
+        // Base URL para las fotos
+        const FOTOS_BASE_URL = 'http://181.224.248.20/appfotos/';
 
-		// Base URL para las fotos
-		const FOTOS_BASE_URL = 'http://181.224.248.20/appfotos/';
-
-		// Variables globales
-		let servicios = [], medicos = [];
+        // Variables globales
+		let servicios = [];
 		let medicosFotos = {}; // Cache de fotos: {medcod: url}
 		let currentMedico = null;
 
 		// Elementos del DOM
+		const comboboxInput = document.getElementById('comboboxInput');
 		const selectEsp = document.getElementById('selectEspecialidad');
-		const inputEsp = document.getElementById('txtEspecialidad');
+		const datalistOptions = document.getElementById('datalistOptions');
 		const gridMed = document.getElementById('gridMedicos');
 		const medicosSection = document.getElementById('medicosSection');
 		const emptyPlaceholder = document.getElementById('emptyPlaceholder');
@@ -708,71 +1032,202 @@
 		const fileInput = document.getElementById('fileImg');
 		const btnSubmit = document.getElementById('btnSubmit');
 
+		// Variables para controlar el datalist
+		let filteredOptions = [];
+		let selectedIndex = -1;
+
 		// Función para formatear el código del médico a 4 dígitos
 		function formatMedCod(codigo) {
-		    return String(codigo).padStart(4, '0');
+			return String(codigo).padStart(4, '0');
 		}
+
+		// Función para crear el datalist personalizado
+		function crearDatalistOptions(serviciosList) {
+			datalistOptions.innerHTML = '';
+			filteredOptions = [];
+
+			serviciosList.forEach(servicio => {
+				const option = document.createElement('div');
+				option.className = 'datalist-option';
+				option.dataset.value = servicio.codigo;
+				option.dataset.text = servicio.descripcion;
+				option.textContent = servicio.descripcion;
+
+				option.addEventListener('click', () => {
+					seleccionarOpcion(servicio.codigo, servicio.descripcion);
+				});
+
+				option.addEventListener('mouseenter', () => {
+					document.querySelectorAll('.datalist-option').forEach(opt => {
+						opt.classList.remove('highlighted');
+					});
+					option.classList.add('highlighted');
+					selectedIndex = Array.from(datalistOptions.children).indexOf(option);
+				});
+
+				datalistOptions.appendChild(option);
+				filteredOptions.push(servicio);
+			});
+		}
+
+		// Función para filtrar opciones
+		function filtrarOpciones(searchText) {
+			if (!searchText) {
+				crearDatalistOptions(servicios);
+				return;
+			}
+
+			const texto = searchText.toUpperCase();
+			const filtrados = servicios.filter(servicio =>
+				servicio.descripcion.toUpperCase().includes(texto)
+			);
+
+			crearDatalistOptions(filtrados);
+		}
+
+		// Función para seleccionar una opción
+		function seleccionarOpcion(codigo, texto) {
+			comboboxInput.value = texto;
+			selectEsp.value = codigo;
+			datalistOptions.classList.remove('show');
+
+			// Llamar a la función para mostrar médicos
+			showDoctors(codigo);
+		}
+
+		// Función para mostrar/ocultar el datalist
+		function toggleDatalist(show) {
+			if (show) {
+				datalistOptions.classList.add('show');
+				if (!comboboxInput.value) {
+					crearDatalistOptions(servicios);
+				}
+			} else {
+				// Pequeño retraso para permitir clics en las opciones
+				setTimeout(() => {
+					datalistOptions.classList.remove('show');
+				}, 150);
+			}
+		}
+
+		// Event Listeners para el combobox
+		comboboxInput.addEventListener('focus', () => {
+			toggleDatalist(true);
+		});
+
+		comboboxInput.addEventListener('input', (e) => {
+			filtrarOpciones(e.target.value);
+			if (!datalistOptions.classList.contains('show')) {
+				datalistOptions.classList.add('show');
+			}
+			selectedIndex = -1;
+		});
+
+		comboboxInput.addEventListener('keydown', (e) => {
+			const options = document.querySelectorAll('.datalist-option');
+
+			switch(e.key) {
+				case 'ArrowDown':
+					e.preventDefault();
+					if (options.length > 0) {
+						selectedIndex = (selectedIndex + 1) % options.length;
+						options.forEach(opt => opt.classList.remove('highlighted'));
+						options[selectedIndex].classList.add('highlighted');
+						options[selectedIndex].scrollIntoView({ block: 'nearest' });
+					}
+					break;
+
+				case 'ArrowUp':
+					e.preventDefault();
+					if (options.length > 0) {
+						selectedIndex = (selectedIndex - 1 + options.length) % options.length;
+						options.forEach(opt => opt.classList.remove('highlighted'));
+						options[selectedIndex].classList.add('highlighted');
+						options[selectedIndex].scrollIntoView({ block: 'nearest' });
+					}
+					break;
+
+				case 'Enter':
+					e.preventDefault();
+					if (selectedIndex >= 0 && options[selectedIndex]) {
+						const option = options[selectedIndex];
+						seleccionarOpcion(option.dataset.value, option.dataset.text);
+					}
+					break;
+
+				case 'Escape':
+					toggleDatalist(false);
+					break;
+			}
+		});
+
+		// Cerrar datalist al hacer clic fuera
+		document.addEventListener('click', (e) => {
+			if (!comboboxInput.contains(e.target) && !datalistOptions.contains(e.target)) {
+				toggleDatalist(false);
+			}
+		});
 
 		// Función para cargar fotos de un médico
 		async function cargarFotoMedico(medcod) {
-		    try {
-		        // Si ya tenemos la foto en cache, usarla
-		        if (medicosFotos[medcod]) {
-		            return medicosFotos[medcod];
-		        }
-		        
-		        // Obtener las fotos del médico desde tu API
-		        const response = await fetch(`${API_FOTOS}/${medcod}`);
-		        if (!response.ok) {
-		            if (response.status === 204) {
-		                console.log(`No hay fotos para el médico ${medcod}`);
-		            }
-		            return null;
-		        }
-		        
-		        const fotos = await response.json();
-		        console.log('Fotos recibidas para', medcod, ':', fotos);
-		        
-		        if (fotos && fotos.length > 0) {
-		            // Buscar la primera foto con URL válida
-		            const foto = fotos[0];
-		            let fotoUrl = null;
-		            
-		            if (foto.urlFoto) {
-		                // Construir la URL completa
-		                fotoUrl = FOTOS_BASE_URL + foto.urlFoto;
-		                console.log('URL construida:', fotoUrl);
-		            } else if (foto.url) {
-		                // Si ya viene la URL completa
-		                fotoUrl = foto.url;
-		            }
-		            
-		            if (fotoUrl) {
-		                // Verificar que la imagen existe
-		                const imgExists = await verificarImagen(fotoUrl);
-		                if (imgExists) {
-		                    medicosFotos[medcod] = fotoUrl;
-		                    return fotoUrl;
-		                } else {
-		                    console.warn(`La imagen no existe en la URL: ${fotoUrl}`);
-		                }
-		            }
-		        }
-		        return null;
-		    } catch (error) {
-		        console.error(`Error cargando foto para ${medcod}:`, error);
-		        return null;
-		    }
+			try {
+				// Si ya tenemos la foto en cache, usarla
+				if (medicosFotos[medcod]) {
+					return medicosFotos[medcod];
+				}
+
+				// Obtener las fotos del médico desde tu API
+				const response = await fetch(`${API_FOTOS}/${medcod}`);
+				if (!response.ok) {
+					if (response.status === 204) {
+						console.log(`No hay fotos para el médico ${medcod}`);
+					}
+					return null;
+				}
+
+				const fotos = await response.json();
+				console.log('Fotos recibidas para', medcod, ':', fotos);
+
+				if (fotos && fotos.length > 0) {
+					// Buscar la primera foto con URL válida
+					const foto = fotos[0];
+					let fotoUrl = null;
+
+					if (foto.urlFoto) {
+						// Construir la URL completa
+						fotoUrl = FOTOS_BASE_URL + foto.urlFoto;
+						console.log('URL construida:', fotoUrl);
+					} else if (foto.url) {
+						// Si ya viene la URL completa
+						fotoUrl = foto.url;
+					}
+
+					if (fotoUrl) {
+						// Verificar que la imagen existe
+						const imgExists = await verificarImagen(fotoUrl);
+						if (imgExists) {
+							medicosFotos[medcod] = fotoUrl;
+							return fotoUrl;
+						} else {
+							console.warn(`La imagen no existe en la URL: ${fotoUrl}`);
+						}
+					}
+				}
+				return null;
+			} catch (error) {
+				console.error(`Error cargando foto para ${medcod}:`, error);
+				return null;
+			}
 		}
 
 		// Función para verificar si una imagen existe
 		function verificarImagen(url) {
-		    return new Promise((resolve) => {
-		        const img = new Image();
-		        img.onload = () => resolve(true);
-		        img.onerror = () => resolve(false);
-		        img.src = url;
-		    });
+			return new Promise((resolve) => {
+				const img = new Image();
+				img.onload = () => resolve(true);
+				img.onerror = () => resolve(false);
+				img.src = url;
+			});
 		}
 
 		// Inicialización
@@ -780,82 +1235,63 @@
 
 		async function init() {
 		    try {
-		        const [s, m] = await Promise.all([
-		            fetch(API_SERVICIOS).then(r => r.json()),
-		            fetch(API_MEDICOS).then(r => r.json())
-		        ]);
-		        servicios = s; 
-		        medicos = m;
-		        fillSelect(servicios);
+		        // Solo cargar servicios
+		        const s = await fetch(API_SERVICIOS).then(r => r.json());
+		        servicios = s;
 
+		        // Llenar el select oculto
+		        selectEsp.innerHTML = '<option value="">-- Seleccionar --</option>';
+		        servicios.forEach(servicio => {
+		            const option = document.createElement('option');
+		            option.value = servicio.codigo;
+		            option.textContent = servicio.descripcion;
+		            selectEsp.appendChild(option);
+		        });
+
+		        // Crear datalist inicial
+		        crearDatalistOptions(servicios);
+
+		        // Seleccionar Medicina General por defecto si existe
 		        const def = servicios.find(x => x.descripcion.toUpperCase().includes('MEDICINA GENERAL'));
 		        if (def) {
-		            selectEsp.value = def.codigo;
-		            await showDoctors(def.codigo);
+		            seleccionarOpcion(def.codigo, def.descripcion);
 		        }
 
-		        inputEsp.addEventListener('input', e => filterServices(e.target.value));
-		        selectEsp.addEventListener('change', async (e) => {
-		            await showDoctors(e.target.value);
-		        });
+				// Event listener para vista previa de imagen seleccionada
+				fileInput.addEventListener('change', function (e) {
+					const file = e.target.files[0];
+					if (file) {
+						// Validar tipo de archivo
+						if (!file.type.match('image.*')) {
+							alert('Por favor, selecciona un archivo de imagen válido (JPG, PNG, etc.)');
+							fileInput.value = '';
+							return;
+						}
 
-		        // Event listener para vista previa de imagen seleccionada
-		        fileInput.addEventListener('change', function(e) {
-		            const file = e.target.files[0];
-		            if (file) {
-		                // Validar tipo de archivo
-		                if (!file.type.match('image.*')) {
-		                    alert('Por favor, selecciona un archivo de imagen válido (JPG, PNG, etc.)');
-		                    fileInput.value = '';
-		                    return;
-		                }
-		                
-		                // Validar tamaño (máximo 5MB)
-		                if (file.size > 10 * 1024 * 1024) {
-		                    alert('La imagen es demasiado grande. Máximo 5MB.');
-		                    fileInput.value = '';
-		                    return;
-		                }
-		                
-		                const reader = new FileReader();
-		                reader.onload = function(e) {
-		                    previewImg.src = e.target.result;
-		                    previewImg.style.display = 'block';
-		                    noImagePreview.style.display = 'none';
-		                }
-		                reader.readAsDataURL(file);
-		            }
-		        });
-		    } catch (e) {
-		        console.error('Error en init:', e);
-		    }
+						// Validar tamaño (máximo 5MB)
+						if (file.size > 10 * 1024 * 1024) {
+							alert('La imagen es demasiado grande. Máximo 5MB.');
+							fileInput.value = '';
+							return;
+						}
+
+						const reader = new FileReader();
+						reader.onload = function (e) {
+							previewImg.src = e.target.result;
+							previewImg.style.display = 'block';
+							noImagePreview.style.display = 'none';
+						}
+						reader.readAsDataURL(file);
+					}
+				});
+
+				document.getElementById('btnTelefono').addEventListener('click', abrirModalTelefono);
+			} catch (e) {
+				console.error('Error en init:', e);
+			}
 		}
 
-		function fillSelect(list) {
-		    selectEsp.innerHTML = '<option value="">-- Seleccionar --</option>';
-		    list.forEach(i => {
-		        const o = document.createElement('option');
-		        o.value = i.codigo;
-		        o.textContent = i.descripcion;
-		        selectEsp.appendChild(o);
-		    });
-		}
-
-		function filterServices(txt) {
-		    txt = txt.toUpperCase();
-		    if (!txt) {
-		        fillSelect(servicios);
-		        return;
-		    }
-		    const f = servicios.filter(x => x.descripcion.toUpperCase().includes(txt));
-		    fillSelect(f);
-		    if (f.length === 1) {
-		        selectEsp.value = f[0].codigo;
-		        showDoctors(f[0].codigo);
-		    }
-		}
-
-		// Función para mostrar médicos (MODIFICADA)
+		// Función para mostrar médicos usando la nueva API
 		async function showDoctors(cod) {
 		    if (!cod) {
 		        medicosSection.style.display = 'none';
@@ -863,289 +1299,472 @@
 		        return;
 		    }
 
-		    const docs = medicos.filter(x => String(x.codigoServicio) === String(cod));
-		    gridMed.innerHTML = '';
-		    badgeCount.textContent = docs.length;
+		    try {
+		        // Llamar a la nueva API con el código del servicio
+		        const response = await fetch(`${API_MEDICOS}/${cod}`);
 
-		    if (docs.length === 0) {
-		        medicosSection.style.display = 'none';
-		        emptyPlaceholder.style.display = 'block';
-		        emptyPlaceholder.innerHTML = '<p>No hay médicos en esta especialidad.</p>';
-		        return;
-		    }
-
-		    medicosSection.style.display = 'block';
-		    emptyPlaceholder.style.display = 'none';
-
-		    // Cargar fotos para todos los médicos
-		    for (const d of docs) {
-		        const div = document.createElement('div');
-		        div.className = 'medico-card';
-		        
-		        // Formatear el código del médico para que tenga 4 dígitos
-		        const medcod = formatMedCod(d.codigo);
-		        
-		        // Intentar cargar la foto
-		        let fotoUrl = await cargarFotoMedico(medcod);
-		        
-		        // Si no hay foto, usar una por defecto
-		        if (!fotoUrl) {
-		            fotoUrl = 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=90&w=800&auto=format&fit=crop';
-		        }
-		        
-		        // Establecer la imagen de fondo
-		        div.style.backgroundImage = `url('${fotoUrl}')`;
-		        
-		        // Agregar estilo para mejor visualización
-		        div.style.backgroundSize = 'cover';
-		        div.style.backgroundPosition = 'center top';
-		        div.style.backgroundRepeat = 'no-repeat';
-
-		        // Almacenar datos del médico como atributos personalizados
-		        div.setAttribute('data-medcod', medcod);
-		        div.setAttribute('data-nombre', esc(d.descripcion));
-		        div.setAttribute('data-especialidad', d.codigoServicio);
-		        
-		        // Agregar evento de clic a toda la tarjeta
-		        div.addEventListener('click', function(e) {
-		            // Prevenir que se active cuando se hace clic en el botón
-		            if (e.target.closest('.card-btn')) {
+		        if (!response.ok) {
+		            if (response.status === 204) {
+		                // No hay médicos para este servicio
+		                medicosSection.style.display = 'none';
+		                emptyPlaceholder.style.display = 'block';
+		                emptyPlaceholder.innerHTML = '<p>No hay médicos en esta especialidad.</p>';
 		                return;
 		            }
-		            
-		            const medcod = this.getAttribute('data-medcod');
-		            const nombre = this.getAttribute('data-nombre');
-		            const especialidad = this.getAttribute('data-especialidad');
-		            
-		            abrirUploadModal(medcod, nombre, especialidad);
-		        });
+		            throw new Error(`Error HTTP: ${response.status}`);
+		        }
 
-		        div.innerHTML = `
-		            <div class="card-overlay">
-		                <div class="card-name">${d.descripcion}</div>
-		                <div class="card-spec">${getServiceName(d.codigoServicio)}</div>
-		                <button class="card-btn" onclick="event.stopPropagation(); abrirUploadModal('${medcod}', '${esc(d.descripcion)}', ${d.codigoServicio})">
-		                    <i class="fa-solid fa-camera"></i> Gestionar Foto
-		                </button>
-		            </div>
-		        `;
-		        gridMed.appendChild(div);
+		        const docs = await response.json();
+		        gridMed.innerHTML = '';
+		        badgeCount.textContent = docs.length;
+
+		        if (docs.length === 0) {
+		            medicosSection.style.display = 'none';
+		            emptyPlaceholder.style.display = 'block';
+		            emptyPlaceholder.innerHTML = '<p>No hay médicos en esta especialidad.</p>';
+		            return;
+		        }
+
+		        medicosSection.style.display = 'block';
+		        emptyPlaceholder.style.display = 'none';
+
+		        // Cargar fotos para todos los médicos
+		        for (const d of docs) {
+		            const div = document.createElement('div');
+		            div.className = 'medico-card';
+
+		            const medcod = formatMedCod(d.codigo);
+		            let fotoUrl = await cargarFotoMedico(medcod);
+
+		            if (!fotoUrl) {
+		                fotoUrl = 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=90&w=800&auto=format&fit=crop';
+		            }
+
+		            div.style.backgroundImage = `url('${fotoUrl}')`;
+		            div.style.backgroundSize = 'cover';
+		            div.style.backgroundPosition = 'center top';
+		            div.style.backgroundRepeat = 'no-repeat';
+
+		            div.setAttribute('data-medcod', medcod);
+		            div.setAttribute('data-nombre', esc(d.descripcion));
+		            div.setAttribute('data-especialidad', d.codigoServicio);
+
+		            div.addEventListener('click', function (e) {
+		                if (e.target.closest('.card-btn')) {
+		                    return;
+		                }
+		                const medcod = this.getAttribute('data-medcod');
+		                const nombre = this.getAttribute('data-nombre');
+		                const especialidad = this.getAttribute('data-especialidad');
+		                abrirUploadModal(medcod, nombre, especialidad);
+		            });
+
+		            div.innerHTML = `
+		                <div class="card-overlay">
+		                    <div class="card-name">${d.descripcion}</div>
+		                    <div class="card-spec">${getServiceName(d.codigoServicio)}</div>
+		                    <button class="card-btn" onclick="event.stopPropagation(); abrirUploadModal('${medcod}', '${esc(d.descripcion)}', ${d.codigoServicio})">
+		                        <i class="fa-solid fa-camera"></i> Gestionar Foto
+		                    </button>
+		                </div>
+		            `;
+		            gridMed.appendChild(div);
+		        }
+		    } catch (error) {
+		        console.error('Error cargando médicos:', error);
+		        medicosSection.style.display = 'none';
+		        emptyPlaceholder.style.display = 'block';
+		        emptyPlaceholder.innerHTML = '<p>Error al cargar los médicos. Intenta de nuevo.</p>';
 		    }
 		}
 
 		// Función para abrir modal de upload
 		async function abrirUploadModal(medcod, nombre, codServ) {
-		    currentMedico = {
-		        medcod: medcod, // Ya viene formateado
-		        nombre: unesc(nombre),
-		        especialidad: getServiceName(codServ)
-		    };
+			currentMedico = {
+				medcod: medcod, // Ya viene formateado
+				nombre: unesc(nombre),
+				especialidad: getServiceName(codServ)
+			};
 
-		    // Mostrar información en el modal
-		    uploadNombre.textContent = currentMedico.nombre;
-		    uploadEspecialidad.textContent = currentMedico.especialidad;
-		    uploadCodigo.textContent = currentMedico.medcod;
+			// Mostrar información en el modal
+			uploadNombre.textContent = currentMedico.nombre;
+			uploadEspecialidad.textContent = currentMedico.especialidad;
+			uploadCodigo.textContent = currentMedico.medcod;
 
-		    // Obtener foto actual
-		    try {
-		        const fotoUrl = await cargarFotoMedico(currentMedico.medcod);
-		        
-		        if (fotoUrl) {
-		            previewImg.src = fotoUrl;
-		            previewImg.style.display = 'block';
-		            noImagePreview.style.display = 'none';
-		            document.querySelector('.current-image').textContent = 'Imagen Actual';
-		        } else {
-		            previewImg.style.display = 'none';
-		            noImagePreview.style.display = 'flex';
-		            document.querySelector('.current-image').textContent = 'Sin Imagen';
-		        }
-		    } catch (error) {
-		        console.error('Error cargando foto para modal:', error);
-		        previewImg.style.display = 'none';
-		        noImagePreview.style.display = 'flex';
-		        document.querySelector('.current-image').textContent = 'Sin Imagen';
-		    }
+			// Obtener foto actual
+			try {
+				const fotoUrl = await cargarFotoMedico(currentMedico.medcod);
 
-		    // Limpiar input de archivo
-		    fileInput.value = '';
+				if (fotoUrl) {
+					previewImg.src = fotoUrl;
+					previewImg.style.display = 'block';
+					noImagePreview.style.display = 'none';
+					document.querySelector('.current-image').textContent = 'Imagen Actual';
+				} else {
+					previewImg.style.display = 'none';
+					noImagePreview.style.display = 'flex';
+					document.querySelector('.current-image').textContent = 'Sin Imagen';
+				}
+			} catch (error) {
+				console.error('Error cargando foto para modal:', error);
+				previewImg.style.display = 'none';
+				noImagePreview.style.display = 'flex';
+				document.querySelector('.current-image').textContent = 'Sin Imagen';
+			}
 
-		    // Mostrar modal
-		    modalUpload.classList.add('open');
-		    document.body.style.overflow = 'hidden';
+			// Limpiar input de archivo
+			fileInput.value = '';
+
+			// Mostrar modal
+			modalUpload.classList.add('open');
+			document.body.style.overflow = 'hidden';
 		}
 
 		// Función para subir la imagen
 		async function guardarImagen() {
-		    if (!currentMedico) {
-		        alert('No hay médico seleccionado');
-		        return;
-		    }
+			if (!currentMedico) {
+				alert('No hay médico seleccionado');
+				return;
+			}
 
-		    const file = fileInput.files[0];
-		    if (!file) {
-		        alert('Por favor, selecciona una imagen primero');
-		        return;
-		    }
+			const file = fileInput.files[0];
+			if (!file) {
+				alert('Por favor, selecciona una imagen primero');
+				return;
+			}
 
-		    if (!file.type.match('image.*')) {
-		        alert('Por favor, selecciona un archivo de imagen válido');
-		        return;
-		    }
+			if (!file.type.match('image.*')) {
+				alert('Por favor, selecciona un archivo de imagen válido');
+				return;
+			}
 
-		    // Validar tamaño (máximo 5MB)
-		    if (file.size > 10 * 1024 * 1024) {
-		        alert('La imagen es demasiado grande. Máximo 5MB.');
-		        return;
-		    }
+			// Validar tamaño (máximo 5MB)
+			if (file.size > 10 * 1024 * 1024) {
+				alert('La imagen es demasiado grande. Máximo 5MB.');
+				return;
+			}
 
-		    // Deshabilitar botón mientras se sube
-		    btnSubmit.disabled = true;
-		    btnSubmit.textContent = 'Subiendo...';
+			// Deshabilitar botón mientras se sube
+			btnSubmit.disabled = true;
+			btnSubmit.textContent = 'Subiendo...';
 
-		    // Crear FormData según lo que espera tu endpoint
-		    const formData = new FormData();
-		    formData.append('file', file); // Tu endpoint espera 'file' como parámetro
-		    
-		    // El doctorId va en el path, no en el formData
+			// Crear FormData según lo que espera tu endpoint
+			const formData = new FormData();
+			formData.append('file', file); // Tu endpoint espera 'file' como parámetro
 
-		    try {
-		        // Usar tu endpoint de upload
-		        const response = await fetch(`${API_UPLOAD}/${currentMedico.medcod}`, {
-		            method: 'POST',
-		            body: formData
-		            // No agregues headers para FormData, el navegador lo hace automáticamente
-		        });
+			// El doctorId va en el path, no en el formData
 
-		        const result = await response.json();
+			try {
+				// Usar tu endpoint de upload
+				const response = await fetch(`${API_UPLOAD}/${currentMedico.medcod}`, {
+					method: 'POST',
+					body: formData
+				});
 
-		        if (response.ok) {
-		            alert('Imagen subida correctamente');
-		            
-		            // Limpiar cache de foto para este médico
-		            delete medicosFotos[currentMedico.medcod];
-		            
-		            // Si el servidor devuelve una ruta de archivo
-		            if (result.filePath) {
-		                // Construir la URL completa
-		                const fotoUrl = FOTOS_BASE_URL + result.filePath;
-		                medicosFotos[currentMedico.medcod] = fotoUrl;
-		            }
-		            
-		            // Cerrar modal
-		            cerrarUpload();
-		            
-		            // Volver a mostrar los médicos para actualizar la imagen
-		            const currentSpecialty = selectEsp.value;
-		            if (currentSpecialty) {
-		                await showDoctors(currentSpecialty);
-		            }
-		        } else {
-		            alert('Error al subir la imagen: ' + (result.message || 'Error desconocido'));
-		        }
-		    } catch (error) {
-		        console.error('Error:', error);
-		        alert('Error en la conexión con el servidor');
-		    } finally {
-		        // Rehabilitar botón
-		        btnSubmit.disabled = false;
-		        btnSubmit.textContent = 'Subir Imagen';
-		    }
+				const result = await response.json();
+
+				if (response.ok) {
+					alert('Imagen subida correctamente');
+
+					// Limpiar cache de foto para este médico
+					delete medicosFotos[currentMedico.medcod];
+
+					// Si el servidor devuelve una ruta de archivo
+					if (result.filePath) {
+						// Construir la URL completa
+						const fotoUrl = FOTOS_BASE_URL + result.filePath;
+						medicosFotos[currentMedico.medcod] = fotoUrl;
+					}
+
+					// Cerrar modal
+					cerrarUpload();
+
+					// Volver a mostrar los médicos para actualizar la imagen
+					const currentSpecialty = selectEsp.value;
+					if (currentSpecialty) {
+						await showDoctors(currentSpecialty);
+					}
+				} else {
+					alert('Error al subir la imagen: ' + (result.message || 'Error desconocido'));
+				}
+			} catch (error) {
+				console.error('Error:', error);
+				alert('Error en la conexión con el servidor');
+			} finally {
+				// Rehabilitar botón
+				btnSubmit.disabled = false;
+				btnSubmit.textContent = 'Subir Imagen';
+			}
 		}
 
 		// Función para cerrar modal
 		function cerrarUpload() {
-		    modalUpload.classList.remove('open');
-		    document.body.style.overflow = '';
-		    currentMedico = null;
-		    btnSubmit.disabled = false;
-		    btnSubmit.textContent = 'Subir Imagen';
+			modalUpload.classList.remove('open');
+			document.body.style.overflow = '';
+			currentMedico = null;
+			btnSubmit.disabled = false;
+			btnSubmit.textContent = 'Subir Imagen';
 		}
 
 		// Funciones auxiliares
 		function getServiceName(c) {
-		    const s = servicios.find(x => String(x.codigo) === String(c));
-		    return s ? s.descripcion : 'General';
+			const s = servicios.find(x => String(x.codigo) === String(c));
+			return s ? s.descripcion : 'General';
 		}
 
 		function esc(s) {
-		    return String(s).replace(/'/g, "\\'").replace(/"/g, '\\"');
+			return String(s).replace(/'/g, "\\'").replace(/"/g, '\\"');
 		}
 
 		function unesc(s) {
-		    return s.replace(/\\'/g, "'").replace(/\\"/g, '"');
+			return s.replace(/\\'/g, "'").replace(/\\"/g, '"');
 		}
 
 		// Cerrar modal al hacer clic fuera
 		modalUpload.addEventListener('click', e => {
-		    if (e.target === modalUpload) cerrarUpload();
+			if (e.target === modalUpload) cerrarUpload();
 		});
 
 		// Login
 		let intentos = 0;
 		window.onload = () => {
-		    document.getElementById("loginModal").style.display = "flex";
+			document.getElementById("loginModal").style.display = "flex";
 		};
 
-		document.getElementById("btnLogin").addEventListener("click", function() {
-		    let user = document.getElementById("username").value.trim().toUpperCase();
-		    let pass = document.getElementById("password").value.trim();
-		    let msg = document.getElementById("loginMessage");
+		document.getElementById("btnLogin").addEventListener("click", function () {
+			let user = document.getElementById("username").value.trim().toUpperCase();
+			let pass = document.getElementById("password").value.trim();
+			let msg = document.getElementById("loginMessage");
 
-		    if (user === "" || pass === "") {
-		        msg.textContent = "Completa los campos.";
-		        return;
-		    }
+			if (user === "" || pass === "") {
+				msg.textContent = "Completa los campos.";
+				return;
+			}
 
-		    let payload = {
-		        username: user,
-		        password: pass
-		    };
+			let payload = {
+				username: user,
+				password: pass
+			};
 
-		    msg.textContent = "Verificando...";
-		    msg.style.color = "#666";
+			msg.textContent = "Verificando...";
+			msg.style.color = "#666";
 
-		    fetch(API_AUTH, {
-		        method: "POST",
-		        headers: {"Content-Type": "application/json"},
-		        body: JSON.stringify(payload)
-		    })
-		    .then(r => r.json())
-		    .then(data => {
-		        console.log("Respuesta del servidor:", data);
+			fetch(API_AUTH, {
+				method: "POST",
+				headers: {"Content-Type": "application/json"},
+				body: JSON.stringify(payload)
+			})
+				.then(r => r.json())
+				.then(data => {
+					console.log("Respuesta del servidor:", data);
 
-		        if (data && data.resultado === "OK") {
-		            console.log("LOGIN OK", data);
-		            document.getElementById("loginModal").style.display = "none";
-		            msg.textContent = "";
-		            intentos = 0;
-		        } else {
-		            intentos++;
-		            msg.textContent = `Credenciales incorrectas. Intento ${intentos} de 3`;
-		            msg.style.color = "red";
+					if (data && data.resultado === "OK") {
+						console.log("LOGIN OK", data);
+						document.getElementById("loginModal").style.display = "none";
+						msg.textContent = "";
+						intentos = 0;
+					} else {
+						intentos++;
+						msg.textContent = `Credenciales incorrectas. Intento ${intentos} de 3`;
+						msg.style.color = "red";
 
-		            if (intentos >= 3) {
-		                setTimeout(() => {
-		                    window.location.href = "http://181.224.248.20/gcita/index.html";
-		                }, 1000);
-		            }
-		        }
-		    })
-		    .catch(err => {
-		        console.error("Error:", err);
-		        msg.textContent = "Error en el servidor.";
-		        msg.style.color = "red";
-		    });
+						if (intentos >= 3) {
+							setTimeout(() => {
+							 window.location.href = `${API_BASE}/gcita/index.html`;
+							}, 1000);
+						}
+					}
+				})
+				.catch(err => {
+					console.error("Error:", err);
+					msg.textContent = "Error en el servidor.";
+					msg.style.color = "red";
+				});
 		});
 
 		// Detectar ENTER en login
-		document.addEventListener("keypress", function(e) {
-		    if (e.target.id === "username" || e.target.id === "password") {
-		        if (e.key === "Enter") {
-		            document.getElementById("btnLogin").click();
-		        }
-		    }
+		document.addEventListener("keypress", function (e) {
+			if (e.target.id === "username" || e.target.id === "password") {
+				if (e.key === "Enter") {
+					document.getElementById("btnLogin").click();
+				}
+			}
 		});
+
+        // Event listener para el botón de teléfonos
+document.getElementById('btnTelefono').addEventListener('click', abrirModalTelefono);
+
+        // URLs para las APIs de teléfonos - usando la misma URL base
+        const API_TELEFONOS_LISTAR = `${API_BASE}/GenerarCita/parametro/listar`;
+        const API_TELEFONOS_UPDATE = `${API_BASE}/GenerarCita/parametro/update`;
+
+        // Variables para teléfonos
+        let telefonosData = [];
+        let telefonoEditando = null;
+
+        // Elementos del modal de teléfono
+        const modalTelefono = document.getElementById('modalTelefono');
+        const telefonoLista = document.getElementById('telefonoLista');
+        const txtNombre = document.getElementById('txtNombre');
+        const txtNumero = document.getElementById('txtNumero');
+        const btnGuardarTel = document.getElementById('btnGuardarTel');
+
+        // Función para abrir el modal de teléfonos
+        async function abrirModalTelefono() {
+            try {
+                // Cargar los teléfonos existentes
+                await cargarTelefonos();
+
+                // Mostrar modal
+                modalTelefono.classList.add('open');
+                document.body.style.overflow = 'hidden';
+
+                // Limpiar formulario
+                limpiarFormTelefono();
+            } catch (error) {
+                console.error('Error al abrir modal de teléfonos:', error);
+                alert('Error al cargar los teléfonos');
+            }
+        }
+
+        // Función para cargar teléfonos desde la API
+        async function cargarTelefonos() {
+            try {
+                const response = await fetch(API_TELEFONOS_LISTAR);
+                if (!response.ok) throw new Error('Error al cargar teléfonos');
+
+                telefonosData = await response.json();
+                renderTelefonos();
+            } catch (error) {
+                console.error('Error cargando teléfonos:', error);
+                telefonosData = [];
+                renderTelefonos();
+            }
+        }
+
+        // Función para renderizar la lista de teléfonos
+        function renderTelefonos() {
+            telefonoLista.innerHTML = '';
+
+            if (telefonosData.length === 0) {
+                telefonoLista.innerHTML = `
+                    <div style="text-align: center; padding: 20px; color: #6b7280;">
+                        <i class="fa-solid fa-phone-slash" style="font-size: 24px; margin-bottom: 10px;"></i>
+                        <p>No hay teléfonos registrados</p>
+                    </div>
+                `;
+                return;
+            }
+
+            telefonosData.forEach(telefono => {
+                const item = document.createElement('div');
+                item.className = 'telefono-item';
+                item.setAttribute('data-id', telefono.codiParam);
+
+                item.innerHTML = `
+                    <div>
+                        <div class="telefono-nombre">${telefono.nombParam}</div>
+                        <small style="color: #6b7280;">ID: ${telefono.codiParam}</small>
+                    </div>
+                    <div>
+                        <div class="telefono-numero">${telefono.valuParam}</div>
+                        <button onclick="editarTelefono(${telefono.codiParam})"
+                                style="background: none; border: none; color: var(--primary); cursor: pointer; font-size: 12px; margin-top: 5px;">
+                            <i class="fa-solid fa-edit"></i> Editar
+                        </button>
+                    </div>
+                `;
+
+                telefonoLista.appendChild(item);
+            });
+        }
+
+        // Función para editar un teléfono
+        function editarTelefono(id) {
+            const telefono = telefonosData.find(t => t.codiParam === id);
+            if (!telefono) return;
+
+            telefonoEditando = telefono;
+            txtNombre.value = telefono.nombParam;
+            txtNumero.value = telefono.valuParam;
+
+            btnGuardarTel.textContent = 'Actualizar';
+            txtNombre.focus();
+        }
+
+        // Función para guardar o actualizar teléfono
+        async function guardarTelefono() {
+            const nombre = txtNombre.value.trim();
+            const numero = txtNumero.value.trim();
+
+            if (!nombre || !numero) {
+                alert('Por favor completa todos los campos');
+                return;
+            }
+
+            // Validar formato del número
+            if (!/^\d+$/.test(numero)) {
+                alert('El número de teléfono debe contener solo dígitos');
+                return;
+            }
+
+            // Preparar datos
+            const datos = {
+                codiParam: telefonoEditando ? telefonoEditando.codiParam : 1, // Usa el ID existente o asigna uno
+                nombParam: nombre,
+                valuParam: numero
+            };
+
+            try {
+                btnGuardarTel.disabled = true;
+                btnGuardarTel.textContent = 'Guardando...';
+
+                const response = await fetch(API_TELEFONOS_UPDATE, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(datos)
+                });
+
+                const result = await response.json();
+
+                if (response.ok && result.resultado === 'ok') {
+                    alert('Teléfono guardado correctamente');
+                    await cargarTelefonos(); // Recargar la lista
+                    limpiarFormTelefono();
+                } else {
+                    throw new Error(result.message || 'Error al guardar');
+                }
+            } catch (error) {
+                console.error('Error guardando teléfono:', error);
+                alert('Error al guardar el teléfono: ' + error.message);
+            } finally {
+                btnGuardarTel.disabled = false;
+                btnGuardarTel.textContent = telefonoEditando ? 'Actualizar' : 'Guardar';
+            }
+        }
+
+        // Función para limpiar el formulario
+        function limpiarFormTelefono() {
+            txtNombre.value = '';
+            txtNumero.value = '';
+            telefonoEditando = null;
+            btnGuardarTel.textContent = 'Guardar';
+        }
+
+        // Función para cerrar el modal
+        function cerrarTelefono() {
+            modalTelefono.classList.remove('open');
+            document.body.style.overflow = '';
+            limpiarFormTelefono();
+        }
+
+        // Cerrar modal al hacer clic fuera
+        modalTelefono.addEventListener('click', e => {
+            if (e.target === modalTelefono) cerrarTelefono();
+        });
+
     </script>
 
 </body>

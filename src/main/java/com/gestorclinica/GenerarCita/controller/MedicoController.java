@@ -8,6 +8,7 @@ import com.gestorclinica.GenerarCita.service.ServicioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -32,6 +33,17 @@ public class MedicoController {
     @GetMapping("/listar")
     public ResponseEntity<List<Medico>> getServiciosDistintos() {
         List<Medico> medicos = medicoService.obtenerMedicoDistintos();
+
+        if (medicos.isEmpty()) {
+            return ResponseEntity.noContent().build(); // 204 No Content si la lista está vacía
+        }
+
+        return ResponseEntity.ok(medicos); // 200 OK
+    }
+
+    @GetMapping("/listarByServicio/{sercod}")
+    public ResponseEntity<List<Medico>> getMedicosByServicio(@PathVariable String sercod) {
+        List<Medico> medicos = medicoService.obtenerMedicoBySercod(sercod);
 
         if (medicos.isEmpty()) {
             return ResponseEntity.noContent().build(); // 204 No Content si la lista está vacía

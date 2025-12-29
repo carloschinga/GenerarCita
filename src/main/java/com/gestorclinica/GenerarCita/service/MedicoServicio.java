@@ -41,4 +41,8 @@ public class MedicoServicio {
         // O si confías en que el ID es único y JpaRepository.findAll() es suficiente:
         // return servicioRepository.findAll();
     }
+
+    public List<Medico> obtenerMedicoBySercod(String sercod) {
+        return medicoRepository.findDistinctMedicosBySercod(sercod);
+    }
 }
