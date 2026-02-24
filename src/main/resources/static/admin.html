@@ -687,6 +687,7 @@
             .btn-telefono span {
                 display: none;
             }
+
             .btn-telefono {
                 padding: 10px;
                 border-radius: 50%;
@@ -847,68 +848,69 @@
             background: #e5e7eb;
         }
 
-            .datalist-placeholder {
-        color: #6b7280 !important;
-        font-style: italic !important;
-        cursor: default !important;
-        background: #f9fafb !important;
-    }
+        .datalist-placeholder {
+            color: #6b7280 !important;
+            font-style: italic !important;
+            cursor: default !important;
+            background: #f9fafb !important;
+        }
 
-    .datalist-placeholder:hover {
-        background: #f9fafb !important;
-    }
+        .datalist-placeholder:hover {
+            background: #f9fafb !important;
+        }
 
         /* Estilos para el botón de limpiar búsqueda */
-.clear-icon {
-    position: absolute;
-    right: 48px; /* Ajustado para que no se solape con la flecha */
-    top: 50%;
-    transform: translateY(-50%);
-    color: #6b7280;
-    cursor: pointer;
-    z-index: 2;
-    background: #f1f5f9;
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    transition: all 0.2s;
-}
+        .clear-icon {
+            position: absolute;
+            right: 48px;
+            /* Ajustado para que no se solape con la flecha */
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6b7280;
+            cursor: pointer;
+            z-index: 2;
+            background: #f1f5f9;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
 
-.clear-icon:hover {
-    background: #e2e8f0;
-    color: #374151;
-}
+        .clear-icon:hover {
+            background: #e2e8f0;
+            color: #374151;
+        }
 
-/* Ajustar el padding del input cuando el botón de limpiar está visible */
-.combobox-input.has-text {
-    padding-right: 80px; /* Espacio para el botón de limpiar y la flecha */
-}
+        /* Ajustar el padding del input cuando el botón de limpiar está visible */
+        .combobox-input.has-text {
+            padding-right: 80px;
+            /* Espacio para el botón de limpiar y la flecha */
+        }
 
-/* Ajustar la posición de la flecha cuando hay texto */
-.combobox-input.has-text + .dropdown-arrow {
-    right: 48px;
-}
+        /* Ajustar la posición de la flecha cuando hay texto */
+        .combobox-input.has-text+.dropdown-arrow {
+            right: 48px;
+        }
 
         @media (max-width: 800px) {
-    .clear-icon {
-        right: 44px;
-        width: 24px;
-        height: 24px;
-    }
+            .clear-icon {
+                right: 44px;
+                width: 24px;
+                height: 24px;
+            }
 
-    .combobox-input.has-text {
-        padding-right: 72px;
-    }
+            .combobox-input.has-text {
+                padding-right: 72px;
+            }
 
-    .combobox-input.has-text + .dropdown-arrow {
-        right: 44px;
-    }
-}
-
+            .combobox-input.has-text+.dropdown-arrow {
+                right: 44px;
+            }
+        }
     </style>
 </head>
 
@@ -928,7 +930,7 @@
 </header>
 
 <div class="main-container">
-    <div class="filter-card">
+    <div class="filter-card">e
         <div class="filter-header">
             <div class="filter-icon-box"><i class="fa-solid fa-filter"></i></div>
             <h2>Filtrar Especialidad</h2>
@@ -1052,718 +1054,725 @@
     </div>
 </div>
 
-    <script>
-        // URL BASE para todas las APIs
-        const API_BASE = 'http://181.224.248.20'; // Cambia esto según tu servidor
+<script>
+    /* APIS DE SERVER - CORREGIDO (MISMA ESTRUCTURA QUE INDEX.HTML) */
 
-        //const API_BASE = 'http://localhost:8082';
+    // URLs de API - Rutas absolutas y fijas
+    const API_SERVICIOS = '/GenerarCita/servicio/listar';
+    const API_MEDICOS = '/GenerarCita/medico/listarByServicio';
+    const API_FOTOS = '/GenerarCita/api/doctor/getFoto';
+    const API_AUTH = '/GenerarCita/auth/login';
+    const API_UPLOAD = '/GenerarCita/api/doctor/upload';
+    const API_TELEFONOS_LISTAR = '/GenerarCita/parametro/listar';
+    const API_TELEFONOS_UPDATE = '/GenerarCita/parametro/update';
 
-        // URLs de API - Usando la URL base
-        const API_SERVICIOS = `${API_BASE}/GenerarCita/servicio/listar`;
-        const API_MEDICOS = `${API_BASE}/GenerarCita/medico/listarByServicio`;
-        const API_FOTOS = `${API_BASE}/GenerarCita/api/doctor/getFoto`;
-        const API_AUTH = `${API_BASE}/GenerarCita/auth/login`;
-        const API_UPLOAD = `${API_BASE}/GenerarCita/api/doctor/upload`;
+    // Base URL para las fotos (igual que en index)
+    const FOTOS_BASE_URL = 'http://181.224.248.20/appfotos/';
 
-        // Base URL para las fotos
-        const FOTOS_BASE_URL = 'http://181.224.248.20/appfotos/';
+    /* APIS DE LOCAL (COMENTADAS POR SI LAS NECESITAS PARA DESARROLLO)
 
-        // Variables globales
-		let servicios = [];
-		let medicosFotos = {}; // Cache de fotos: {medcod: url}
-		let currentMedico = null;
+    // const API_SERVICIOS = 'http://localhost:8082/gcita/servicio/listar';
+    // const API_MEDICOS = 'http://localhost:8082/gcita/medico/listarByServicio';
+    // const API_FOTOS = 'http://localhost:8082/gcita/api/doctor/getFoto';
+    // const API_UPLOAD = 'http://localhost:8082/gcita/api/doctor/upload';
+    // const API_AUTH = 'http://localhost:8082/gcita/auth/login';
+    // const API_TELEFONOS_LISTAR = 'http://localhost:8082/gcita/parametro/listar';
+    // const API_TELEFONOS_UPDATE = 'http://localhost:8082/gcita/parametro/update';
+    // const FOTOS_BASE_URL = 'http://localhost:8083/appfotos/';
 
-		// Elementos del DOM
-		const comboboxInput = document.getElementById('comboboxInput');
-		const selectEsp = document.getElementById('selectEspecialidad');
-		const datalistOptions = document.getElementById('datalistOptions');
-		const gridMed = document.getElementById('gridMedicos');
-		const medicosSection = document.getElementById('medicosSection');
-		const emptyPlaceholder = document.getElementById('emptyPlaceholder');
-		const badgeCount = document.getElementById('badgeCount');
+    */
 
-		const modalUpload = document.getElementById('modalUpload');
-		const uploadNombre = document.getElementById('uploadNombre');
-		const uploadEspecialidad = document.getElementById('uploadEspecialidad');
-		const uploadCodigo = document.getElementById('uploadCodigo');
-		const previewImg = document.getElementById('previewImg');
-		const noImagePreview = document.getElementById('noImagePreview');
-		const fileInput = document.getElementById('fileImg');
-		const btnSubmit = document.getElementById('btnSubmit');
+    // Variables globales
+    let servicios = [];
+    let medicosFotos = {}; // Cache de fotos: {medcod: url}
+    let currentMedico = null;
 
-		let clearSearchBtn = document.getElementById('clearSearchBtn');
+    // Elementos del DOM
+    const comboboxInput = document.getElementById('comboboxInput');
+    const selectEsp = document.getElementById('selectEspecialidad');
+    const datalistOptions = document.getElementById('datalistOptions');
+    const gridMed = document.getElementById('gridMedicos');
+    const medicosSection = document.getElementById('medicosSection');
+    const emptyPlaceholder = document.getElementById('emptyPlaceholder');
+    const badgeCount = document.getElementById('badgeCount');
 
-		// Variables para controlar el datalist
-		let filteredOptions = [];
-		let selectedIndex = -1;
+    const modalUpload = document.getElementById('modalUpload');
+    const uploadNombre = document.getElementById('uploadNombre');
+    const uploadEspecialidad = document.getElementById('uploadEspecialidad');
+    const uploadCodigo = document.getElementById('uploadCodigo');
+    const previewImg = document.getElementById('previewImg');
+    const noImagePreview = document.getElementById('noImagePreview');
+    const fileInput = document.getElementById('fileImg');
+    const btnSubmit = document.getElementById('btnSubmit');
 
-		// Función para formatear el código del médico a 4 dígitos
-		function formatMedCod(codigo) {
-			return String(codigo).padStart(4, '0');
-		}
+    let clearSearchBtn = document.getElementById('clearSearchBtn');
 
-		// Función para crear el datalist personalizado
-function crearDatalistOptions(serviciosList, showPlaceholder = false) {
-    datalistOptions.innerHTML = '';
-    filteredOptions = [];
+    // Variables para controlar el datalist
+    let filteredOptions = [];
+    let selectedIndex = -1;
 
-    // Si showPlaceholder es true y la lista está vacía, mostrar mensaje
-    if (showPlaceholder && (!serviciosList || serviciosList.length === 0)) {
-        const emptyOption = document.createElement('div');
-        emptyOption.className = 'datalist-option datalist-placeholder';
-        emptyOption.textContent = 'No se encontraron especialidades';
-        emptyOption.addEventListener('click', (e) => {
-            e.stopPropagation(); // Evitar que se cierre
-        });
-        datalistOptions.appendChild(emptyOption);
-        return;
+    // Función para formatear el código del médico a 4 dígitos
+    function formatMedCod(codigo) {
+        return String(codigo).padStart(4, '0');
     }
 
-    // Si la lista está vacía pero no estamos mostrando placeholder, no mostrar nada
-    if (!serviciosList || serviciosList.length === 0) {
-        return;
-    }
+    // Función para crear el datalist personalizado
+    function crearDatalistOptions(serviciosList, showPlaceholder = false) {
+        datalistOptions.innerHTML = '';
+        filteredOptions = [];
 
-    serviciosList.forEach(servicio => {
-        const option = document.createElement('div');
-        option.className = 'datalist-option';
-        option.dataset.value = servicio.codigo;
-        option.dataset.text = servicio.descripcion;
-        option.textContent = servicio.descripcion;
-
-        option.addEventListener('click', () => {
-            seleccionarOpcion(servicio.codigo, servicio.descripcion);
-        });
-
-        option.addEventListener('mouseenter', () => {
-            document.querySelectorAll('.datalist-option').forEach(opt => {
-                opt.classList.remove('highlighted');
+        // Si showPlaceholder es true y la lista está vacía, mostrar mensaje
+        if (showPlaceholder && (!serviciosList || serviciosList.length === 0)) {
+            const emptyOption = document.createElement('div');
+            emptyOption.className = 'datalist-option datalist-placeholder';
+            emptyOption.textContent = 'No se encontraron especialidades';
+            emptyOption.addEventListener('click', (e) => {
+                e.stopPropagation(); // Evitar que se cierre
             });
-            // No resaltar el placeholder
-            if (!option.classList.contains('datalist-placeholder')) {
-                option.classList.add('highlighted');
-                selectedIndex = Array.from(datalistOptions.children).indexOf(option);
-            }
+            datalistOptions.appendChild(emptyOption);
+            return;
+        }
+
+        // Si la lista está vacía pero no estamos mostrando placeholder, no mostrar nada
+        if (!serviciosList || serviciosList.length === 0) {
+            return;
+        }
+
+        serviciosList.forEach(servicio => {
+            const option = document.createElement('div');
+            option.className = 'datalist-option';
+            option.dataset.value = servicio.codigo;
+            option.dataset.text = servicio.descripcion;
+            option.textContent = servicio.descripcion;
+
+            option.addEventListener('click', () => {
+                seleccionarOpcion(servicio.codigo, servicio.descripcion);
+            });
+
+            option.addEventListener('mouseenter', () => {
+                document.querySelectorAll('.datalist-option').forEach(opt => {
+                    opt.classList.remove('highlighted');
+                });
+                // No resaltar el placeholder
+                if (!option.classList.contains('datalist-placeholder')) {
+                    option.classList.add('highlighted');
+                    selectedIndex = Array.from(datalistOptions.children).indexOf(option);
+                }
+            });
+
+            datalistOptions.appendChild(option);
+            filteredOptions.push(servicio);
         });
-
-        datalistOptions.appendChild(option);
-        filteredOptions.push(servicio);
-    });
-}
-
-		// Función para filtrar opciones
-function filtrarOpciones(searchText) {
-    if (!searchText || searchText.trim() === '') {
-        // Cuando no hay texto, mostrar TODOS los servicios
-        crearDatalistOptions(servicios);
-        return;
     }
 
-    const texto = searchText.toUpperCase();
-    const filtrados = servicios.filter(servicio =>
-        servicio.descripcion.toUpperCase().includes(texto)
-    );
-
-    // Mostrar resultados filtrados, y si no hay resultados, mostrar mensaje
-    crearDatalistOptions(filtrados, true); // true = mostrar placeholder si no hay resultados
-}
-
-		// Función para seleccionar una opción
-		function seleccionarOpcion(codigo, texto) {
-    comboboxInput.value = texto;
-    selectEsp.value = codigo;
-    datalistOptions.classList.remove('show');
-
-    // Mostrar botón de limpiar cuando hay texto seleccionado
-    toggleClearButton(true);
-
-    // Mostrar médicos
-    showDoctors(codigo);
-}
-
-		// Función para mostrar/ocultar el datalist - ACTUALIZADO
-function toggleDatalist(show) {
-    if (show) {
-        datalistOptions.classList.add('show');
-        // Si no hay texto o se acaba de limpiar, mostrar TODAS las opciones
-        if (!comboboxInput.value || comboboxInput.value.trim() === '') {
+    // Función para filtrar opciones
+    function filtrarOpciones(searchText) {
+        if (!searchText || searchText.trim() === '') {
+            // Cuando no hay texto, mostrar TODOS los servicios
             crearDatalistOptions(servicios);
+            return;
+        }
+
+        const texto = searchText.toUpperCase();
+        const filtrados = servicios.filter(servicio =>
+            servicio.descripcion.toUpperCase().includes(texto)
+        );
+
+        // Mostrar resultados filtrados, y si no hay resultados, mostrar mensaje
+        crearDatalistOptions(filtrados, true); // true = mostrar placeholder si no hay resultados
+    }
+
+    // Función para seleccionar una opción
+    function seleccionarOpcion(codigo, texto) {
+        comboboxInput.value = texto;
+        selectEsp.value = codigo;
+        datalistOptions.classList.remove('show');
+
+        // Mostrar botón de limpiar cuando hay texto seleccionado
+        toggleClearButton(true);
+
+        // Mostrar médicos
+        showDoctors(codigo);
+    }
+
+    // Función para mostrar/ocultar el datalist - ACTUALIZADO
+    function toggleDatalist(show) {
+        if (show) {
+            datalistOptions.classList.add('show');
+            // Si no hay texto o se acaba de limpiar, mostrar TODAS las opciones
+            if (!comboboxInput.value || comboboxInput.value.trim() === '') {
+                crearDatalistOptions(servicios);
+            } else {
+                // Si hay texto, mostrar las opciones filtradas
+                filtrarOpciones(comboboxInput.value);
+            }
         } else {
-            // Si hay texto, mostrar las opciones filtradas
-            filtrarOpciones(comboboxInput.value);
+            // Pequeño delay para que los clics en las opciones funcionen
+            setTimeout(() => {
+                datalistOptions.classList.remove('show');
+            }, 150);
         }
-    } else {
-        // Pequeño delay para que los clics en las opciones funcionen
-        setTimeout(() => {
-            datalistOptions.classList.remove('show');
-        }, 150);
     }
-}
 
-	// Event Listeners para el combobox - ACTUALIZADO
-comboboxInput.addEventListener('focus', () => {
-    toggleDatalist(true);
-    // Mostrar botón de limpiar solo si hay texto
-    if (comboboxInput.value.trim() !== '') {
-        toggleClearButton(true);
+    // Event Listeners para el combobox - ACTUALIZADO
+    comboboxInput.addEventListener('focus', () => {
+        toggleDatalist(true);
+        // Mostrar botón de limpiar solo si hay texto
+        if (comboboxInput.value.trim() !== '') {
+            toggleClearButton(true);
+        }
+    });
+
+
+    // Actualizar la función de input para mostrar/ocultar el botón de limpiar
+    comboboxInput.addEventListener('input', (e) => {
+        filtrarOpciones(e.target.value);
+        if (!datalistOptions.classList.contains('show')) {
+            datalistOptions.classList.add('show');
+        }
+        selectedIndex = -1;
+
+        // Mostrar/ocultar botón de limpiar según si hay texto
+        if (e.target.value.trim() !== '') {
+            toggleClearButton(true);
+        } else {
+            toggleClearButton(false);
+        }
+    });
+
+    comboboxInput.addEventListener('keydown', (e) => {
+        const options = document.querySelectorAll('.datalist-option');
+
+        switch (e.key) {
+            case 'ArrowDown':
+                e.preventDefault();
+                if (options.length > 0) {
+                    selectedIndex = (selectedIndex + 1) % options.length;
+                    options.forEach(opt => opt.classList.remove('highlighted'));
+                    options[selectedIndex].classList.add('highlighted');
+                    options[selectedIndex].scrollIntoView({block: 'nearest'});
+                }
+                break;
+
+            case 'ArrowUp':
+                e.preventDefault();
+                if (options.length > 0) {
+                    selectedIndex = (selectedIndex - 1 + options.length) % options.length;
+                    options.forEach(opt => opt.classList.remove('highlighted'));
+                    options[selectedIndex].classList.add('highlighted');
+                    options[selectedIndex].scrollIntoView({block: 'nearest'});
+                }
+                break;
+
+            case 'Enter':
+                e.preventDefault();
+                if (selectedIndex >= 0 && options[selectedIndex]) {
+                    const option = options[selectedIndex];
+                    seleccionarOpcion(option.dataset.value, option.dataset.text);
+                }
+                break;
+
+            case 'Escape':
+                toggleDatalist(false);
+                break;
+        }
+    });
+
+    // Cerrar datalist al hacer clic fuera - ACTUALIZADO
+    document.addEventListener('click', (e) => {
+        // Si el clic no es en el input, ni en el datalist, NI en el botón de limpiar
+        if (!comboboxInput.contains(e.target) &&
+            !datalistOptions.contains(e.target) &&
+            !clearSearchBtn.contains(e.target)) {
+            toggleDatalist(false);
+        }
+    });
+
+    // Función para cargar fotos de un médico
+    async function cargarFotoMedico(medcod) {
+        try {
+            // Si ya tenemos la foto en cache, usarla
+            if (medicosFotos[medcod]) {
+                return medicosFotos[medcod];
+            }
+
+            // Obtener las fotos del médico desde tu API
+            const response = await fetch(`${API_FOTOS}/${medcod}`);
+            if (!response.ok) {
+                if (response.status === 204) {
+                    console.log(`No hay fotos para el médico ${medcod}`);
+                }
+                return null;
+            }
+
+            const fotos = await response.json();
+            console.log('Fotos recibidas para', medcod, ':', fotos);
+
+            if (fotos && fotos.length > 0) {
+                // Buscar la primera foto con URL válida
+                const foto = fotos[0];
+                let fotoUrl = null;
+
+                if (foto.urlFoto) {
+                    // Construir la URL completa
+                    fotoUrl = FOTOS_BASE_URL + foto.urlFoto;
+                    console.log('URL construida:', fotoUrl);
+                } else if (foto.url) {
+                    // Si ya viene la URL completa
+                    fotoUrl = foto.url;
+                }
+
+                if (fotoUrl) {
+                    // Verificar que la imagen existe
+                    const imgExists = await verificarImagen(fotoUrl);
+                    if (imgExists) {
+                        medicosFotos[medcod] = fotoUrl;
+                        return fotoUrl;
+                    } else {
+                        console.warn(`La imagen no existe en la URL: ${fotoUrl}`);
+                    }
+                }
+            }
+            return null;
+        } catch (error) {
+            console.error(`Error cargando foto para ${medcod}:`, error);
+            return null;
+        }
     }
-});
 
-
-		// Actualizar la función de input para mostrar/ocultar el botón de limpiar
-comboboxInput.addEventListener('input', (e) => {
-    filtrarOpciones(e.target.value);
-    if (!datalistOptions.classList.contains('show')) {
-        datalistOptions.classList.add('show');
+    // Función para verificar si una imagen existe
+    function verificarImagen(url) {
+        return new Promise((resolve) => {
+            const img = new Image();
+            img.onload = () => resolve(true);
+            img.onerror = () => resolve(false);
+            img.src = url;
+        });
     }
-    selectedIndex = -1;
 
-    // Mostrar/ocultar botón de limpiar según si hay texto
-    if (e.target.value.trim() !== '') {
-        toggleClearButton(true);
-    } else {
-        toggleClearButton(false);
+    // Inicialización
+    document.addEventListener('DOMContentLoaded', init);
+
+    async function init() {
+        try {
+            // Solo cargar servicios
+            const s = await fetch(API_SERVICIOS).then(r => r.json());
+            servicios = s;
+
+            // Llenar el select oculto
+            selectEsp.innerHTML = '<option value="">-- Seleccionar --</option>';
+            servicios.forEach(servicio => {
+                const option = document.createElement('option');
+                option.value = servicio.codigo;
+                option.textContent = servicio.descripcion;
+                selectEsp.appendChild(option);
+            });
+
+            // Crear datalist inicial
+            crearDatalistOptions([]);
+            // Inicializar estado del botón de limpiar
+            toggleClearButton(false);
+
+            // Event listener para vista previa de imagen seleccionada
+            fileInput.addEventListener('change', function (e) {
+                const file = e.target.files[0];
+                if (file) {
+                    // Validar tipo de archivo
+                    if (!file.type.match('image.*')) {
+                        alert('Por favor, selecciona un archivo de imagen válido (JPG, PNG, etc.)');
+                        fileInput.value = '';
+                        return;
+                    }
+
+                    // Validar tamaño (máximo 5MB)
+                    if (file.size > 10 * 1024 * 1024) {
+                        alert('La imagen es demasiado grande. Máximo 5MB.');
+                        fileInput.value = '';
+                        return;
+                    }
+
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        previewImg.src = e.target.result;
+                        previewImg.style.display = 'block';
+                        noImagePreview.style.display = 'none';
+                    }
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // No olvides agregar el event listener para el botón de teléfono
+            document.getElementById('btnTelefono').addEventListener('click', abrirModalTelefono);
+        } catch (e) {
+            console.error('Error en init:', e);
+        }
     }
-});
 
-		comboboxInput.addEventListener('keydown', (e) => {
-			const options = document.querySelectorAll('.datalist-option');
+    // Función para mostrar médicos usando la nueva API
+    async function showDoctors(cod) {
+        if (!cod) {
+            medicosSection.style.display = 'none';
+            emptyPlaceholder.style.display = 'block';
+            return;
+        }
 
-			switch(e.key) {
-				case 'ArrowDown':
-					e.preventDefault();
-					if (options.length > 0) {
-						selectedIndex = (selectedIndex + 1) % options.length;
-						options.forEach(opt => opt.classList.remove('highlighted'));
-						options[selectedIndex].classList.add('highlighted');
-						options[selectedIndex].scrollIntoView({ block: 'nearest' });
-					}
-					break;
+        try {
+            // Llamar a la nueva API con el código del servicio
+            const response = await fetch(`${API_MEDICOS}/${cod}`);
 
-				case 'ArrowUp':
-					e.preventDefault();
-					if (options.length > 0) {
-						selectedIndex = (selectedIndex - 1 + options.length) % options.length;
-						options.forEach(opt => opt.classList.remove('highlighted'));
-						options[selectedIndex].classList.add('highlighted');
-						options[selectedIndex].scrollIntoView({ block: 'nearest' });
-					}
-					break;
+            if (!response.ok) {
+                if (response.status === 204) {
+                    // No hay médicos para este servicio
+                    medicosSection.style.display = 'none';
+                    emptyPlaceholder.style.display = 'block';
+                    emptyPlaceholder.innerHTML = '<p>No hay médicos en esta especialidad.</p>';
+                    return;
+                }
+                throw new Error(`Error HTTP: ${response.status}`);
+            }
 
-				case 'Enter':
-					e.preventDefault();
-					if (selectedIndex >= 0 && options[selectedIndex]) {
-						const option = options[selectedIndex];
-						seleccionarOpcion(option.dataset.value, option.dataset.text);
-					}
-					break;
+            const docs = await response.json();
+            gridMed.innerHTML = '';
+            badgeCount.textContent = docs.length;
 
-				case 'Escape':
-					toggleDatalist(false);
-					break;
-			}
-		});
+            if (docs.length === 0) {
+                medicosSection.style.display = 'none';
+                emptyPlaceholder.style.display = 'block';
+                emptyPlaceholder.innerHTML = '<p>No hay médicos en esta especialidad.</p>';
+                return;
+            }
 
-		// Cerrar datalist al hacer clic fuera - ACTUALIZADO
-document.addEventListener('click', (e) => {
-    // Si el clic no es en el input, ni en el datalist, NI en el botón de limpiar
-    if (!comboboxInput.contains(e.target) &&
-        !datalistOptions.contains(e.target) &&
-        !clearSearchBtn.contains(e.target)) {
-        toggleDatalist(false);
+            medicosSection.style.display = 'block';
+            emptyPlaceholder.style.display = 'none';
+
+            // Cargar fotos para todos los médicos
+            for (const d of docs) {
+                const div = document.createElement('div');
+                div.className = 'medico-card';
+
+                const medcod = formatMedCod(d.codigo);
+                let fotoUrl = await cargarFotoMedico(medcod);
+
+                if (!fotoUrl) {
+                    fotoUrl = 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=90&w=800&auto=format&fit=crop';
+                }
+
+                div.style.backgroundImage = `url('${fotoUrl}')`;
+                div.style.backgroundSize = 'cover';
+                div.style.backgroundPosition = 'center top';
+                div.style.backgroundRepeat = 'no-repeat';
+
+                div.setAttribute('data-medcod', medcod);
+                div.setAttribute('data-nombre', esc(d.descripcion));
+                div.setAttribute('data-especialidad', d.codigoServicio);
+
+                div.addEventListener('click', function (e) {
+                    if (e.target.closest('.card-btn')) {
+                        return;
+                    }
+                    const medcod = this.getAttribute('data-medcod');
+                    const nombre = this.getAttribute('data-nombre');
+                    const especialidad = this.getAttribute('data-especialidad');
+                    abrirUploadModal(medcod, nombre, especialidad);
+                });
+
+                div.innerHTML = `
+                        <div class="card-overlay">
+                            <div class="card-name">${d.descripcion}</div>
+                            <div class="card-spec">${getServiceName(d.codigoServicio)}</div>
+                            <button class="card-btn" onclick="event.stopPropagation(); abrirUploadModal('${medcod}', '${esc(d.descripcion)}', ${d.codigoServicio})">
+                                <i class="fa-solid fa-camera"></i> Gestionar Foto
+                            </button>
+                        </div>
+                    `;
+                gridMed.appendChild(div);
+            }
+        } catch (error) {
+            console.error('Error cargando médicos:', error);
+            medicosSection.style.display = 'none';
+            emptyPlaceholder.style.display = 'block';
+            emptyPlaceholder.innerHTML = '<p>Error al cargar los médicos. Intenta de nuevo.</p>';
+        }
     }
-});
-
-		// Función para cargar fotos de un médico
-		async function cargarFotoMedico(medcod) {
-			try {
-				// Si ya tenemos la foto en cache, usarla
-				if (medicosFotos[medcod]) {
-					return medicosFotos[medcod];
-				}
-
-				// Obtener las fotos del médico desde tu API
-				const response = await fetch(`${API_FOTOS}/${medcod}`);
-				if (!response.ok) {
-					if (response.status === 204) {
-						console.log(`No hay fotos para el médico ${medcod}`);
-					}
-					return null;
-				}
-
-				const fotos = await response.json();
-				console.log('Fotos recibidas para', medcod, ':', fotos);
-
-				if (fotos && fotos.length > 0) {
-					// Buscar la primera foto con URL válida
-					const foto = fotos[0];
-					let fotoUrl = null;
-
-					if (foto.urlFoto) {
-						// Construir la URL completa
-						fotoUrl = FOTOS_BASE_URL + foto.urlFoto;
-						console.log('URL construida:', fotoUrl);
-					} else if (foto.url) {
-						// Si ya viene la URL completa
-						fotoUrl = foto.url;
-					}
-
-					if (fotoUrl) {
-						// Verificar que la imagen existe
-						const imgExists = await verificarImagen(fotoUrl);
-						if (imgExists) {
-							medicosFotos[medcod] = fotoUrl;
-							return fotoUrl;
-						} else {
-							console.warn(`La imagen no existe en la URL: ${fotoUrl}`);
-						}
-					}
-				}
-				return null;
-			} catch (error) {
-				console.error(`Error cargando foto para ${medcod}:`, error);
-				return null;
-			}
-		}
-
-		// Función para verificar si una imagen existe
-		function verificarImagen(url) {
-			return new Promise((resolve) => {
-				const img = new Image();
-				img.onload = () => resolve(true);
-				img.onerror = () => resolve(false);
-				img.src = url;
-			});
-		}
-
-		// Inicialización
-		document.addEventListener('DOMContentLoaded', init);
-
-		async function init() {
-		    try {
-		        // Solo cargar servicios
-		        const s = await fetch(API_SERVICIOS).then(r => r.json());
-		        servicios = s;
-
-		        // Llenar el select oculto
-		        selectEsp.innerHTML = '<option value="">-- Seleccionar --</option>';
-		        servicios.forEach(servicio => {
-		            const option = document.createElement('option');
-		            option.value = servicio.codigo;
-		            option.textContent = servicio.descripcion;
-		            selectEsp.appendChild(option);
-		        });
-
-		        // Crear datalist inicial
-		        crearDatalistOptions([]);
-		         // Inicializar estado del botón de limpiar
-        toggleClearButton(false);
-
-				// Event listener para vista previa de imagen seleccionada
-				fileInput.addEventListener('change', function (e) {
-					const file = e.target.files[0];
-					if (file) {
-						// Validar tipo de archivo
-						if (!file.type.match('image.*')) {
-							alert('Por favor, selecciona un archivo de imagen válido (JPG, PNG, etc.)');
-							fileInput.value = '';
-							return;
-						}
-
-						// Validar tamaño (máximo 5MB)
-						if (file.size > 10 * 1024 * 1024) {
-							alert('La imagen es demasiado grande. Máximo 5MB.');
-							fileInput.value = '';
-							return;
-						}
-
-						const reader = new FileReader();
-						reader.onload = function (e) {
-							previewImg.src = e.target.result;
-							previewImg.style.display = 'block';
-							noImagePreview.style.display = 'none';
-						}
-						reader.readAsDataURL(file);
-					}
-				});
-
-				document.getElementById('btnTelefono').addEventListener('click', abrirModalTelefono);
-			} catch (e) {
-				console.error('Error en init:', e);
-			}
-		}
-
-		// Función para mostrar médicos usando la nueva API
-		async function showDoctors(cod) {
-		    if (!cod) {
-		        medicosSection.style.display = 'none';
-		        emptyPlaceholder.style.display = 'block';
-		        return;
-		    }
-
-		    try {
-		        // Llamar a la nueva API con el código del servicio
-		        const response = await fetch(`${API_MEDICOS}/${cod}`);
-
-		        if (!response.ok) {
-		            if (response.status === 204) {
-		                // No hay médicos para este servicio
-		                medicosSection.style.display = 'none';
-		                emptyPlaceholder.style.display = 'block';
-		                emptyPlaceholder.innerHTML = '<p>No hay médicos en esta especialidad.</p>';
-		                return;
-		            }
-		            throw new Error(`Error HTTP: ${response.status}`);
-		        }
-
-		        const docs = await response.json();
-		        gridMed.innerHTML = '';
-		        badgeCount.textContent = docs.length;
-
-		        if (docs.length === 0) {
-		            medicosSection.style.display = 'none';
-		            emptyPlaceholder.style.display = 'block';
-		            emptyPlaceholder.innerHTML = '<p>No hay médicos en esta especialidad.</p>';
-		            return;
-		        }
-
-		        medicosSection.style.display = 'block';
-		        emptyPlaceholder.style.display = 'none';
-
-		        // Cargar fotos para todos los médicos
-		        for (const d of docs) {
-		            const div = document.createElement('div');
-		            div.className = 'medico-card';
-
-		            const medcod = formatMedCod(d.codigo);
-		            let fotoUrl = await cargarFotoMedico(medcod);
-
-		            if (!fotoUrl) {
-		                fotoUrl = 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=90&w=800&auto=format&fit=crop';
-		            }
-
-		            div.style.backgroundImage = `url('${fotoUrl}')`;
-		            div.style.backgroundSize = 'cover';
-		            div.style.backgroundPosition = 'center top';
-		            div.style.backgroundRepeat = 'no-repeat';
-
-		            div.setAttribute('data-medcod', medcod);
-		            div.setAttribute('data-nombre', esc(d.descripcion));
-		            div.setAttribute('data-especialidad', d.codigoServicio);
-
-		            div.addEventListener('click', function (e) {
-		                if (e.target.closest('.card-btn')) {
-		                    return;
-		                }
-		                const medcod = this.getAttribute('data-medcod');
-		                const nombre = this.getAttribute('data-nombre');
-		                const especialidad = this.getAttribute('data-especialidad');
-		                abrirUploadModal(medcod, nombre, especialidad);
-		            });
-
-		            div.innerHTML = `
-		                <div class="card-overlay">
-		                    <div class="card-name">${d.descripcion}</div>
-		                    <div class="card-spec">${getServiceName(d.codigoServicio)}</div>
-		                    <button class="card-btn" onclick="event.stopPropagation(); abrirUploadModal('${medcod}', '${esc(d.descripcion)}', ${d.codigoServicio})">
-		                        <i class="fa-solid fa-camera"></i> Gestionar Foto
-		                    </button>
-		                </div>
-		            `;
-		            gridMed.appendChild(div);
-		        }
-		    } catch (error) {
-		        console.error('Error cargando médicos:', error);
-		        medicosSection.style.display = 'none';
-		        emptyPlaceholder.style.display = 'block';
-		        emptyPlaceholder.innerHTML = '<p>Error al cargar los médicos. Intenta de nuevo.</p>';
-		    }
-		}
-
-		// Función para abrir modal de upload
-		async function abrirUploadModal(medcod, nombre, codServ) {
-			currentMedico = {
-				medcod: medcod, // Ya viene formateado
-				nombre: unesc(nombre),
-				especialidad: getServiceName(codServ)
-			};
-
-			// Mostrar información en el modal
-			uploadNombre.textContent = currentMedico.nombre;
-			uploadEspecialidad.textContent = currentMedico.especialidad;
-			uploadCodigo.textContent = currentMedico.medcod;
-
-			// Obtener foto actual
-			try {
-				const fotoUrl = await cargarFotoMedico(currentMedico.medcod);
-
-				if (fotoUrl) {
-					previewImg.src = fotoUrl;
-					previewImg.style.display = 'block';
-					noImagePreview.style.display = 'none';
-					document.querySelector('.current-image').textContent = 'Imagen Actual';
-				} else {
-					previewImg.style.display = 'none';
-					noImagePreview.style.display = 'flex';
-					document.querySelector('.current-image').textContent = 'Sin Imagen';
-				}
-			} catch (error) {
-				console.error('Error cargando foto para modal:', error);
-				previewImg.style.display = 'none';
-				noImagePreview.style.display = 'flex';
-				document.querySelector('.current-image').textContent = 'Sin Imagen';
-			}
-
-			// Limpiar input de archivo
-			fileInput.value = '';
-
-			// Mostrar modal
-			modalUpload.classList.add('open');
-			document.body.style.overflow = 'hidden';
-		}
-
-		// Función para subir la imagen
-		async function guardarImagen() {
-			if (!currentMedico) {
-				alert('No hay médico seleccionado');
-				return;
-			}
-
-			const file = fileInput.files[0];
-			if (!file) {
-				alert('Por favor, selecciona una imagen primero');
-				return;
-			}
-
-			if (!file.type.match('image.*')) {
-				alert('Por favor, selecciona un archivo de imagen válido');
-				return;
-			}
-
-			// Validar tamaño (máximo 5MB)
-			if (file.size > 10 * 1024 * 1024) {
-				alert('La imagen es demasiado grande. Máximo 5MB.');
-				return;
-			}
-
-			// Deshabilitar botón mientras se sube
-			btnSubmit.disabled = true;
-			btnSubmit.textContent = 'Subiendo...';
-
-			// Crear FormData según lo que espera tu endpoint
-			const formData = new FormData();
-			formData.append('file', file); // Tu endpoint espera 'file' como parámetro
-
-			// El doctorId va en el path, no en el formData
-
-			try {
-				// Usar tu endpoint de upload
-				const response = await fetch(`${API_UPLOAD}/${currentMedico.medcod}`, {
-					method: 'POST',
-					body: formData
-				});
-
-				const result = await response.json();
-
-				if (response.ok) {
-					alert('Imagen subida correctamente');
-
-					// Limpiar cache de foto para este médico
-					delete medicosFotos[currentMedico.medcod];
-
-					// Si el servidor devuelve una ruta de archivo
-					if (result.filePath) {
-						// Construir la URL completa
-						const fotoUrl = FOTOS_BASE_URL + result.filePath;
-						medicosFotos[currentMedico.medcod] = fotoUrl;
-					}
-
-					// Cerrar modal
-					cerrarUpload();
-
-					// Volver a mostrar los médicos para actualizar la imagen
-					const currentSpecialty = selectEsp.value;
-					if (currentSpecialty) {
-						await showDoctors(currentSpecialty);
-					}
-				} else {
-					alert('Error al subir la imagen: ' + (result.message || 'Error desconocido'));
-				}
-			} catch (error) {
-				console.error('Error:', error);
-				alert('Error en la conexión con el servidor');
-			} finally {
-				// Rehabilitar botón
-				btnSubmit.disabled = false;
-				btnSubmit.textContent = 'Subir Imagen';
-			}
-		}
-
-		// Función para cerrar modal
-		function cerrarUpload() {
-			modalUpload.classList.remove('open');
-			document.body.style.overflow = '';
-			currentMedico = null;
-			btnSubmit.disabled = false;
-			btnSubmit.textContent = 'Subir Imagen';
-		}
-
-		// Funciones auxiliares
-		function getServiceName(c) {
-			const s = servicios.find(x => String(x.codigo) === String(c));
-			return s ? s.descripcion : 'General';
-		}
-
-		function esc(s) {
-			return String(s).replace(/'/g, "\\'").replace(/"/g, '\\"');
-		}
-
-		function unesc(s) {
-			return s.replace(/\\'/g, "'").replace(/\\"/g, '"');
-		}
-
-		// Cerrar modal al hacer clic fuera
-		modalUpload.addEventListener('click', e => {
-			if (e.target === modalUpload) cerrarUpload();
-		});
-
-		// Login
-		let intentos = 0;
-		window.onload = () => {
-			document.getElementById("loginModal").style.display = "flex";
-		};
-
-		document.getElementById("btnLogin").addEventListener("click", function () {
-			let user = document.getElementById("username").value.trim().toUpperCase();
-			let pass = document.getElementById("password").value.trim();
-			let msg = document.getElementById("loginMessage");
-
-			if (user === "" || pass === "") {
-				msg.textContent = "Completa los campos.";
-				return;
-			}
-
-			let payload = {
-				username: user,
-				password: pass
-			};
-
-			msg.textContent = "Verificando...";
-			msg.style.color = "#666";
-
-			fetch(API_AUTH, {
-				method: "POST",
-				headers: {"Content-Type": "application/json"},
-				body: JSON.stringify(payload)
-			})
-				.then(r => r.json())
-				.then(data => {
-					console.log("Respuesta del servidor:", data);
-
-					if (data && data.resultado === "OK") {
-						console.log("LOGIN OK", data);
-						document.getElementById("loginModal").style.display = "none";
-						msg.textContent = "";
-						intentos = 0;
-					} else {
-						intentos++;
-						msg.textContent = `Credenciales incorrectas. Intento ${intentos} de 3`;
-						msg.style.color = "red";
-
-						if (intentos >= 3) {
-							setTimeout(() => {
-							 window.location.href = `${API_BASE}/gcita/index.html`;
-							}, 1000);
-						}
-					}
-				})
-				.catch(err => {
-					console.error("Error:", err);
-					msg.textContent = "Error en el servidor.";
-					msg.style.color = "red";
-				});
-		});
-
-		// Detectar ENTER en login
-		document.addEventListener("keypress", function (e) {
-			if (e.target.id === "username" || e.target.id === "password") {
-				if (e.key === "Enter") {
-					document.getElementById("btnLogin").click();
-				}
-			}
-		});
-
-        // Event listener para el botón de teléfonos
-document.getElementById('btnTelefono').addEventListener('click', abrirModalTelefono);
-
-        // URLs para las APIs de teléfonos - usando la misma URL base
-        const API_TELEFONOS_LISTAR = `${API_BASE}/GenerarCita/parametro/listar`;
-        const API_TELEFONOS_UPDATE = `${API_BASE}/GenerarCita/parametro/update`;
-
-        // Variables para teléfonos
-        let telefonosData = [];
-        let telefonoEditando = null;
-
-        // Elementos del modal de teléfono
-        const modalTelefono = document.getElementById('modalTelefono');
-        const telefonoLista = document.getElementById('telefonoLista');
-        const txtNombre = document.getElementById('txtNombre');
-        const txtNumero = document.getElementById('txtNumero');
-        const btnGuardarTel = document.getElementById('btnGuardarTel');
-
-        // Función para abrir el modal de teléfonos
-        async function abrirModalTelefono() {
-            try {
-                // Cargar los teléfonos existentes
-                await cargarTelefonos();
-
-                // Mostrar modal
-                modalTelefono.classList.add('open');
-                document.body.style.overflow = 'hidden';
-
-                // Limpiar formulario
-                limpiarFormTelefono();
-            } catch (error) {
-                console.error('Error al abrir modal de teléfonos:', error);
-                alert('Error al cargar los teléfonos');
+
+    // Función para abrir modal de upload
+    async function abrirUploadModal(medcod, nombre, codServ) {
+        currentMedico = {
+            medcod: medcod, // Ya viene formateado
+            nombre: unesc(nombre),
+            especialidad: getServiceName(codServ)
+        };
+
+        // Mostrar información en el modal
+        uploadNombre.textContent = currentMedico.nombre;
+        uploadEspecialidad.textContent = currentMedico.especialidad;
+        uploadCodigo.textContent = currentMedico.medcod;
+
+        // Obtener foto actual
+        try {
+            const fotoUrl = await cargarFotoMedico(currentMedico.medcod);
+
+            if (fotoUrl) {
+                previewImg.src = fotoUrl;
+                previewImg.style.display = 'block';
+                noImagePreview.style.display = 'none';
+                document.querySelector('.current-image').textContent = 'Imagen Actual';
+            } else {
+                previewImg.style.display = 'none';
+                noImagePreview.style.display = 'flex';
+                document.querySelector('.current-image').textContent = 'Sin Imagen';
+            }
+        } catch (error) {
+            console.error('Error cargando foto para modal:', error);
+            previewImg.style.display = 'none';
+            noImagePreview.style.display = 'flex';
+            document.querySelector('.current-image').textContent = 'Sin Imagen';
+        }
+
+        // Limpiar input de archivo
+        fileInput.value = '';
+
+        // Mostrar modal
+        modalUpload.classList.add('open');
+        document.body.style.overflow = 'hidden';
+    }
+
+    // Función para subir la imagen
+    async function guardarImagen() {
+        if (!currentMedico) {
+            alert('No hay médico seleccionado');
+            return;
+        }
+
+        const file = fileInput.files[0];
+        if (!file) {
+            alert('Por favor, selecciona una imagen primero');
+            return;
+        }
+
+        if (!file.type.match('image.*')) {
+            alert('Por favor, selecciona un archivo de imagen válido');
+            return;
+        }
+
+        // Validar tamaño (máximo 5MB)
+        if (file.size > 10 * 1024 * 1024) {
+            alert('La imagen es demasiado grande. Máximo 5MB.');
+            return;
+        }
+
+        // Deshabilitar botón mientras se sube
+        btnSubmit.disabled = true;
+        btnSubmit.textContent = 'Subiendo...';
+
+        // Crear FormData según lo que espera tu endpoint
+        const formData = new FormData();
+        formData.append('file', file); // Tu endpoint espera 'file' como parámetro
+
+        // El doctorId va en el path, no en el formData
+
+        try {
+            // Usar tu endpoint de upload
+            const response = await fetch(`${API_UPLOAD}/${currentMedico.medcod}`, {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                alert('Imagen subida correctamente');
+
+                // Limpiar cache de foto para este médico
+                delete medicosFotos[currentMedico.medcod];
+
+                // Si el servidor devuelve una ruta de archivo
+                if (result.filePath) {
+                    // Construir la URL completa
+                    const fotoUrl = FOTOS_BASE_URL + result.filePath;
+                    medicosFotos[currentMedico.medcod] = fotoUrl;
+                }
+
+                // Cerrar modal
+                cerrarUpload();
+
+                // Volver a mostrar los médicos para actualizar la imagen
+                const currentSpecialty = selectEsp.value;
+                if (currentSpecialty) {
+                    await showDoctors(currentSpecialty);
+                }
+            } else {
+                alert('Error al subir la imagen: ' + (result.message || 'Error desconocido'));
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Error en la conexión con el servidor');
+        } finally {
+            // Rehabilitar botón
+            btnSubmit.disabled = false;
+            btnSubmit.textContent = 'Subir Imagen';
+        }
+    }
+
+    // Función para cerrar modal
+    function cerrarUpload() {
+        modalUpload.classList.remove('open');
+        document.body.style.overflow = '';
+        currentMedico = null;
+        btnSubmit.disabled = false;
+        btnSubmit.textContent = 'Subir Imagen';
+    }
+
+    // Funciones auxiliares
+    function getServiceName(c) {
+        const s = servicios.find(x => String(x.codigo) === String(c));
+        return s ? s.descripcion : 'General';
+    }
+
+    function esc(s) {
+        return String(s).replace(/'/g, "\\'").replace(/"/g, '\\"');
+    }
+
+    function unesc(s) {
+        return s.replace(/\\'/g, "'").replace(/\\"/g, '"');
+    }
+
+    // Cerrar modal al hacer clic fuera
+    modalUpload.addEventListener('click', e => {
+        if (e.target === modalUpload) cerrarUpload();
+    });
+
+    // Login
+    let intentos = 0;
+    window.onload = () => {
+        document.getElementById("loginModal").style.display = "flex";
+    };
+
+    document.getElementById("btnLogin").addEventListener("click", function () {
+        let user = document.getElementById("username").value.trim().toUpperCase();
+        let pass = document.getElementById("password").value.trim();
+        let msg = document.getElementById("loginMessage");
+
+        if (user === "" || pass === "") {
+            msg.textContent = "Completa los campos.";
+            return;
+        }
+
+        let payload = {
+            username: user,
+            password: pass
+        };
+
+        msg.textContent = "Verificando...";
+        msg.style.color = "#666";
+
+        fetch(API_AUTH, {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(payload)
+        })
+            .then(r => r.json())
+            .then(data => {
+                console.log("Respuesta del servidor:", data);
+
+                if (data && data.resultado === "OK") {
+                    console.log("LOGIN OK", data);
+                    document.getElementById("loginModal").style.display = "none";
+                    msg.textContent = "";
+                    intentos = 0;
+                } else {
+                    intentos++;
+                    msg.textContent = `Credenciales incorrectas. Intento ${intentos} de 3`;
+                    msg.style.color = "red";
+
+                    if (intentos >= 3) {
+                        setTimeout(() => {
+                            // CORRECCIÓN: Redirigir a index.html en el servidor
+                            window.location.href = '/GenerarCita/index.html';
+                        }, 1000);
+                    }
+                }
+            })
+            .catch(err => {
+                console.error("Error:", err);
+                msg.textContent = "Error en el servidor.";
+                msg.style.color = "red";
+            });
+    });
+
+    // Detectar ENTER en login
+    document.addEventListener("keypress", function (e) {
+        if (e.target.id === "username" || e.target.id === "password") {
+            if (e.key === "Enter") {
+                document.getElementById("btnLogin").click();
             }
         }
+    });
 
-        // Función para cargar teléfonos desde la API
-        async function cargarTelefonos() {
-            try {
-                const response = await fetch(API_TELEFONOS_LISTAR);
-                if (!response.ok) throw new Error('Error al cargar teléfonos');
+    // Variables para teléfonos
+    let telefonosData = [];
+    let telefonoEditando = null;
 
-                telefonosData = await response.json();
-                renderTelefonos();
-            } catch (error) {
-                console.error('Error cargando teléfonos:', error);
-                telefonosData = [];
-                renderTelefonos();
-            }
+    // Elementos del modal de teléfono
+    const modalTelefono = document.getElementById('modalTelefono');
+    const telefonoLista = document.getElementById('telefonoLista');
+    const txtNombre = document.getElementById('txtNombre');
+    const txtNumero = document.getElementById('txtNumero');
+    const btnGuardarTel = document.getElementById('btnGuardarTel');
+
+    // Función para abrir el modal de teléfonos
+    async function abrirModalTelefono() {
+        try {
+            // Cargar los teléfonos existentes
+            await cargarTelefonos();
+
+            // Mostrar modal
+            modalTelefono.classList.add('open');
+            document.body.style.overflow = 'hidden';
+
+            // Limpiar formulario
+            limpiarFormTelefono();
+        } catch (error) {
+            console.error('Error al abrir modal de teléfonos:', error);
+            alert('Error al cargar los teléfonos');
         }
+    }
 
-        // Función para renderizar la lista de teléfonos
-        function renderTelefonos() {
-            telefonoLista.innerHTML = '';
+    // Función para cargar teléfonos desde la API
+    async function cargarTelefonos() {
+        try {
+            const response = await fetch(API_TELEFONOS_LISTAR);
+            if (!response.ok) throw new Error('Error al cargar teléfonos');
 
-            if (telefonosData.length === 0) {
-                telefonoLista.innerHTML = `
+            telefonosData = await response.json();
+            renderTelefonos();
+        } catch (error) {
+            console.error('Error cargando teléfonos:', error);
+            telefonosData = [];
+            renderTelefonos();
+        }
+    }
+
+    // Función para renderizar la lista de teléfonos
+    function renderTelefonos() {
+        telefonoLista.innerHTML = '';
+
+        if (telefonosData.length === 0) {
+            telefonoLista.innerHTML = `
                     <div style="text-align: center; padding: 20px; color: #6b7280;">
                         <i class="fa-solid fa-phone-slash" style="font-size: 24px; margin-bottom: 10px;"></i>
                         <p>No hay teléfonos registrados</p>
                     </div>
                 `;
-                return;
-            }
+            return;
+        }
 
-            telefonosData.forEach(telefono => {
-                const item = document.createElement('div');
-                item.className = 'telefono-item';
-                item.setAttribute('data-id', telefono.codiParam);
+        telefonosData.forEach(telefono => {
+            const item = document.createElement('div');
+            item.className = 'telefono-item';
+            item.setAttribute('data-id', telefono.codiParam);
 
-                item.innerHTML = `
+            item.innerHTML = `
                     <div>
                         <div class="telefono-nombre">${telefono.nombParam}</div>
                         <small style="color: #6b7280;">ID: ${telefono.codiParam}</small>
@@ -1777,135 +1786,141 @@ document.getElementById('btnTelefono').addEventListener('click', abrirModalTelef
                     </div>
                 `;
 
-                telefonoLista.appendChild(item);
-            });
-        }
-
-        // Función para editar un teléfono
-        function editarTelefono(id) {
-            const telefono = telefonosData.find(t => t.codiParam === id);
-            if (!telefono) return;
-
-            telefonoEditando = telefono;
-            txtNombre.value = telefono.nombParam;
-            txtNumero.value = telefono.valuParam;
-
-            btnGuardarTel.textContent = 'Actualizar';
-            txtNombre.focus();
-        }
-
-        // Función para guardar o actualizar teléfono
-        async function guardarTelefono() {
-            const nombre = txtNombre.value.trim();
-            const numero = txtNumero.value.trim();
-
-            if (!nombre || !numero) {
-                alert('Por favor completa todos los campos');
-                return;
-            }
-
-            // Validar formato del número
-            if (!/^\d+$/.test(numero)) {
-                alert('El número de teléfono debe contener solo dígitos');
-                return;
-            }
-
-            // Preparar datos
-            const datos = {
-                codiParam: telefonoEditando ? telefonoEditando.codiParam : 1, // Usa el ID existente o asigna uno
-                nombParam: nombre,
-                valuParam: numero
-            };
-
-            try {
-                btnGuardarTel.disabled = true;
-                btnGuardarTel.textContent = 'Guardando...';
-
-                const response = await fetch(API_TELEFONOS_UPDATE, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(datos)
-                });
-
-                const result = await response.json();
-
-                if (response.ok && result.resultado === 'ok') {
-                    alert('Teléfono guardado correctamente');
-                    await cargarTelefonos(); // Recargar la lista
-                    limpiarFormTelefono();
-                } else {
-                    throw new Error(result.message || 'Error al guardar');
-                }
-            } catch (error) {
-                console.error('Error guardando teléfono:', error);
-                alert('Error al guardar el teléfono: ' + error.message);
-            } finally {
-                btnGuardarTel.disabled = false;
-                btnGuardarTel.textContent = telefonoEditando ? 'Actualizar' : 'Guardar';
-            }
-        }
-
-        // Función para limpiar el formulario
-        function limpiarFormTelefono() {
-            txtNombre.value = '';
-            txtNumero.value = '';
-            telefonoEditando = null;
-            btnGuardarTel.textContent = 'Guardar';
-        }
-
-        // Función para cerrar el modal
-        function cerrarTelefono() {
-            modalTelefono.classList.remove('open');
-            document.body.style.overflow = '';
-            limpiarFormTelefono();
-        }
-
-        // Cerrar modal al hacer clic fuera
-        modalTelefono.addEventListener('click', e => {
-            if (e.target === modalTelefono) cerrarTelefono();
+            telefonoLista.appendChild(item);
         });
-
-       // Función para mostrar/ocultar el botón de limpiar
-function toggleClearButton(show) {
-    if (show) {
-        clearSearchBtn.style.display = 'flex';
-        comboboxInput.classList.add('has-text');
-    } else {
-        clearSearchBtn.style.display = 'none';
-        comboboxInput.classList.remove('has-text');
     }
-}
 
-       // Función para limpiar la búsqueda
-function clearSearch() {
-    comboboxInput.value = '';
-    comboboxInput.focus();
-    toggleClearButton(false);
-    selectEsp.value = '';
+    // Función para editar un teléfono (debe ser global para que el onclick la encuentre)
+    window.editarTelefono = function (id) {
+        const telefono = telefonosData.find(t => t.codiParam === id);
+        if (!telefono) return;
 
-    // Ocultar la sección de médicos
-    medicosSection.style.display = 'none';
-    emptyPlaceholder.style.display = 'block';
+        telefonoEditando = telefono;
+        txtNombre.value = telefono.nombParam;
+        txtNumero.value = telefono.valuParam;
 
-    // IMPORTANTE: Mostrar todas las opciones en el datalist inmediatamente
-    crearDatalistOptions(servicios);
+        btnGuardarTel.textContent = 'Actualizar';
+        txtNombre.focus();
+    };
 
-    // Asegurar que el dropdown esté visible
-    if (!datalistOptions.classList.contains('show')) {
-        datalistOptions.classList.add('show');
+    // Función para guardar o actualizar teléfono
+    async function guardarTelefono() {
+        const nombre = txtNombre.value.trim();
+        const numero = txtNumero.value.trim();
+
+        if (!nombre || !numero) {
+            alert('Por favor completa todos los campos');
+            return;
+        }
+
+        // Validar formato del número
+        if (!/^\d+$/.test(numero)) {
+            alert('El número de teléfono debe contener solo dígitos');
+            return;
+        }
+
+        // Preparar datos
+        const datos = {
+            codiParam: telefonoEditando ? telefonoEditando.codiParam : 1, // Usa el ID existente o asigna uno
+            nombParam: nombre,
+            valuParam: numero
+        };
+
+        try {
+            btnGuardarTel.disabled = true;
+            btnGuardarTel.textContent = 'Guardando...';
+
+            const response = await fetch(API_TELEFONOS_UPDATE, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(datos)
+            });
+
+            const result = await response.json();
+
+            if (response.ok && result.resultado === 'ok') {
+                alert('Teléfono guardado correctamente');
+                await cargarTelefonos(); // Recargar la lista
+                limpiarFormTelefono();
+            } else {
+                throw new Error(result.message || 'Error al guardar');
+            }
+        } catch (error) {
+            console.error('Error guardando teléfono:', error);
+            alert('Error al guardar el teléfono: ' + error.message);
+        } finally {
+            btnGuardarTel.disabled = false;
+            btnGuardarTel.textContent = telefonoEditando ? 'Actualizar' : 'Guardar';
+        }
     }
-}
 
-        // Event listener para el botón de limpiar - ACTUALIZADO
-clearSearchBtn.addEventListener('click', function(e) {
-    e.stopPropagation(); // IMPORTANTE: Evitar que el clic se propague
-    e.preventDefault(); // Prevenir comportamiento por defecto
-    clearSearch();
-});
+    // Función para limpiar el formulario
+    function limpiarFormTelefono() {
+        txtNombre.value = '';
+        txtNumero.value = '';
+        telefonoEditando = null;
+        btnGuardarTel.textContent = 'Guardar';
+    }
 
-    </script>
+    // Función para cerrar el modal
+    function cerrarTelefono() {
+        modalTelefono.classList.remove('open');
+        document.body.style.overflow = '';
+        limpiarFormTelefono();
+    }
+
+    // Cerrar modal al hacer clic fuera
+    modalTelefono.addEventListener('click', e => {
+        if (e.target === modalTelefono) cerrarTelefono();
+    });
+
+    // Función para mostrar/ocultar el botón de limpiar
+    function toggleClearButton(show) {
+        if (show) {
+            clearSearchBtn.style.display = 'flex';
+            comboboxInput.classList.add('has-text');
+        } else {
+            clearSearchBtn.style.display = 'none';
+            comboboxInput.classList.remove('has-text');
+        }
+    }
+
+    // Función para limpiar la búsqueda
+    function clearSearch() {
+        comboboxInput.value = '';
+        comboboxInput.focus();
+        toggleClearButton(false);
+        selectEsp.value = '';
+
+        // Ocultar la sección de médicos
+        medicosSection.style.display = 'none';
+        emptyPlaceholder.style.display = 'block';
+
+        // IMPORTANTE: Mostrar todas las opciones en el datalist inmediatamente
+        crearDatalistOptions(servicios);
+
+        // Asegurar que el dropdown esté visible
+        if (!datalistOptions.classList.contains('show')) {
+            datalistOptions.classList.add('show');
+        }
+    }
+
+    // Event listener para el botón de limpiar - ACTUALIZADO
+    clearSearchBtn.addEventListener('click', function (e) {
+        e.stopPropagation(); // IMPORTANTE: Evitar que el clic se propague
+        e.preventDefault(); // Prevenir comportamiento por defecto
+        clearSearch();
+    });
+
+    // Hacer la función guardarImagen global para el onclick del botón
+    window.guardarImagen = guardarImagen;
+    window.cerrarUpload = cerrarUpload;
+    window.abrirUploadModal = abrirUploadModal;
+    window.cerrarTelefono = cerrarTelefono;
+    window.guardarTelefono = guardarTelefono;
+</script>
 
 </body>
 
